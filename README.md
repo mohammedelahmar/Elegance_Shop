@@ -33,7 +33,9 @@ Your app will now be running at **http://localhost:3000/** 🎉
 - CSS 🎨
 
 ## 👤 Created By
-[Your Name] 👨‍💻
+Mohammed Mehdi Boudir 👨‍💻
+Mohammed El Ahmar 👨‍💻
+Yasser Amiri 👨‍💻
 
 ## 📜 License
 This project is licensed under the **MIT License** 📄
