@@ -6,7 +6,7 @@ import generateToken from '../../utils/generateToken.js';
 // @desc   Register new user
 // @route  POST /api/users/register
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password, phone_number, address, role } = req.body;
+    const { Firstname,Lastname,sexe, email, password, phone_number, address } = req.body;
 
     // Check if user already exists by email or phone number
     const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
@@ -20,19 +20,24 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Create user
     const user = await User.create({
-        name,
+        Firstname,
+        Lastname,
+        sexe,
         email,
         password: hashedPassword,
         phone_number,
         address,
-        role
+        role: 'client'
     });
 
     if (user) {
         res.status(201).json({
             _id: user.id,
-            name: user.name,
+            Firstname: user.Firstname,
+            Lastname: user.Lastname,
             email: user.email,
+            phone_number: user.phone_number,
+            address: user.address,
             role: user.role,
             token: generateToken(user._id)
         });

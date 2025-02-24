@@ -3,16 +3,17 @@ import { Footer, Navbar } from "../components";
 import { Link } from 'react-router-dom';
 
 const Register = () => {
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        sexe: '',
-        email: '',
-        password: '',
-        phone_number: '',
-        address: '',
-        role: 'client'
-    });
+
+const [formData, setFormData] = useState({
+    Firstname: '', 
+    Lastname: '',  
+    sexe: '',
+    email: '',
+    password: '',
+    phone_number: '',
+    address: ''
+  });
+  
 
     const [message, setMessage] = useState('');
 
@@ -67,9 +68,9 @@ const Register = () => {
                                     type="text"
                                     className="form-control"
                                     id="FirstName"
-                                    name="firstName"
+                                    name="Firstname"
                                     placeholder="Enter Your First Name"
-                                    value={formData.firstName}
+                                    value={formData.Firstname}
                                     onChange={handleChange}
                                     required
                                 />
@@ -80,9 +81,9 @@ const Register = () => {
                                     type="text"
                                     className="form-control"
                                     id="LastName"
-                                    name="lastName"
+                                    name="Lastname"
                                     placeholder="Enter Your Last Name"
-                                    value={formData.lastName}
+                                    value={formData.Lastname}
                                     onChange={handleChange}
                                     required
                                 />
