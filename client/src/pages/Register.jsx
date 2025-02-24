@@ -160,18 +160,7 @@ const Register = () => {
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="form my-3">
-                                <label htmlFor="Role">Role</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="Role"
-                                    name="role"
-                                    placeholder="Enter Your Role"
-                                    value={formData.role}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                            
                             <div className="my-3">
                                 <p>Already have an account? <Link to="/login" className="text-decoration-underline text-info">Login</Link></p>
                             </div>
