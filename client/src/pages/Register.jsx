@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 
 const Register = () => {
     const [formData, setFormData] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
+        sexe: '',
         email: '',
         password: '',
         phone_number: '',
@@ -60,17 +62,53 @@ const Register = () => {
                     <div className="col-md-4 col-lg-4 col-sm-8 mx-auto">
                         <form onSubmit={handleSubmit}>
                             <div className="form my-3">
-                                <label htmlFor="Name">Full Name</label>
+                                <label htmlFor="FirstName">First Name</label>
                                 <input
                                     type="text"
                                     className="form-control"
-                                    id="Name"
-                                    name="name"
-                                    placeholder="Enter Your Name"
-                                    value={formData.name}
+                                    id="FirstName"
+                                    name="firstName"
+                                    placeholder="Enter Your First Name"
+                                    value={formData.firstName}
                                     onChange={handleChange}
                                     required
                                 />
+                            </div>
+                            <div className="form my-3">
+                                <label htmlFor="LastName">Last Name</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="LastName"
+                                    name="lastName"
+                                    placeholder="Enter Your Last Name"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="form my-3">
+                                <label htmlFor="Sexe">Sexe</label>
+                                <div>
+                                    <input
+                                        type="radio"
+                                        id="male"
+                                        name="sexe"
+                                        value="male"
+                                        checked={formData.sexe === 'male'}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="male" className="mx-2">Male</label>
+                                    <input
+                                        type="radio"
+                                        id="female"
+                                        name="sexe"
+                                        value="female"
+                                        checked={formData.sexe === 'female'}
+                                        onChange={handleChange}
+                                    />
+                                    <label htmlFor="female" className="mx-2">Female</label>
+                                </div>
                             </div>
                             <div className="form my-3">
                                 <label htmlFor="Email">Email address</label>
