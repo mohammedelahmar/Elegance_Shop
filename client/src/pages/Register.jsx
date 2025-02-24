@@ -36,7 +36,7 @@ const Register = () => {
 
             const data = await response.json();
 
-            console.log('Server Response:', data); // Debugging: Log the server response
+            console.log('Server Response:', data);
 
             if (response.ok) {
                 setMessage('Registration successful!');
