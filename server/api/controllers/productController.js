@@ -2,6 +2,10 @@ import Product from "../../models/Product.js";
 import asyncHandler from "express-async-handler";
 // Removed unused generateToken import
 
+
+//---------------------------------------------------------------------------------------------------------------------//
+
+
 // @desc   Fetch all products
 // @route  GET /api/products
 // @access Public
@@ -9,6 +13,9 @@ const getProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({});
   res.json(products);
 });
+
+//---------------------------------------------------------------------------------------------------------------------//
+
 
 // @desc   Fetch single product
 // @route  GET /api/products/:id
@@ -23,6 +30,9 @@ const getProductById = asyncHandler(async (req, res) => {
   }
 });
 
+//---------------------------------------------------------------------------------------------------------------------//
+
+
 // @desc   Delete a product
 // @route  DELETE /api/products/:id
 // @access Private/Admin
@@ -36,6 +46,10 @@ const deleteProduct = asyncHandler(async (req, res) => {
     throw new Error("Product not found");
   }
 });
+
+
+//---------------------------------------------------------------------------------------------------------------------//
+
 
 // @desc   Create a product
 // @route  POST /api/products
@@ -53,6 +67,10 @@ const createProduct = asyncHandler(async (req, res) => {
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
 });
+
+
+//---------------------------------------------------------------------------------------------------------------------//
+
 
 // @desc   Update a product
 // @route  PUT /api/products/:id
@@ -76,5 +94,9 @@ const updateProduct = asyncHandler(async (req, res) => {
     throw new Error("Product not found");
   }
 });
+
+
+//---------------------------------------------------------------------------------------------------------------------//
+
 
 export { getProducts, getProductById, deleteProduct, createProduct, updateProduct };
