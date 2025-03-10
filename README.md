@@ -1,6 +1,6 @@
-# 👕 Srbi Mab9ach - Online Clothing Store
+# 👕 ShopIt WearIt - Online Clothing Store
 
-Welcome to **Srbi Mab9ach**! 🛍️ A stylish and modern online clothing store where you can browse and buy trendy outfits with ease. Made using **React** and **JavaScript**.
+Welcome to **ShopIt WearIt**! 🛍️ A stylish and modern online clothing store where you can browse and buy trendy outfits with ease. Made using **React** and **JavaScript**.
 
 ## 🚀 Getting Started
 Follow these steps to run the project on your local machine:
