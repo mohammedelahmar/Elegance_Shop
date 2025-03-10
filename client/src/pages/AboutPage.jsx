@@ -211,7 +211,7 @@ const AboutPage = () => {
                     <i className="fas fa-user-edit"></i>
                   </div>
                   <h4>Amiri Yasser</h4>
-                  <p className="member-role">Data Analyst</p>
+                  <p className="member-role">Rapport Maker</p>
                   <div className="member-social">
                     <a href="https://github.com/sarahlahmar" target="_blank" rel="noreferrer">
                       <i className="fab fa-github"></i>
