@@ -13,7 +13,8 @@ import adminMiddleware from "../../middlewares/adminMiddleware.js"; // Corrected
 const router = express.Router();
 
 router.get("/", getProducts);
-router.post("/", authMiddleware, adminMiddleware, createProduct);
+// router.post("/", authMiddleware, adminMiddleware, createProduct);
+router.post("/",createProduct);
 router.get("/:id", getProductById);
 router.put("/:id", authMiddleware, adminMiddleware, updateProduct);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteProduct);

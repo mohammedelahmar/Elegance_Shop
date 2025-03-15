@@ -12,7 +12,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
     if (existingUser) {
         res.status(400).json({ message: 'User with this email or phone number already exists' });
-        return; // Stop further execution
+        return; 
     }
 
     // Hash password

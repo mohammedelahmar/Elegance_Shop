@@ -15,36 +15,28 @@ const Products = () => {
   const dispatch = useDispatch();
 
   const addProduct = (product) => {
-    dispatch(addCart(product));
+    // Add product with a default quantity of 1
+    dispatch(addCart({ ...product, quantity: 1 }));
   };
 
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
       try {
-        // Fetch both categories in parallel
-        const [menResponse, womenResponse] = await Promise.all([
-          fetch("https://fakestoreapi.com/products/category/men's%20clothing"),
-          fetch("https://fakestoreapi.com/products/category/women's%20clothing")
-        ]);
-
-        // Parse responses
-        const menData = await menResponse.json();
-        const womenData = await womenResponse.json();
-
-        // Combine results
-        const combinedData = [...menData, ...womenData];
+        // Fetch all products from the local API endpoint
+        const response = await fetch("http://localhost:5000/api/products");
+        const productsData = await response.json();
 
         if (componentMounted.current) {
-          setData(combinedData);
-          setFilter(combinedData);
+          setData(productsData);
+          setFilter(productsData);
           setLoading(false);
         }
       } catch (error) {
+        console.error("Error fetching products:", error);
         if (componentMounted.current) {
           setLoading(false);
         }
-        console.error("Error fetching products:", error);
       }
     };
 
@@ -58,13 +50,14 @@ const Products = () => {
 
   const filterProduct = (category) => {
     setActiveCategory(category);
-    
     if (category === "all") {
       setFilter(data);
       return;
     }
-    
-    const updatedList = data.filter((product) => product.category === category);
+    // Filter products by category. Make sure the category names match those stored in your local API.
+    const updatedList = data.filter(
+      (product) => product.category === category
+    );
     setFilter(updatedList);
   };
 
@@ -77,13 +70,25 @@ const Products = () => {
               <Skeleton height="100%" />
             </div>
             <div className="skeleton-content">
-              <Skeleton height={20} width="70%" style={{ marginBottom: "10px" }} />
-              <Skeleton height={15} count={2} style={{ marginBottom: "15px" }} />
+              <Skeleton
+                height={20}
+                width="70%"
+                style={{ marginBottom: "10px" }}
+              />
+              <Skeleton
+                height={15}
+                count={2}
+                style={{ marginBottom: "15px" }}
+              />
               <div className="skeleton-footer">
                 <Skeleton height={24} width={80} />
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Skeleton height={38} width={90} />
-                  <Skeleton height={38} width={38} borderRadius="50%" />
+                  <Skeleton
+                    height={38}
+                    width={38}
+                    borderRadius="50%"
+                  />
                 </div>
               </div>
             </div>
@@ -102,20 +107,24 @@ const Products = () => {
             <div className="underline"></div>
           </div>
           <div className="filter-buttons">
-            <button 
-              className={`filter-btn ${activeCategory === 'all' ? 'active' : ''}`} 
+            <button
+              className={`filter-btn ${activeCategory === "all" ? "active" : ""}`}
               onClick={() => filterProduct("all")}
             >
               All Products
             </button>
-            <button 
-              className={`filter-btn ${activeCategory === "men's clothing" ? 'active' : ''}`}  
+            <button
+              className={`filter-btn ${
+                activeCategory === "men's clothing" ? "active" : ""
+              }`}
               onClick={() => filterProduct("men's clothing")}
             >
               Men's Collection
             </button>
-            <button 
-              className={`filter-btn ${activeCategory === "women's clothing" ? 'active' : ''}`}  
+            <button
+              className={`filter-btn ${
+                activeCategory === "women's clothing" ? "active" : ""
+              }`}
               onClick={() => filterProduct("women's clothing")}
             >
               Women's Collection
@@ -129,28 +138,25 @@ const Products = () => {
 
         <div className="product-grid">
           {filter.map((product) => (
-            <div className="product-card" key={product.id}>
+            <div className="product-card" key={product._id}>
               <div className="card-inner">
                 <div className="product-image">
-                  <img 
-                    src={product.image} 
-                    alt={product.title}
+                  <img
+                    src={product.image_url}
+                    alt={product.name}
                     className="product-img"
                   />
                   <div className="card-overlay">
                     <div className="overlay-buttons">
-                    <Link 
-                        to={`/product/${product.id}`} 
+                      <Link
+                        to={`/product/${product._id}`}
                         className="overlay-btn view-btn"
-                        onClick={() => {
-                          // This ensures immediate scroll to top when clicking the link
-                          window.scrollTo(0, 0);
-                        }}
+                        onClick={() => window.scrollTo(0, 0)}
                       >
                         <i className="fas fa-eye"></i>
                         <span>Quick View</span>
                       </Link>
-                      <button 
+                      <button
                         className="overlay-btn cart-btn"
                         onClick={() => addProduct(product)}
                       >
@@ -161,16 +167,24 @@ const Products = () => {
                   </div>
                 </div>
                 <div className="product-details">
-                  <h3 className="product-title">{product.title.substring(0, 40)}{product.title.length > 40 ? '...' : ''}</h3>
+                  <h3 className="product-title">
+                    {product.name.substring(0, 40)}
+                    {product.name.length > 40 ? "..." : ""}
+                  </h3>
                   <div className="product-category">
                     <span>{product.category}</span>
                   </div>
                   <div className="product-footer">
-                    <div className="product-price">${product.price.toFixed(2)}</div>
+                    <div className="product-price">
+                      ${parseFloat(product.price).toFixed(2)}
+                    </div>
+                    {/* If you have rating data available, you can uncomment this section */}
+                    {/*
                     <div className="product-rating">
                       <i className="fas fa-star"></i>
-                      <span>{product.rating?.rate || '4.0'}</span>
+                      <span>{product.rating?.rate || "4.0"}</span>
                     </div>
+                    */}
                   </div>
                 </div>
               </div>
@@ -461,7 +475,6 @@ const Products = () => {
           margin-top: 1.5rem;
         }
         
-        /* Responsive adjustments */
         @media (max-width: 576px) {
           .filter-btn {
             padding: 0.6rem 1.2rem;
@@ -483,9 +496,11 @@ const Products = () => {
         <div className="container">
           <div className="section-title">
             <h2>Explore Our Collection</h2>
-            <p>Discover our carefully curated selection of high-quality clothing designed for comfort and style.</p>
+            <p>
+              Discover our carefully curated selection of high-quality clothing
+              designed for comfort and style.
+            </p>
           </div>
-
           {loading ? <Loading /> : <ShowProducts />}
         </div>
       </div>
