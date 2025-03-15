@@ -162,6 +162,10 @@ const Navbar = () => {
                   className="nav-link nav-link-custom"
                   activeClassName="active"
                   to="/"
+                  onClick={() => {
+                    // This ensures immediate scroll to top when clicking the link
+                    window.scrollTo(0, 0);
+                  }}
                 >
                   Home
                 </NavLink>
@@ -171,7 +175,10 @@ const Navbar = () => {
                   className="nav-link nav-link-custom"
                   activeClassName="active"
                   to="/product"
-                  
+                  onClick={() => {
+                    // This ensures immediate scroll to top when clicking the link
+                    window.scrollTo(0, 0);
+                  }}
                 >
                   Products
                 </NavLink>
@@ -181,6 +188,10 @@ const Navbar = () => {
                   className="nav-link nav-link-custom"
                   activeClassName="active"
                   to="/about"
+                  onClick={() => {
+                    // This ensures immediate scroll to top when clicking the link
+                    window.scrollTo(0, 0);
+                  }}
                 >
                   About
                 </NavLink>
@@ -190,6 +201,10 @@ const Navbar = () => {
                   className="nav-link nav-link-custom"
                   activeClassName="active"
                   to="/contact"
+                  onClick={() => {
+                    // This ensures immediate scroll to top when clicking the link
+                    window.scrollTo(0, 0);
+                  }}
                 >
                   Contact
                 </NavLink>
