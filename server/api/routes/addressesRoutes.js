@@ -1,14 +1,13 @@
 import express from 'express';
-import { addAddress, getAddressById, getAddresses, updateAddress,deleteAdresse } from '../controllers/addressesController.js';
-import { protect as authMiddleware } from '../../middlewares/authMiddleware.js';
-import adminMiddleware from '../../middlewares/adminMiddleware.js'; // Corrected import
+import { addAdresse, getAdresseById, getAllAdresses, updateAdresse, deleteAdresse } from '../controllers/addressesController.js';
+import { protect, admin } from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/', authMiddleware, addAddress);
-router.get('/', authMiddleware, adminMiddleware, getAddresses);
-router.get('/:id', authMiddleware, getAddressById);
-router.put('/:id', authMiddleware, updateAddress);
-router.delete('/:id', authMiddleware, deleteAdresse);
+router.post('/', protect, addAdresse);
+router.get('/', protect, admin, getAllAdresses);
+router.get('/:id', protect, getAdresseById);
+router.put('/:id', protect, updateAdresse);
+router.delete('/:id', protect, deleteAdresse);
 
 export default router;

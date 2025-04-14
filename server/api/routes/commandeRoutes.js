@@ -1,15 +1,14 @@
 import express from 'express';
 import { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders, getOrders, updateOrderToDelivered } from '../controllers/commandeController.js';
-import { protect as authMiddleware } from "../../middlewares/authMiddleware.js";
-import adminMiddleware from "../../middlewares/adminMiddleware.js"; // Corrected import
+import { protect, admin } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post('/', authMiddleware, addOrderItems);
-router.get('/', authMiddleware, adminMiddleware, getOrders);
-router.get('/myorders', authMiddleware, getMyOrders);
-router.get('/:id', authMiddleware, getOrderById);
-router.put('/:id/pay', authMiddleware, updateOrderToPaid);
-router.put('/:id/deliver', authMiddleware, adminMiddleware, updateOrderToDelivered);
+router.post('/', protect, addOrderItems);
+router.get('/', protect, admin, getOrders);
+router.get('/myorders', protect, getMyOrders);
+router.get('/:id', protect, getOrderById);
+router.put('/:id/pay', protect, updateOrderToPaid);
+router.put('/:id/deliver', protect, admin, updateOrderToDelivered);
 
 export default router;

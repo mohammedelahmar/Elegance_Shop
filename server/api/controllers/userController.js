@@ -58,7 +58,8 @@ const loginUser = asyncHandler(async (req, res) => {
     if (user && (await bcrypt.compare(password, user.password))) {
         res.json({
             _id: user.id,
-            name: user.name,
+            Firstname: user.Firstname,
+            Lastname: user.Lastname,
             email: user.email,
             role: user.role,
             token: generateToken(user._id)
@@ -78,14 +79,16 @@ const getUserProfile = asyncHandler(async (req, res) => {
     if (user) {
         res.json({
             _id: user.id,
-            name: user.name,
+            Firstname: user.Firstname,
+            Lastname: user.Lastname,
             email: user.email,
             phone_number: user.phone_number,
             address: user.address,
             role: user.role
         });
     } else {
-        res.status(404).json({ message: 'User not found' });
+        res.status(404);
+        throw new Error('User not found');
     }
 });
 
@@ -97,49 +100,52 @@ const getUserProfile = asyncHandler(async (req, res) => {
 const updateUserProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user.id);
 
-    if (user) {
-        // Check email uniqueness
-        if (req.body.email && req.body.email !== user.email) {
-            const emailExists = await User.findOne({ email: req.body.email });
-            if (emailExists) {
-                res.status(400).json({ message: 'Email already in use' });
-                return;
-            }
-        }
-
-        // Check phone number uniqueness
-        if (req.body.phone_number && req.body.phone_number !== user.phone_number) {
-            const phoneExists = await User.findOne({ phone_number: req.body.phone_number });
-            if (phoneExists) {
-                res.status(400).json({ message: 'Phone number already in use' });
-                return;
-            }
-        }
-
-        // Update fields
-        user.name = req.body.name || user.name;
-        user.email = req.body.email || user.email;
-        user.phone_number = req.body.phone_number || user.phone_number;
-        user.address = req.body.address || user.address;
-
-        // Update password if provided
-        if (req.body.password) {
-            user.password = await bcrypt.hash(req.body.password, 10);
-        }
-
-        const updatedUser = await user.save();
-        res.json({
-            _id: updatedUser.id,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            phone_number: updatedUser.phone_number,
-            address: updatedUser.address,
-            role: updatedUser.role,
-            token: generateToken(updatedUser._id)
-        });
-    } else {
-        res.status(404).json({ message: 'User not found' });
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
     }
+
+    // Check email uniqueness if changed
+    if (req.body.email && req.body.email !== user.email) {
+        const emailExists = await User.findOne({ email: req.body.email });
+        if (emailExists) {
+            res.status(400);
+            throw new Error('Email already in use');
+        }
+    }
+
+    // Check phone number uniqueness if changed
+    if (req.body.phone_number && req.body.phone_number !== user.phone_number) {
+        const phoneExists = await User.findOne({ phone_number: req.body.phone_number });
+        if (phoneExists) {
+            res.status(400);
+            throw new Error('Phone number already in use');
+        }
+    }
+
+    // Update fields - note the fix for name/Firstname/Lastname
+    user.Firstname = req.body.Firstname || user.Firstname;
+    user.Lastname = req.body.Lastname || user.Lastname;
+    user.email = req.body.email || user.email;
+    user.phone_number = req.body.phone_number || user.phone_number;
+    user.address = req.body.address || user.address;
+
+    // Update password if provided
+    if (req.body.password) {
+        user.password = await bcrypt.hash(req.body.password, 10);
+    }
+
+    const updatedUser = await user.save();
+    res.json({
+        _id: updatedUser.id,
+        Firstname: updatedUser.Firstname,
+        Lastname: updatedUser.Lastname,
+        email: updatedUser.email,
+        phone_number: updatedUser.phone_number,
+        address: updatedUser.address,
+        role: updatedUser.role,
+        token: generateToken(updatedUser._id)
+    });
 });
 
 //---------------------------------------------------------------------------------------------------------------------//
@@ -193,41 +199,65 @@ const getUserById = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
 
-    if (user) {
-        // Check email uniqueness
-        if (req.body.email && req.body.email !== user.email) {
-            const emailExists = await User.findOne({ email: req.body.email });
-            if (emailExists) {
-                res.status(400).json({ message: 'Email already in use' });
-                return;
-            }
-        }
-
-        // Check phone number uniqueness
-        if (req.body.phone_number && req.body.phone_number !== user.phone_number) {
-            const phoneExists = await User.findOne({ phone_number: req.body.phone_number });
-            if (phoneExists) {
-                res.status(400).json({ message: 'Phone number already in use' });
-                return;
-            }
-        }
-
-        // Update fields
-        user.name = req.body.name || user.name;
-        user.email = req.body.email || user.email;
-        user.phone_number = req.body.phone_number || user.phone_number;
-        user.address = req.body.address || user.address;
-        user.role = req.body.role || user.role;
-
-        const updatedUser = await user.save();
-        res.json(updatedUser);
-    } else {
-        res.status(404).json({ message: 'User not found' });
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
     }
+
+    // Email uniqueness check
+    if (req.body.email && req.body.email !== user.email) {
+        const emailExists = await User.findOne({ email: req.body.email });
+        if (emailExists) {
+            res.status(400);
+            throw new Error('Email already in use');
+        }
+    }
+
+    // Phone number uniqueness check
+    if (req.body.phone_number && req.body.phone_number !== user.phone_number) {
+        const phoneExists = await User.findOne({ phone_number: req.body.phone_number });
+        if (phoneExists) {
+            res.status(400);
+            throw new Error('Phone number already in use');
+        }
+    }
+
+    // Update fields
+    user.Firstname = req.body.Firstname || user.Firstname;
+    user.Lastname = req.body.Lastname || user.Lastname;
+    user.email = req.body.email || user.email;
+    user.phone_number = req.body.phone_number || user.phone_number;
+    user.address = req.body.address || user.address;
+    user.role = req.body.role || user.role;
+
+    const updatedUser = await user.save();
+    res.json(updatedUser);
 });
 
 //---------------------------------------------------------------------------------------------------------------------//
 
+// @desc    Promote user to admin
+// @route   PUT /api/users/:id/promote
+// @access  Private/Admin
+const promoteToAdmin = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+    
+    if (user) {
+        user.role = 'admin';
+        const updatedUser = await user.save();
+        
+        res.json({
+            _id: updatedUser._id,
+            Firstname: updatedUser.Firstname,
+            Lastname: updatedUser.Lastname,
+            email: updatedUser.email,
+            role: updatedUser.role
+        });
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
+});
 
 export {
     registerUser,
@@ -237,5 +267,6 @@ export {
     getUsers,
     deleteUser,
     getUserById,
-    updateUser
+    updateUser,
+    promoteToAdmin
 };

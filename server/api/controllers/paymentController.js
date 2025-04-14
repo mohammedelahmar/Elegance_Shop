@@ -18,3 +18,6 @@ const processPayment = asyncHandler(async (req, res) => {
     const createdPayment = await payment.save();
     res.status(201).json(createdPayment);
 });
+
+export { processPayment };
+//           res.status(200).json(wishlist);

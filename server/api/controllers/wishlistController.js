@@ -1,7 +1,5 @@
-import Wishlist from "../../models/Wishlist";
+import Wishlist from "../../models/Wishlist.js";
 import asyncHandler from "express-async-handler";
-import { protect as authMiddleware } from "../../middlewares/authMiddleware";
-import adminMiddleware from "../../middlewares/adminMiddleware";
 
 // @desc   Get the current user's wishlist
 // @route  GET /api/wishlist
@@ -25,29 +23,27 @@ const getWishlist = asyncHandler(async (req, res) => {
 
 const addProductToWishlist = asyncHandler(async (req, res) => {
      try {
-          const UserId = req.user._id;
-          const { productId } = req.body;
-          const wishlist = await Wishlist.findOne({ user: UserId});
-          if(!wishlist){
-               const newWishlist = new Wishlist({
-                    user: UserId,
-                    products: [productId]
-               });    
-          }else{
-               if(!wishlist.products.includes(productID)){
-                    wishlist.products.push(productId);
-               }
-          }
-          await wishlist.save();
-          return res.status(200).json(wishlist);
-
-          
+         const userId = req.user._id;
+         const { productId } = req.body;
+         let wishlist = await Wishlist.findOne({ user: userId });
+         
+         if(!wishlist){
+             wishlist = new Wishlist({
+                 user: userId,
+                 products: [productId]
+             });    
+         } else {
+             if(!wishlist.products.includes(productId)){
+                 wishlist.products.push(productId);
+             }
+         }
+         
+         await wishlist.save();
+         return res.status(200).json(wishlist);
      } catch (error) {
-          return res.status(500).json({ message: error.message });
-          
+         return res.status(500).json({ message: error.message });
      }
-}
-);
+ });
 
 // @desc   Remove a product from the current user's wishlist
 // @route  DELETE /api/wishlist/:productId

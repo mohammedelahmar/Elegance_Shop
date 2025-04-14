@@ -7,16 +7,14 @@ import {
   updateProduct
 } from "../controllers/productController.js";
 
-import { protect as authMiddleware } from "../../middlewares/authMiddleware.js";
-import adminMiddleware from "../../middlewares/adminMiddleware.js"; // Corrected import
+import { protect, admin } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getProducts);
-// router.post("/", authMiddleware, adminMiddleware, createProduct);
-router.post("/",createProduct);
+router.post("/", protect, admin, createProduct);
 router.get("/:id", getProductById);
-router.put("/:id", authMiddleware, adminMiddleware, updateProduct);
-router.delete("/:id", authMiddleware, adminMiddleware, deleteProduct);
+router.put("/:id", protect, admin, updateProduct);
+router.delete("/:id", protect, admin, deleteProduct);
 
 export default router;
