@@ -133,11 +133,11 @@ const Products = () => {
         </div>
 
         <div className="products-count">
-          <p>Showing {filter.length} products</p>
+          <p>Showing {Array.isArray(filter) ? filter.length : 0} products</p>
         </div>
 
         <div className="product-grid">
-          {filter.map((product) => (
+          {Array.isArray(filter) && filter.map((product) => (
             <div className="product-card" key={product._id}>
               <div className="card-inner">
                 <div className="product-image">
