@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Footer, Navbar } from "../components";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaPhone, FaHome, FaVenusMars, FaCheck } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,9 @@ const Register = () => {
   });
 
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,6 +30,8 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
     
     try {
       const response = await fetch('http://localhost:5000/api/users/register', {
@@ -37,15 +43,27 @@ const Register = () => {
       });
 
       const data = await response.json();
-      setMessage(data.message || (response.ok ? 'Registration successful!' : 'Registration failed'));
       
-      if (response.ok) {
-        console.log('User registered:', data);
-        // Add redirect logic here
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
       }
+      
+      // Save user data and token
+      login(data);
+      
+      // Show success message briefly
+      setMessage('Registration successful! Redirecting...');
+      
+      // Redirect to home page
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
+
     } catch (error) {
-      setMessage('An error occurred. Please try again.');
+      setMessage(error.message || 'An error occurred. Please try again.');
       console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -204,8 +222,9 @@ const Register = () => {
                     }}
                     onMouseOver={e => e.target.style.opacity = '0.9'}
                     onMouseOut={e => e.target.style.opacity = '1'}
+                    disabled={isLoading}
                   >
-                    Create Account
+                    {isLoading ? "Creating Account..." : "Create Account"}
                   </button>
 
                   {/* Message Alert */}

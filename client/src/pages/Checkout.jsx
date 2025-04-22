@@ -1,72 +1,126 @@
-
 import React, { useState } from "react";
 import { Footer, Navbar } from "../components";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { api } from "../services/apiService";
+import { isAuthenticated } from "../services/authService";
 
-const Checkout = () => {
-  const state = useSelector((state) => state.handleCart);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    address: "",
-    address2: "",
-    country: "",
-    state: "",
-    zip: "",
-    paymentMethod: "credit"
-  });
-  const [errors, setErrors] = useState({});
-  const [isProcessing, setIsProcessing] = useState(false);
-  const navigate = useNavigate();
+
+
+  const Checkout = () => {
+    const state = useSelector((state) => state.handleCart);
+    const navigate = useNavigate();
+    
+    const [formData, setFormData] = useState({
+      firstName: "",
+      lastName: "",
+      email: "",
+      address: "",
+      address2: "",
+      country: "",
+      state: "",
+      zip: "",
+      paymentMethod: "credit"
+    });
+    
+    const [errors, setErrors] = useState({});
+    const [isProcessing, setIsProcessing] = useState(false);
   
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [id]: value
-    }));
+    // Calculate totals
+    const subtotal = state.reduce((total, item) => {
+      return total + (Number(item.price) * (item.quantity || 1));
+    }, 0);
     
-    // Clear error when field is edited
-    if (errors[id]) {
-      setErrors(prev => ({
-        ...prev,
-        [id]: ""
-      }));
-    }
-  };
+    const shipping = subtotal > 0 ? 10 : 0;
   
-  const validateForm = () => {
-    const newErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!emailRegex.test(formData.email)) newErrors.email = "Email is not valid";
-    if (!formData.address.trim()) newErrors.address = "Address is required";
-    if (!formData.country) newErrors.country = "Country is required";
-    if (!formData.state) newErrors.state = "State is required";
-    if (!formData.zip.trim()) newErrors.zip = "Zip code is required";
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    const handleChange = (e) => {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value
+      });
+    };
+    const validateForm = () => {
+      const newErrors = {};
+      
+      // Validate required fields
+      if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
+      if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+      if (!formData.email.trim()) newErrors.email = "Email is required";
+      else if (!/\S+@\S+\.\S+/.test(formData.email)) 
+        newErrors.email = "Email address is invalid";
+      
+      if (!formData.address.trim()) newErrors.address = "Address is required";
+      if (!formData.country.trim()) newErrors.country = "Country is required";
+      if (!formData.state.trim()) newErrors.state = "State is required";
+      if (!formData.zip.trim()) newErrors.zip = "Zip code is required";
+      
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
   
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-    
-    setIsProcessing(true);
-    
-    // Simulate processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      navigate('/order-success');
-    }, 2000);
-  };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      
+      if (!validateForm()) return;
+      
+      // Check if user is authenticated
+      if (!isAuthenticated()) {
+        navigate('/login?redirect=checkout');
+        return;
+      }
+      
+      setIsProcessing(true);
+      
+      try {
+        // 1. Create order
+        const orderData = {
+          orderItems: state.map(item => ({
+            product: item.id,
+            name: item.title,
+            quantity: item.quantity || 1,
+            price: item.price,
+            image: item.image
+          })),
+          shippingAddress: {
+            address: formData.address,
+            city: formData.state,
+            postalCode: formData.zip,
+            country: formData.country
+          },
+          paymentMethod: formData.paymentMethod,
+          itemsPrice: subtotal,
+          shippingPrice: shipping,
+          totalPrice: subtotal + shipping
+        };
+        
+        const order = await api.createOrder(orderData);
+        
+        // 2. Process payment
+        const paymentData = {
+          paymentMethod: formData.paymentMethod,
+          amount: subtotal + shipping,
+          currency: 'USD',
+          orderId: order._id,
+        };
+        
+        await api.processPayment(paymentData);
+        
+        // 3. Clear cart
+        if (isAuthenticated()) {
+          await api.clearCart();
+        }
+        
+        navigate('/order-success');
+      } catch (error) {
+        console.error("Checkout failed:", error);
+        setErrors({
+          ...errors,
+          submit: error.message || "Checkout failed. Please try again."
+        });
+      } finally {
+        setIsProcessing(false);
+      }
+    };
 
   const EmptyCart = () => {
     return (

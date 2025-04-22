@@ -1,18 +1,22 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Footer, Navbar } from "../components";
 import { FaEnvelope, FaLock, FaSignInAlt } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -20,26 +24,39 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setIsLoading(true);
+    setMessage("");
+
     try {
-      const response = await fetch('http://localhost:5000/api/users/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/users/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(formData)
       });
 
       const data = await response.json();
-      setMessage(data.message || (response.ok ? 'Login successful!' : 'Login failed'));
-      
-      if (response.ok) {
-        console.log('User login:', data);
-        // Redirect logic here
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
       }
+
+      // Save user data and token
+      login(data);
+
+      // Show success message briefly
+      setMessage("Login successful! Redirecting...");
+
+      // Redirect to home page
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     } catch (error) {
-      setMessage('An error occurred. Please try again.');
-      console.error('Error:', error);
+      setMessage(error.message || "An error occurred. Please try again.");
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -72,8 +89,8 @@ const Login = () => {
                         onChange={handleChange}
                         required
                         style={{
-                          borderLeft: 'none',
-                          borderRadius: '0.375rem'
+                          borderLeft: "none",
+                          borderRadius: "0.375rem"
                         }}
                       />
                     </div>
@@ -102,40 +119,49 @@ const Login = () => {
                         className="form-check-input"
                         id="rememberMe"
                       />
-                      <label className="form-check-label text-secondary" htmlFor="rememberMe">
+                      <label
+                        className="form-check-label text-secondary"
+                        htmlFor="rememberMe"
+                      >
                         Remember me
                       </label>
                     </div>
-                    <Link to="/forgot-password" className="text-decoration-none text-primary">
+                    <Link
+                      to="/forgot-password"
+                      className="text-decoration-none text-primary"
+                    >
                       Forgot Password?
                     </Link>
                   </div>
 
-                  <button 
-                    className="btn btn-primary btn-lg w-100 mb-3" 
+                  <button
+                    className="btn btn-primary btn-lg w-100 mb-3"
                     type="submit"
+                    disabled={isLoading}
                     style={{
-                      background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                      border: 'none',
-                      transition: 'all 0.3s ease'
+                      background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+                      border: "none",
+                      transition: "all 0.3s ease"
                     }}
-                    onMouseOver={e => e.target.style.opacity = '0.9'}
-                    onMouseOut={e => e.target.style.opacity = '1'}
                   >
-                    <FaSignInAlt className="me-2" />
-                    Sign In
+                    {isLoading ? (
+                      <span>Processing...</span>
+                    ) : (
+                      <>
+                        <FaSignInAlt className="me-2" />
+                        Sign In
+                      </>
+                    )}
                   </button>
 
                   {message && (
-                    <div className={`alert ${message.includes('success') ? 'alert-success' : 'alert-danger'} mt-3`}>
-                      {message}
-                    </div>
+                    <div className="alert alert-info mt-3">{message}</div>
                   )}
 
                   <div className="text-center mt-4">
                     <span className="text-muted">Don't have an account? </span>
-                    <Link 
-                      to="/register" 
+                    <Link
+                      to="/register"
                       className="text-decoration-none text-primary fw-semibold"
                     >
                       Create Account

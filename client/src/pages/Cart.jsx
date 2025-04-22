@@ -1,19 +1,77 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Footer, Navbar } from "../components";
 import { useSelector, useDispatch } from "react-redux";
 import { addCart, delCart } from "../redux/action";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "../services/apiService";
+import { isAuthenticated } from "../services/authService";
 
 const Cart = () => {
   const state = useSelector((state) => state.handleCart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [syncingCart, setSyncingCart] = useState(false);
 
-  const addItem = (product) => {
+  // Sync cart with backend when component mounts (if user is logged in)
+  useEffect(() => {
+    const syncCartWithServer = async () => {
+      if (isAuthenticated()) {
+        try {
+          setSyncingCart(true);
+          
+          // Get cart from server
+          const serverCart = await api.getCart();
+          
+          // Clear server cart first
+          if (serverCart.data.length > 0) {
+            await api.clearCart();
+          }
+          
+          // Add each item from Redux to server
+          for (const item of state) {
+            await api.addToCart({
+              product_id: item.id,
+              quantity: item.quantity || 1
+            });
+          }
+        } catch (error) {
+          console.error("Failed to sync cart:", error);
+        } finally {
+          setSyncingCart(false);
+        }
+      }
+    };
+    
+    syncCartWithServer();
+  }, [state]);
+
+  const addItem = async (product) => {
     dispatch(addCart(product));
+    
+    // If authenticated, also update server cart
+    if (isAuthenticated()) {
+      try {
+        await api.addToCart({
+          product_id: product.id,
+          quantity: 1
+        });
+      } catch (error) {
+        console.error("Failed to add item to server cart:", error);
+      }
+    }
   };
   
-  const removeItem = (product) => {
+  const removeItem = async (product) => {
     dispatch(delCart(product));
+    
+    // If authenticated, also update server cart
+    if (isAuthenticated() && product.cartItemId) {
+      try {
+        await api.removeFromCart(product.cartItemId);
+      } catch (error) {
+        console.error("Failed to remove item from server cart:", error);
+      }
+    }
   };
 
   const EmptyCart = () => {

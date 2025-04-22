@@ -6,6 +6,7 @@ import Marquee from "react-fast-marquee";
 import { useDispatch } from "react-redux";
 import { addCart } from "../redux/action";
 import { Footer, Navbar } from "../components";
+import { getProductById, getProducts } from "../services/api";
 
 const Product = () => {
   const { id } = useParams();
@@ -267,6 +268,43 @@ const Product = () => {
       </div>
     );
   };
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const data = await getProductById(id);
+        setProduct(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        setLoading(false);
+      }
+    };
+    
+    const fetchSimilarProducts = async () => {
+      setLoading2(true);
+      try {
+        // Get products in the same category if the product has loaded
+        if (product && product.category) {
+          const data = await getProducts({ category: product.category });
+          // Filter out the current product and limit to 8 similar products
+          const filtered = data.filter(p => p._id !== id).slice(0, 8);
+          setSimilarProducts(filtered);
+        } else {
+          // If no category yet, just get some products
+          const data = await getProducts({ limit: 8 });
+          setSimilarProducts(data);
+        }
+        setLoading2(false);
+      } catch (error) {
+        console.error("Error fetching similar products:", error);
+        setLoading2(false);
+      }
+    };
+
+    fetchProduct();
+    fetchSimilarProducts();
+  }, [id, product?.category]);
 
   return (
     <>

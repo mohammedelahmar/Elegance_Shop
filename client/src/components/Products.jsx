@@ -4,6 +4,7 @@ import { addCart } from "../redux/action";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Link } from "react-router-dom";
+import { getProducts } from "../services/api";
 
 const Products = () => {
   const [data, setData] = useState([]);
@@ -20,16 +21,13 @@ const Products = () => {
   };
 
   useEffect(() => {
-    const getProducts = async () => {
+    const fetchProducts = async () => {
       setLoading(true);
       try {
-        // Fetch all products from the local API endpoint
-        const response = await fetch("http://localhost:5000/api/products");
-        const productsData = await response.json();
-
+        const data = await getProducts();
         if (componentMounted.current) {
-          setData(productsData);
-          setFilter(productsData);
+          setData(data);
+          setFilter(data);
           setLoading(false);
         }
       } catch (error) {
@@ -40,10 +38,9 @@ const Products = () => {
       }
     };
 
-    getProducts();
+    fetchProducts();
 
     return () => {
-      // Clean up
       componentMounted.current = false;
     };
   }, []);

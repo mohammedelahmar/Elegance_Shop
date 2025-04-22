@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const state = useSelector((state) => state.handleCart);
   const [scrolled, setScrolled] = useState(false);
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +18,11 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   const styles = `
     .navbar {
       transition: all 0.3s ease;
@@ -212,14 +220,56 @@ const Navbar = () => {
             </ul>
             
             <div className="d-flex gap-3 buttons-container">
-              <NavLink to="/login" className="btn btn-outline-nav">
-                <i className="fas fa-sign-in-alt"></i>
-                Login
-              </NavLink>
-              <NavLink to="/register" className="btn btn-outline-nav">
-                <i className="fas fa-user-plus"></i>
-                Register
-              </NavLink>
+              {currentUser ? (
+                <>
+                  <span className="nav-welcome d-none d-lg-flex align-items-center text-light">
+                    Welcome, {currentUser.Firstname}
+                  </span>
+                  <div className="dropdown">
+                    <button 
+                      className="btn btn-primary-nav dropdown-toggle"
+                      type="button"
+                      id="userDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i className="fas fa-user"></i>
+                      Account
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                      <li>
+                        <NavLink to="/profile" className="dropdown-item">
+                          <i className="fas fa-user-circle me-2"></i> Profile
+                        </NavLink>
+                      </li>
+                      {currentUser.role === 'admin' && (
+                        <li>
+                          <NavLink to="/admin" className="dropdown-item">
+                            <i className="fas fa-cog me-2"></i> Admin Dashboard
+                          </NavLink>
+                        </li>
+                      )}
+                      <li><hr className="dropdown-divider" /></li>
+                      <li>
+                        <button onClick={handleLogout} className="dropdown-item text-danger">
+                          <i className="fas fa-sign-out-alt me-2"></i> Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <NavLink to="/login" className="btn btn-outline-nav">
+                    <i className="fas fa-sign-in-alt"></i>
+                    Login
+                  </NavLink>
+                  <NavLink to="/register" className="btn btn-outline-nav">
+                    <i className="fas fa-user-plus"></i>
+                    Register
+                  </NavLink>
+                </>
+              )}
               <NavLink to="/cart" className="btn btn-primary-nav position-relative">
                 <i className="fas fa-shopping-cart"></i>
                 Cart
