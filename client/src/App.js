@@ -4,8 +4,6 @@ import { Provider } from 'react-redux';
 import { AuthProvider } from './context/AuthContext';
 import store from './redux/store';
 
-// Import layout and routes - using the correct case as it exists on your disk
-import Layout from './components/layout/layout'; // Use all lowercase to match the file on disk
 import AppRoutes from './routes/AppRoutes';
 
 function App() {
@@ -13,9 +11,7 @@ function App() {
     <Provider store={store}>
       <AuthProvider>
         <Router>
-          <Layout>
-            <AppRoutes />
-          </Layout>
+          <AppRoutes />
         </Router>
       </AuthProvider>
     </Provider>
