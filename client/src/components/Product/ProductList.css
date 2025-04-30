@@ -1,0 +1,14 @@
+.product-list-container {
+  padding: 1rem 0;
+}
+
+.filter-panel {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  margin-bottom: 2rem;
+}
+
+.pagination {
+  justify-content: center;
+}

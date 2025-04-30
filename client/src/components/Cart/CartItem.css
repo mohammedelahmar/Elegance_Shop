@@ -1,0 +1,16 @@
+.cart-item-image {
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.quantity-control .form-control {
+  width: 60px;
+}
+
+.cart-item {
+  transition: background-color 0.2s;
+}
+
+.cart-item:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
