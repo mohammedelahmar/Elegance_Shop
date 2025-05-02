@@ -1,21 +1,36 @@
-import React, { useState } from 'react';
-import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Navbar, Nav, Container, Badge, NavDropdown, Form, InputGroup } from 'react-bootstrap';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSelector } from 'react-redux';
-import { FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
+import { FaShoppingCart, FaUser, FaTags, FaClipboardList, FaHome, FaInfoCircle, FaEnvelope, FaSearch } from 'react-icons/fa';
 import Button from '../UI/Button';
-import Input from '../UI/Input';
+import './Header.css';
 
 const Header = () => {
   const { currentUser, isAuthenticated, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [expanded, setExpanded] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [scrolled, setScrolled] = useState(false);
+  const [searchExpanded, setSearchExpanded] = useState(false);
 
   // Get cart state from Redux
   const { cartItems = [] } = useSelector((state) => state.cart || {});
   const cartItemsCount = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
+
+  // Handle scroll effect for navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
 
   const handleLogout = () => {
     logout();
@@ -23,107 +38,173 @@ const Header = () => {
   };
 
   const closeNavbar = () => setExpanded(false);
-  
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
-      setSearchTerm('');
-      closeNavbar();
+
+  const isActive = (path) => {
+    if (path === '/' && location.pathname === '/') return true;
+    return path !== '/' && location.pathname.startsWith(path);
+  };
+
+  const handleSearchToggle = () => {
+    setSearchExpanded(!searchExpanded);
+  };
+
+  const handleSearchBlur = () => {
+    if (searchExpanded && window.innerWidth > 991) {
+      // Small delay to allow for clicking the search icon
+      setTimeout(() => setSearchExpanded(false), 200);
     }
   };
 
   return (
-    <Navbar bg="light" variant="light" expand="lg" sticky="top" expanded={expanded} className="shadow-sm mb-3">
+    <Navbar 
+      expand="lg" 
+      expanded={expanded} 
+      className={`main-navbar ${scrolled ? 'navbar-scrolled' : ''}`}
+      fixed="top"
+    >
       <Container>
-        <Navbar.Brand as={Link} to="/" onClick={closeNavbar}>
-          My E-Shop
+        <Navbar.Brand as={Link} to="/" onClick={closeNavbar} className="brand">
+          <span className="brand-text">Elegance</span>
+          <span className="brand-accent">Shop</span>
         </Navbar.Brand>
         
-        <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(!expanded)} />
+        <Navbar.Toggle aria-controls="main-nav" onClick={() => setExpanded(!expanded)} />
         
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/" onClick={closeNavbar}>Home</Nav.Link>
-            <Nav.Link as={Link} to="/products" onClick={closeNavbar}>Products</Nav.Link>
-            <Nav.Link as={Link} to="/about" onClick={closeNavbar}>About</Nav.Link>
-            <Nav.Link as={Link} to="/contact" onClick={closeNavbar}>Contact</Nav.Link>
+        <Navbar.Collapse id="main-nav">
+          <Nav className="mx-auto">
+            <Nav.Link 
+              as={Link} 
+              to="/" 
+              onClick={closeNavbar} 
+              className={`nav-item ${isActive('/') ? 'active' : ''}`}
+            >
+              <FaHome className="nav-icon" />
+              <span>Home</span>
+            </Nav.Link>
+            <Nav.Link 
+              as={Link} 
+              to="/products" 
+              onClick={closeNavbar} 
+              className={`nav-item ${isActive('/products') ? 'active' : ''}`}
+            >
+              <FaTags className="nav-icon" />
+              <span>Products</span>
+            </Nav.Link>
+            <Nav.Link 
+              as={Link} 
+              to="/about" 
+              onClick={closeNavbar}
+              className={`nav-item ${isActive('/about') ? 'active' : ''}`}
+            >
+              <FaInfoCircle className="nav-icon" />
+              <span>About</span>
+            </Nav.Link>
+            <Nav.Link 
+              as={Link} 
+              to="/contact" 
+              onClick={closeNavbar}
+              className={`nav-item ${isActive('/contact') ? 'active' : ''}`}
+            >
+              <FaEnvelope className="nav-icon" />
+              <span>Contact</span>
+            </Nav.Link>
             
             {isAuthenticated && isAdmin && (
-              <NavDropdown title="Admin" id="admin-dropdown">
-                <NavDropdown.Item as={Link} to="/admin/dashboard" onClick={closeNavbar}>
+              <NavDropdown 
+                title={<span className="admin-dropdown">Admin Panel</span>} 
+                id="admin-dropdown"
+                className={`${isActive('/admin') ? 'active' : ''}`}
+              >
+                <NavDropdown.Item as={Link} to="/admin/dashboard" onClick={closeNavbar} className="dropdown-item">
                   Dashboard
                 </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/admin/products" onClick={closeNavbar}>
+                <NavDropdown.Item as={Link} to="/admin/products" onClick={closeNavbar} className="dropdown-item">
                   Products
                 </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/admin/orders" onClick={closeNavbar}>
+                <NavDropdown.Item as={Link} to="/admin/orders" onClick={closeNavbar} className="dropdown-item">
                   Orders
                 </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/admin/users" onClick={closeNavbar}>
+                <NavDropdown.Item as={Link} to="/admin/users" onClick={closeNavbar} className="dropdown-item">
                   Users
                 </NavDropdown.Item>
               </NavDropdown>
             )}
           </Nav>
 
-          <form className="d-flex me-3 my-2 my-lg-0" onSubmit={handleSearch}>
-            <div className="d-flex">
-              <Input
-                type="search"
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                icon={FaSearch}
-                iconPosition="right"
-                className="me-2"
-                fullWidth={false}
-              />
+          {/* Animated Search Form */}
+          <Form className={`search-form ${searchExpanded ? 'expanded' : 'collapsed'}`}>
+            <div className="search-form-container">
+              <InputGroup>
+                <Form.Control
+                  type="search"
+                  placeholder="Search products..."
+                  className="search-input"
+                  aria-label="Search"
+                  onBlur={handleSearchBlur}
+                  ref={input => searchExpanded && input && input.focus()}
+                />
+                <div 
+                  className="search-icon-wrapper"
+                  onClick={handleSearchToggle}
+                >
+                  <FaSearch className="search-icon" />
+                </div>
+              </InputGroup>
             </div>
-          </form>
+          </Form>
 
-          <Nav className="ms-auto">
-            <Nav.Link as={Link} to="/cart" className="me-3" onClick={closeNavbar}>
-              <FaShoppingCart className="me-1" />
-              Cart
-              {cartItemsCount > 0 && (
-                <Badge bg="danger" pill className="ms-1">
-                  {cartItemsCount}
-                </Badge>
-              )}
+          <div className="navbar-actions">
+            <Nav.Link 
+              as={Link} 
+              to="/cart" 
+              onClick={closeNavbar} 
+              className={`cart-link ${isActive('/cart') ? 'active' : ''}`}
+            >
+              <div className="cart-icon-container">
+                <FaShoppingCart className="cart-icon" />
+                {cartItemsCount > 0 && (
+                  <Badge className="cart-badge">
+                    {cartItemsCount}
+                  </Badge>
+                )}
+              </div>
             </Nav.Link>
 
             {isAuthenticated ? (
               <NavDropdown 
                 title={
-                  <span>
-                    <FaUser className="me-1" />
-                    {currentUser?.Firstname || 'Account'}
-                  </span>
+                  <div className="user-dropdown-toggle">
+                    <FaUser className="user-icon" />
+                    <span className="user-name">{currentUser?.Firstname || 'Account'}</span>
+                  </div>
                 } 
                 id="user-dropdown"
+                align="end"
               >
-                <NavDropdown.Item as={Link} to="/profile" onClick={closeNavbar}>
+                <div className="dropdown-user-header">
+                  <strong>Hello, {currentUser?.Firstname || 'User'}</strong>
+                </div>
+                <NavDropdown.Divider />
+                <NavDropdown.Item as={Link} to="/profile" onClick={closeNavbar} className="dropdown-item">
                   My Profile
                 </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/orders" onClick={closeNavbar}>
+                <NavDropdown.Item as={Link} to="/orders" onClick={closeNavbar} className="dropdown-item">
+                  <FaClipboardList className="me-2" />
                   My Orders
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={() => { handleLogout(); closeNavbar(); }}>
+                <NavDropdown.Item onClick={() => { handleLogout(); closeNavbar(); }} className="dropdown-item logout">
                   Logout
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <>
+              <div className="auth-buttons">
                 <Button 
                   as={Link} 
                   to="/login" 
-                  variant="outline-primary" 
-                  className="me-2"
+                  variant="text"
                   onClick={closeNavbar}
-                  icon={FaUser}
-                  size="sm"
+                  className="login-btn"
                 >
                   Login
                 </Button>
@@ -132,13 +213,13 @@ const Header = () => {
                   to="/register" 
                   variant="primary"
                   onClick={closeNavbar}
-                  size="sm"
+                  className="register-btn"
                 >
                   Register
                 </Button>
-              </>
+              </div>
             )}
-          </Nav>
+          </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>
