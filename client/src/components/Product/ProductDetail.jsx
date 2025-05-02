@@ -9,9 +9,24 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
 
+// Add this helper function near the top of the component
+const formatPrice = (price) => {
+  if (!price) return '0.00';
+  
+  // Handle Decimal128 format from MongoDB
+  if (typeof price === 'object' && price.$numberDecimal) {
+    return parseFloat(price.$numberDecimal).toFixed(2);
+  }
+  
+  // Handle regular number or string
+  return parseFloat(price).toFixed(2);
+};
+
 const ProductDetail = ({ product, variants, onAddToCart }) => {
   const dispatch = useDispatch();
-  const { addItem } = useCart();
+  const cart = useCart();
+  // Safely access addItem, or provide a fallback function
+  const addItem = cart?.addItem || (async () => console.log('Cart context not available'));
   const navigate = useNavigate();
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -67,7 +82,8 @@ const ProductDetail = ({ product, variants, onAddToCart }) => {
       
       dispatch(addToCart(itemToAdd));
       
-      if (addItem) {
+      // Use the safe version of addItem 
+      if (cart) {
         await addItem(
           product._id, 
           quantity, 
@@ -111,7 +127,7 @@ const ProductDetail = ({ product, variants, onAddToCart }) => {
         <h1 className="mb-2">{product.name}</h1>
         
         <h2 className="product-price mb-3">
-          ${selectedVariant ? (selectedVariant.price?.toFixed(2) || product.price?.toFixed(2)) : product.price?.toFixed(2)}
+          ${selectedVariant ? formatPrice(selectedVariant.price || product.price) : formatPrice(product.price)}
         </h2>
         
         {isOutOfStock ? (

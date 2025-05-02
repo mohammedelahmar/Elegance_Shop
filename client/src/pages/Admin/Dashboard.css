@@ -1,0 +1,25 @@
+.dashboard-stat-card {
+  transition: all 0.3s ease;
+}
+
+.dashboard-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dashboard-stat-card h3 {
+  font-weight: 600;
+}
+
+.quick-action-btn {
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.quick-action-btn svg {
+  font-size: 1.5rem;
+}

@@ -16,6 +16,19 @@ const ProductCard = ({ product }) => {
     dispatch(addToCart({ ...product, quantity: 1 }));
   };
 
+  // Helper function to safely format price
+  const formatPrice = (price) => {
+    if (!price) return '0.00';
+    
+    // Handle Decimal128 format from MongoDB
+    if (typeof price === 'object' && price.$numberDecimal) {
+      return parseFloat(price.$numberDecimal).toFixed(2);
+    }
+    
+    // Handle regular number or string
+    return parseFloat(price).toFixed(2);
+  };
+
   return (
     <Card className="product-card h-100">
       <div className="product-image-container">
@@ -41,7 +54,7 @@ const ProductCard = ({ product }) => {
         <div className="mt-auto">
           <div className="d-flex justify-content-between align-items-center mt-2">
             <span className="product-price">
-              ${(product.price || 0).toFixed(2)}
+              ${formatPrice(product.price)}
             </span>
             <Button 
               variant="outline-primary" 

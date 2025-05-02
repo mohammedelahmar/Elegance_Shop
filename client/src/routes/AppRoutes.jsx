@@ -18,14 +18,17 @@ const Profile = lazy(() => import('../pages/ProfilePage'));
 const OrderHistory = lazy(() => import('../pages/OrderHistoryPage'));
 const OrderDetail = lazy(() => import('../pages/OrderPage'));
 const Wishlist = lazy(() => import('../pages/WishlistPage'));
-// const NotFound = lazy(() => import('../pages/NotFound'));
+const NotFound = lazy(() => import('../pages/NotFound'));
 
 // Admin pages
-// const Dashboard = lazy(() => import('../pages/admin/'));
-// const ProductManagement = lazy(() => import('../pages/admin/ProductManagement'));
-// const CategoryManagement = lazy(() => import('../pages/admin/CategoryManagement'));
-// const OrderManagement = lazy(() => import('../pages/admin/OrderManagement'));
-// const UserManagement = lazy(() => import('../pages/admin/UserManagement'));
+const Dashboard = lazy(() => import('../pages/Admin/Dashboard'));
+const ProductManagement = lazy(() => import('../pages/Admin/ProductsPage'));
+const CategoryManagement = lazy(() => import('../pages/Admin/CategoriesPage'));
+const VariantManagement = lazy(() => import('../pages/Admin/VariantsPage'));
+const OrderManagement = lazy(() => import('../pages/Admin/OrdersPage'));
+const UserManagement = lazy(() => import('../pages/Admin/UsersPage'));
+const ReviewManagement = lazy(() => import('../pages/Admin/ReviewsPage'));
+const AddressManagement = lazy(() => import('../pages/Admin/AddressesPage'));
 
 const LoadingFallback = () => (
   <div className="page-loader">
@@ -58,17 +61,21 @@ const AppRoutes = () => {
           </Route>
           
           {/* Admin routes - require admin role */}
-          {/* <Route element={<AdminRoute />}>
+          <Route element={<AdminRoute />}>
             <Route path="/admin" element={<Dashboard />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/products" element={<ProductManagement />} />
             <Route path="/admin/categories" element={<CategoryManagement />} />
+            <Route path="/admin/variants" element={<VariantManagement />} />
             <Route path="/admin/orders" element={<OrderManagement />} />
             <Route path="/admin/users" element={<UserManagement />} />
-          </Route> */}
+            <Route path="/admin/reviews" element={<ReviewManagement />} />
+            <Route path="/admin/addresses" element={<AddressManagement />} />
+          </Route>
           
           {/* Catch all route for 404 */}
-          {/* <Route path="/404" element={<NotFound />} />
-          <Route path="*" element={<Navigate to="/404" replace />} /> */}
+          <Route path="/404" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/404" replace />} />
         </Route>
       </Routes>
     </Suspense>

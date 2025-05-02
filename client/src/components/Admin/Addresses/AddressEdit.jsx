@@ -3,35 +3,50 @@ import { Modal, Form, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Input from '../../UI/Input';
 import Button from '../../UI/Button';
-import { updateUser } from '../../../api/user';
+import { updateAddress } from '../../../api/address';
+import { getAllUsers } from '../../../api/user';
 import { FaSave } from 'react-icons/fa';
 
-const UserEdit = ({ user, show, onHide, onUserUpdated }) => {
+const AddressEdit = ({ address, show, onHide, onAddressUpdated }) => {
   const [formData, setFormData] = useState({
-    Firstname: '',
-    Lastname: '',
-    email: '',
-    phone_number: '',
+    user: '',
     address: '',
-    role: '',
-    password: ''
+    city: '',
+    country: '',
+    postal_code: '',
+    phone_number: ''
   });
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (user) {
+    if (address) {
       setFormData({
-        Firstname: user.Firstname || '',
-        Lastname: user.Lastname || '',
-        email: user.email || '',
-        phone_number: user.phone_number || '',
-        address: user.address || '',
-        role: user.role || 'client',
-        password: ''
+        user: address.user?._id || address.user || '',
+        address: address.address || '',
+        city: address.city || '',
+        country: address.country || '',
+        postal_code: address.postal_code || '',
+        phone_number: address.phone_number || ''
       });
     }
-  }, [user]);
+  }, [address]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await getAllUsers();
+        setUsers(data);
+      } catch (err) {
+        setError('Failed to load users. Please refresh and try again.');
+      }
+    };
+
+    if (show) {
+      fetchUsers();
+    }
+  }, [show]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,14 +59,8 @@ const UserEdit = ({ user, show, onHide, onUserUpdated }) => {
       setLoading(true);
       setError('');
       
-      // Create a data object without password if it's empty
-      const updateData = { ...formData };
-      if (!updateData.password) {
-        delete updateData.password;
-      }
-      
-      await updateUser(user._id, updateData);
-      onUserUpdated();
+      await updateAddress(address._id, formData);
+      onAddressUpdated();
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -59,36 +68,57 @@ const UserEdit = ({ user, show, onHide, onUserUpdated }) => {
     }
   };
 
-  const roleOptions = [
-    { value: 'client', label: 'Client' },
-    { value: 'admin', label: 'Admin' }
-  ];
-
   return (
     <Modal show={show} onHide={onHide} backdrop="static" keyboard={false} size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>Edit User</Modal.Title>
+        <Modal.Title>Edit Address</Modal.Title>
       </Modal.Header>
       
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
           {error && <div className="alert alert-danger">{error}</div>}
           
+          <Input
+            label="User"
+            as="select"
+            name="user"
+            value={formData.user}
+            onChange={handleChange}
+            required
+            options={[
+              { value: '', label: 'Select User' },
+              ...users.map(user => ({
+                value: user._id,
+                label: `${user.Firstname} ${user.Lastname} (${user.email})`
+              }))
+            ]}
+          />
+          
+          <Input
+            label="Street Address"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+            as="textarea"
+            rows={2}
+          />
+          
           <Row>
             <Col md={6}>
               <Input
-                label="First Name"
-                name="Firstname"
-                value={formData.Firstname}
+                label="City"
+                name="city"
+                value={formData.city}
                 onChange={handleChange}
                 required
               />
             </Col>
             <Col md={6}>
               <Input
-                label="Last Name"
-                name="Lastname"
-                value={formData.Lastname}
+                label="Postal Code"
+                name="postal_code"
+                value={formData.postal_code}
                 onChange={handleChange}
                 required
               />
@@ -96,47 +126,19 @@ const UserEdit = ({ user, show, onHide, onUserUpdated }) => {
           </Row>
           
           <Input
-            label="Email Address"
-            type="email"
-            name="email"
-            value={formData.email}
+            label="Country"
+            name="country"
+            value={formData.country}
             onChange={handleChange}
             required
           />
           
           <Input
             label="Phone Number"
-            type="tel"
             name="phone_number"
             value={formData.phone_number}
             onChange={handleChange}
             required
-          />
-          
-          <Input
-            label="Address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-          />
-          
-          <Input
-            label="Role"
-            as="select"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            options={roleOptions}
-          />
-          
-          <Input
-            label="New Password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            helperText="Leave empty to keep the current password"
           />
         </Modal.Body>
         
@@ -158,11 +160,11 @@ const UserEdit = ({ user, show, onHide, onUserUpdated }) => {
   );
 };
 
-UserEdit.propTypes = {
-  user: PropTypes.object,
+AddressEdit.propTypes = {
+  address: PropTypes.object,
   show: PropTypes.bool.isRequired,
   onHide: PropTypes.func.isRequired,
-  onUserUpdated: PropTypes.func.isRequired
+  onAddressUpdated: PropTypes.func.isRequired
 };
 
-export default UserEdit;
+export default AddressEdit;

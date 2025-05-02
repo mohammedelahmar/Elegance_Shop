@@ -141,9 +141,64 @@ const deleteReview = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Get all reviews (admin only)
+ * @route   GET /api/reviews
+ * @access  Private/Admin
+ */
+const getAllReviews = async (req, res, next) => {
+  try {
+    const reviews = await Review.find({})
+      .populate('user_id', 'Firstname Lastname email')
+      .populate('product_id', 'name image_url');
+    
+    res.status(200).json({
+      success: true,
+      count: reviews.length,
+      data: reviews
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Update review status (admin only)
+ * @route   PUT /api/reviews/admin/:id
+ * @access  Private/Admin
+ */
+const updateReviewStatus = async (req, res, next) => {
+  try {
+    const { approved } = req.body;
+    
+    let review = await Review.findById(req.params.id);
+    
+    if (!review) {
+      res.status(404);
+      throw new Error('Review not found');
+    }
+    
+    review = await Review.findByIdAndUpdate(
+      req.params.id,
+      { approved },
+      { new: true, runValidators: true }
+    ).populate('user_id', 'Firstname Lastname email')
+      .populate('product_id', 'name image_url');
+    
+    res.status(200).json({
+      success: true,
+      data: review
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   getProductReviews,
   addReview,
   updateReview,
-  deleteReview
+  deleteReview,
+  getAllReviews,
+  updateReviewStatus
 };

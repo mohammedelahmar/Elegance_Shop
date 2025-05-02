@@ -39,10 +39,21 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     }
   };
 
-  const productUrl = `/products/${item.product_id}`;
-  const productImageUrl = item.product?.image_url || 'https://via.placeholder.com/100x100?text=No+Image';
-  const productName = item.product?.name || 'Unknown Product';
-  const productPrice = item.product?.price || 0;
+  const productUrl = `/products/${item.product_id?._id || item.product_id}`;
+  const productImageUrl = item.product_id?.image_url || 'https://via.placeholder.com/100x100?text=No+Image';
+  const productName = item.product_id?.name || 'Unknown Product';
+
+  const getProductPrice = () => {
+    if (!item.product_id?.price) return 0;
+    
+    if (typeof item.product_id.price === 'object' && item.product_id.price.$numberDecimal) {
+      return parseFloat(item.product_id.price.$numberDecimal);
+    }
+    
+    return parseFloat(item.product_id.price) || 0;
+  };
+
+  const productPrice = getProductPrice();
   const totalPrice = productPrice * quantity;
 
   return (

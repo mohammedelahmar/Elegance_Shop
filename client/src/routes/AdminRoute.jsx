@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext';
  * Redirects to home page if user is not an admin
  */
 const AdminRoute = () => {
-  const { isAuthenticated, isAdmin, loading, currentUser } = useAuth();
+  const { isAuthenticated, isAdmin, loading } = useAuth();
   const location = useLocation();
   
   // Show loading state while checking authentication
