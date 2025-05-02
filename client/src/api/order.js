@@ -39,7 +39,7 @@ export const getAllOrders = async () => {
 };
 
 /**
- * Update order to paid status
+ * Update order to paid status manually (admin only)
  * @param {string} id - Order ID
  * @param {Object} paymentResult - Payment result details
  * @returns {Promise} - Promise with updated order

@@ -1,18 +1,24 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { AuthProvider } from './context/AuthContext';
 import store from './redux/store';
-
+import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { WishlistProvider } from './context/WishlistContext';
 import AppRoutes from './routes/AppRoutes';
+import './App.css';
 
 function App() {
   return (
     <Provider store={store}>
       <AuthProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
+        <CartProvider>
+          <WishlistProvider>
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </WishlistProvider>
+        </CartProvider>
       </AuthProvider>
     </Provider>
   );

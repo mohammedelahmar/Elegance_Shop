@@ -17,8 +17,11 @@ export const getCart = async () => {
  * @returns {Promise} - Promise with updated cart
  */
 export const addToCart = async (productId, quantity = 1, variantId = null) => {
-  const payload = { productId, quantity };
-  if (variantId) payload.variantId = variantId;
+  const payload = { 
+    product_id: productId, // Change productId to product_id to match server expectation
+    quantity 
+  };
+  if (variantId) payload.variant_id = variantId;
   
   const { data } = await axios.post('/cart', payload);
   return data;

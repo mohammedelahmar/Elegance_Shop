@@ -19,8 +19,18 @@ export const CartProvider = ({ children }) => {
   // Calculate derived values
   const itemsCount = cartItems.reduce((count, item) => count + item.quantity, 0);
   
+  // FIX: Safely calculate subtotal by checking if product_id exists and has price
   const subtotal = cartItems.reduce(
-    (total, item) => total + item.product.price * item.quantity, 
+    (total, item) => {
+      // Handle MongoDB Decimal128 price format or regular price
+      const price = item.product_id ? 
+        (typeof item.product_id.price === 'object' && item.product_id.price.$numberDecimal ? 
+          parseFloat(item.product_id.price.$numberDecimal) : 
+          (parseFloat(item.product_id.price) || 0)) : 
+        0;
+      
+      return total + price * item.quantity;
+    }, 
     0
   );
 
@@ -40,7 +50,7 @@ export const CartProvider = ({ children }) => {
     setError(null);
     try {
       const data = await getCart();
-      setCartItems(data.items || []);
+      setCartItems(data.data || []);
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to fetch cart');
       console.error('Error fetching cart:', error);
@@ -54,7 +64,8 @@ export const CartProvider = ({ children }) => {
     setError(null);
     try {
       const data = await addToCart(productId, quantity, variantId);
-      setCartItems(data.items || []);
+      // Fetch the updated cart after adding an item
+      await fetchCart();
       return data;
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to add item to cart');
@@ -67,7 +78,8 @@ export const CartProvider = ({ children }) => {
     setError(null);
     try {
       const data = await updateCartItem(itemId, quantity);
-      setCartItems(data.items || []);
+      // Fetch the updated cart after updating an item
+      await fetchCart();
       return data;
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to update item');
@@ -80,7 +92,8 @@ export const CartProvider = ({ children }) => {
     setError(null);
     try {
       const data = await removeFromCart(itemId);
-      setCartItems(data.items || []);
+      // Fetch the updated cart after removing an item
+      await fetchCart();
       return data;
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to remove item');
@@ -108,9 +121,9 @@ export const CartProvider = ({ children }) => {
   const isInCart = (productId, variantId = null) => {
     return cartItems.some(item => {
       if (variantId) {
-        return item.product._id === productId && item.variant?._id === variantId;
+        return item.product_id?._id === productId && item.variant_id === variantId;
       }
-      return item.product._id === productId;
+      return item.product_id?._id === productId;
     });
   };
 

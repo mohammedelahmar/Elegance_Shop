@@ -26,7 +26,16 @@ const CartPage = () => {
   // Calculate cart totals
   const itemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const cartSubtotal = subtotal || cartItems.reduce(
-    (total, item) => total + (item.product?.price || 0) * item.quantity, 
+    (total, item) => {
+      // Handle MongoDB Decimal128 price format or regular price
+      const price = item.product_id ? 
+        (typeof item.product_id.price === 'object' && item.product_id.price.$numberDecimal ? 
+          parseFloat(item.product_id.price.$numberDecimal) : 
+          (parseFloat(item.product_id.price) || 0)) : 
+        0;
+      
+      return total + price * item.quantity;
+    }, 
     0
   );
   const shippingCost = cartSubtotal > 50 ? 0 : 10;

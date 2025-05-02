@@ -29,3 +29,24 @@ export const deleteReview = async (id) => {
   const { data } = await axios.delete(`/reviews/${id}`);
   return data;
 };
+
+/**
+ * Get all reviews (admin only)
+ * @param {Object} params - Query parameters (page, limit, etc)
+ * @returns {Promise} - Promise with list of all reviews
+ */
+export const getAllReviews = async (params = {}) => {
+  const { data } = await axios.get('/reviews', { params });
+  return data;
+};
+
+/**
+ * Update review status (admin only)
+ * @param {string} id - Review ID
+ * @param {Object} updateData - Data to update (approved, etc)
+ * @returns {Promise} - Promise with updated review
+ */
+export const updateReviewStatus = async (id, updateData) => {
+  const { data } = await axios.put(`/reviews/admin/${id}`, updateData);
+  return data;
+};

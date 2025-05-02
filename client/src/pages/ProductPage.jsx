@@ -55,11 +55,12 @@ const ProductPage = () => {
         ]);
         
         if (variantsData.status === 'fulfilled') {
-          setVariants(variantsData.value);
+          setVariants(variantsData.value.data || []);
         }
         
         if (reviewsData.status === 'fulfilled') {
-          setReviews(reviewsData.value);
+          // Extract the reviews array from the response object
+          setReviews(reviewsData.value.data || []);
         }
       } catch (err) {
         setError('Failed to load product. It may have been removed or is unavailable.');
@@ -74,7 +75,8 @@ const ProductPage = () => {
   
   // Calculate average rating
   const calculateAverageRating = () => {
-    if (!reviews || reviews.length === 0) return 0;
+    // Make sure reviews is an array and has elements
+    if (!reviews || !Array.isArray(reviews) || reviews.length === 0) return 0;
     
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
     return totalRating / reviews.length;

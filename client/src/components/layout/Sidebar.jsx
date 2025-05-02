@@ -12,7 +12,9 @@ import {
   FaCommentAlt,
   FaAngleDown,
   FaAngleUp,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaPuzzlePiece,
+  FaMapMarkerAlt
 } from 'react-icons/fa';
 import Button from '../UI/Button';
 import './Sidebar.css';
@@ -87,6 +89,14 @@ const Sidebar = () => {
 
         <Nav.Link 
           as={Link} 
+          to="/admin/variants" 
+          className={isActive('/admin/variants') ? 'active' : ''}
+        >
+          <FaPuzzlePiece className="sidebar-icon" /> Variants
+        </Nav.Link>
+
+        <Nav.Link 
+          as={Link} 
           to="/admin/categories" 
           className={isActive('/admin/categories') ? 'active' : ''}
         >
@@ -156,6 +166,14 @@ const Sidebar = () => {
           className={isActive('/admin/settings') ? 'active' : ''}
         >
           <FaCog className="sidebar-icon" /> Settings
+        </Nav.Link>
+
+        <Nav.Link 
+          as={Link} 
+          to="/admin/addresses" 
+          className={isActive('/admin/addresses') ? 'active' : ''}
+        >
+          <FaMapMarkerAlt className="sidebar-icon" /> Addresses
         </Nav.Link>
 
         <div className="mt-auto p-3">
