@@ -3,6 +3,23 @@ import { Badge, ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+// Helper function to safely format price values
+const formatPrice = (price) => {
+  if (!price) return '0.00';
+  
+  // Handle MongoDB Decimal128 format
+  if (typeof price === 'object' && price.$numberDecimal) {
+    return parseFloat(price.$numberDecimal).toFixed(2);
+  }
+  
+  // Handle regular number or string
+  try {
+    return parseFloat(price).toFixed(2);
+  } catch (e) {
+    return '0.00';
+  }
+};
+
 const RecentOrders = ({ orders }) => {
   if (!orders.length) {
     return <p className="text-muted text-center">No recent orders</p>;
@@ -29,13 +46,13 @@ const RecentOrders = ({ orders }) => {
             </small>
             <div>
               <small>
-                {order.user?.Firstname} {order.user?.Lastname}
+                By {order.user_id?.Firstname || ''} {order.user_id?.Lastname || ''}
               </small>
             </div>
           </div>
           
           <div className="text-end">
-            <div>${order.totalPrice.toFixed(2)}</div>
+            <div>${formatPrice(order.totalPrice || order.total_amount)}</div>
             <div>
               {order.isPaid ? (
                 order.isDelivered ? (

@@ -5,14 +5,14 @@ import asyncHandler from 'express-async-handler';
 // @route  POST /api/payment
 // @access Private
 const processPayment = asyncHandler(async (req, res) => {
-    const { paymentMethod, amount, currency, orderId, userId } = req.body;
+    const { paymentMethod, amount, currency, orderId } = req.body;
 
+    // Create payment with fields that match the schema
     const payment = new Payment({
-        paymentMethod,
+        commande_id: orderId,  // Changed from orderId to commande_id to match schema
+        payment_method: paymentMethod,  // Changed from paymentMethod to payment_method
         amount,
-        currency,
-        orderId,
-        userId
+        status: 'completed'  // Set a default status
     });
 
     const createdPayment = await payment.save();
@@ -20,4 +20,3 @@ const processPayment = asyncHandler(async (req, res) => {
 });
 
 export { processPayment };
-//           res.status(200).json(wishlist);

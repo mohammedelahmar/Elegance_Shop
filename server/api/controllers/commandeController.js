@@ -17,13 +17,13 @@ const addOrderItems = asyncHandler(async (req, res) => {
     
     const order = new commande({
         orderItems,
-        user: req.user._id,
+        user_id: req.user._id,  // Changed from user to user_id to match model
         shippingAddress,
         paymentMethod,
         itemsPrice,
         taxPrice,
         shippingPrice,
-        totalPrice
+        total_amount: totalPrice  // Changed from totalPrice to total_amount to match model
     });
     
     const createdOrder = await order.save();
@@ -35,15 +35,14 @@ const addOrderItems = asyncHandler(async (req, res) => {
 // @access  Private
 
 const getOrderById = asyncHandler(async (req, res) => {
-     const order = await commande.findById(req.params.id).populate('user', 'name email');
+     const order = await commande.findById(req.params.id).populate('user_id', 'name email'); // Updated here as well
      if (order){
           res.json(order);
      }else{
           res.status(404);
           throw new Error('Order not found');
      }
-}
-);
+});
 
 // @desc    Update order to paid
 // @route   GET /api/commandes/:id/pay
@@ -66,8 +65,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
           res.status(404);
           throw new Error('Order not found');
      }
-}
-);
+});
 
 // @desc    Update order to delivered
 // @route   GET /api/commandes/:id/deliver
@@ -84,8 +82,7 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
           res.status(404);
           throw new Error('Order not found');
      }
-}
-);
+});
 
 // @desc    Get logged in user orders
 // @route   GET /api/commandes/myorders
@@ -94,18 +91,16 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 const getMyOrders = asyncHandler(async (req, res) => {
      const orders = await commande.find({ user: req.user._id });
      res.json(orders);
-}
-);
+});
 
 // @desc    Get all orders
 // @route   GET /api/commandes
 // @access  Private/Admin
 
 const getOrders = asyncHandler(async (req, res) => {
-     const orders = await commande.find({}).populate('user', 'id name');
+     const orders = await commande.find({}).populate('user_id', 'id Firstname Lastname email');
      res.json(orders);
-}
-);
+});
 
 export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders, getOrders, updateOrderToDelivered };
 
