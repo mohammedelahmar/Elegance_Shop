@@ -102,9 +102,9 @@ const ProductPage = () => {
     
     try {
       const newReview = await createReview({
-        product: id,
+        product_id: id,  // Changed from product to product_id
         rating: reviewState.rating,
-        comment: reviewState.comment
+        commentaire: reviewState.comment  // Changed from comment to commentaire
       });
       
       // Add new review to the reviews list
@@ -318,7 +318,7 @@ const ProductPage = () => {
                       <div key={review._id} className="review-item mb-3">
                         <div className="d-flex justify-content-between">
                           <div>
-                            <strong>{review.user?.Firstname || 'Anonymous'}</strong>
+                            <strong>{review.user_id?.Firstname || 'Anonymous'}</strong>
                             <div className="text-muted small">
                               {new Date(review.createdAt).toLocaleDateString()}
                             </div>
@@ -327,7 +327,7 @@ const ProductPage = () => {
                             {renderStarRating(review.rating)}
                           </div>
                         </div>
-                        <p className="mt-2">{review.comment}</p>
+                        <p className="mt-2">{review.commentaire}</p>
                         <hr />
                       </div>
                     ))
