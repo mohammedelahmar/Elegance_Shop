@@ -3,6 +3,14 @@ import { Modal, Card, Row, Col, Badge, Table, Button, ListGroup } from 'react-bo
 import { FaCreditCard, FaTruck } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 
+// Add this helper function at the top of your component
+const formatPrice = (value) => {
+  // Check if value is a number or can be converted to a number
+  if (value === null || value === undefined) return '0.00';
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+  return isNaN(num) ? '0.00' : num.toFixed(2);
+};
+
 const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoading }) => {
   if (!order) return null;
 
@@ -27,10 +35,10 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
               <Card.Header>Customer Information</Card.Header>
               <ListGroup variant="flush">
                 <ListGroup.Item>
-                  <strong>Name:</strong> {order.user?.name || 'Guest'}
+                  <strong>Name:</strong> {order.user_id?.Firstname || ''} {order.user_id?.Lastname || 'Guest'}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <strong>Email:</strong> {order.user?.email || 'N/A'}
+                  <strong>Email:</strong> {order.user_id?.email || 'N/A'}
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <strong>Order Date:</strong> {formatDate(order.createdAt)}
@@ -43,13 +51,13 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
               <Card.Header>Shipping Information</Card.Header>
               <ListGroup variant="flush">
                 <ListGroup.Item>
-                  <strong>Address:</strong> {order.shippingAddress?.address}
+                  <strong>Address:</strong> {order.shippingAddress?.address || 'N/A'}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <strong>City:</strong> {order.shippingAddress?.city}, {order.shippingAddress?.postalCode}
+                  <strong>City:</strong> {order.shippingAddress?.city || ''}, {order.shippingAddress?.postal_code || ''}
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <strong>Country:</strong> {order.shippingAddress?.country}
+                  <strong>Country:</strong> {order.shippingAddress?.country || ''}
                 </ListGroup.Item>
               </ListGroup>
             </Card>
@@ -134,24 +142,12 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
               </tr>
             </thead>
             <tbody>
-              {order.orderItems?.map((item, index) => (
+              {order.orderItems && order.orderItems.map((item, index) => (
                 <tr key={index}>
-                  <td>
-                    <div className="d-flex align-items-center">
-                      {item.image_url && (
-                        <img 
-                          src={item.image_url} 
-                          alt={item.name}
-                          style={{ width: '50px', height: '50px', objectFit: 'cover' }}
-                          className="me-2"
-                        />
-                      )}
-                      <span>{item.name}</span>
-                    </div>
-                  </td>
-                  <td>${item.price?.toFixed(2)}</td>
+                  <td>{item.product?.name || item.name || 'Unknown Product'}</td>
+                  <td>${formatPrice(item.price)}</td>
                   <td>{item.quantity}</td>
-                  <td>${(item.price * item.quantity).toFixed(2)}</td>
+                  <td>${formatPrice(item.price * item.quantity)}</td>
                 </tr>
               ))}
             </tbody>
@@ -163,19 +159,19 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
           <ListGroup variant="flush">
             <ListGroup.Item className="d-flex justify-content-between">
               <span>Items:</span>
-              <span>${order.itemsPrice?.toFixed(2) || '0.00'}</span>
+              <span>${formatPrice(order.itemsPrice)}</span>
             </ListGroup.Item>
             <ListGroup.Item className="d-flex justify-content-between">
               <span>Shipping:</span>
-              <span>${order.shippingPrice?.toFixed(2) || '0.00'}</span>
+              <span>${formatPrice(order.shippingPrice)}</span>
             </ListGroup.Item>
             <ListGroup.Item className="d-flex justify-content-between">
               <span>Tax:</span>
-              <span>${order.taxPrice?.toFixed(2) || '0.00'}</span>
+              <span>${formatPrice(order.taxPrice)}</span>
             </ListGroup.Item>
             <ListGroup.Item className="d-flex justify-content-between fw-bold">
               <span>Total:</span>
-              <span>${order.totalPrice?.toFixed(2) || '0.00'}</span>
+              <span>${formatPrice(order.totalPrice || order.total_amount)}</span>
             </ListGroup.Item>
           </ListGroup>
         </Card>

@@ -44,8 +44,9 @@ export const getAllOrders = async () => {
  * @param {Object} paymentResult - Payment result details
  * @returns {Promise} - Promise with updated order
  */
-export const updateOrderToPaid = async (id, paymentResult) => {
-  const { data } = await axios.put(`/orders/${id}/pay`, paymentResult);
+export const updateOrderToPaid = async (id, paymentResult = {}) => {
+  // Remove the /api prefix to avoid the double prefix
+  const { data } = await axios.put(`/commandes/${id}/pay`, paymentResult);
   return data;
 };
 
@@ -55,6 +56,7 @@ export const updateOrderToPaid = async (id, paymentResult) => {
  * @returns {Promise} - Promise with updated order
  */
 export const updateOrderToDelivered = async (id) => {
-  const { data } = await axios.put(`/orders/${id}/deliver`);
+  // Remove the /api prefix to avoid the double prefix
+  const { data } = await axios.put(`/commandes/${id}/deliver`);
   return data;
 };

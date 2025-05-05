@@ -8,7 +8,33 @@ import '../Categories/CategoryList.css';
 const OrderStats = ({ orders, className }) => {
   const stats = useMemo(() => {
     const totalOrders = orders.length;
+<<<<<<< HEAD
     const totalRevenue = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+=======
+    
+    // Only count revenue from paid orders with better price handling
+    const totalRevenue = orders
+      .filter(order => order.isPaid)
+      .reduce((sum, order) => {
+        let price = 0;
+        if (order.totalPrice) {
+          if (typeof order.totalPrice === 'object' && order.totalPrice.$numberDecimal) {
+            price = parseFloat(order.totalPrice.$numberDecimal);
+          } else {
+            price = parseFloat(order.totalPrice);
+          }
+        } else if (order.total_amount) {
+          if (typeof order.total_amount === 'object' && order.total_amount.$numberDecimal) {
+            price = parseFloat(order.total_amount.$numberDecimal);
+          } else {
+            price = parseFloat(order.total_amount);
+          }
+        }
+        return sum + price;
+      }, 0);
+    
+    const paidOrders = orders.filter(order => order.isPaid).length;
+>>>>>>> 5d58d1978195451df82544d75b9d8a47d83c5c0e
     const deliveredOrders = orders.filter(order => order.isDelivered).length;
     const pendingOrders = orders.filter(order => !order.isDelivered).length;
     return {

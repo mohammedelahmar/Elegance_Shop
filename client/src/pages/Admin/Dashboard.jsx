@@ -52,8 +52,25 @@ const Dashboard = () => {
         ]);
 
         // Calculate statistics
-        const totalRevenue = orders.reduce((sum, order) => 
-          sum + (order.isPaid ? order.totalPrice : 0), 0);
+        const totalRevenue = orders
+          .filter(order => order.isPaid)
+          .reduce((sum, order) => {
+            let price = 0;
+            if (order.totalPrice) {
+              if (typeof order.totalPrice === 'object' && order.totalPrice.$numberDecimal) {
+                price = parseFloat(order.totalPrice.$numberDecimal);
+              } else {
+                price = parseFloat(order.totalPrice) || 0;
+              }
+            } else if (order.total_amount) {
+              if (typeof order.total_amount === 'object' && order.total_amount.$numberDecimal) {
+                price = parseFloat(order.total_amount.$numberDecimal);
+              } else {
+                price = parseFloat(order.total_amount) || 0;
+              }
+            }
+            return sum + price;
+          }, 0);
         
         const processingOrders = orders.filter(
           order => order.isPaid && !order.isDelivered
@@ -92,17 +109,30 @@ const Dashboard = () => {
         orders.forEach(order => {
           if (!order.isPaid) return;
           
+          // Skip if orderItems is undefined or not an array
+          if (!order.orderItems || !Array.isArray(order.orderItems)) return;
+          
           order.orderItems.forEach(item => {
-            if (!productSales[item.product_id]) {
-              productSales[item.product_id] = {
+            const productId = item.product_id || item.product || 'unknown';
+            if (!productSales[productId]) {
+              productSales[productId] = {
                 quantity: 0,
                 revenue: 0,
-                name: item.name,
-                image: item.image_url
+                name: item.name || 'Unknown Product',
+                image: item.image_url || item.image || ''
               };
             }
-            productSales[item.product_id].quantity += item.quantity;
-            productSales[item.product_id].revenue += item.price * item.quantity;
+            
+            // Handle price safely
+            let itemPrice = 0;
+            if (typeof item.price === 'object' && item.price.$numberDecimal) {
+              itemPrice = parseFloat(item.price.$numberDecimal);
+            } else {
+              itemPrice = parseFloat(item.price) || 0;
+            }
+            
+            productSales[productId].quantity += item.quantity || 0;
+            productSales[productId].revenue += itemPrice * (item.quantity || 0);
           });
         });
 
