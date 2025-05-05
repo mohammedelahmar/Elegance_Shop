@@ -22,7 +22,7 @@ const formatPrice = (price) => {
   return parseFloat(price).toFixed(2);
 };
 
-const ProductDetail = ({ product, variants, onAddToCart }) => {
+const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
   const dispatch = useDispatch();
   const cart = useCart();
   // Safely access addItem, or provide a fallback function
@@ -112,35 +112,9 @@ const ProductDetail = ({ product, variants, onAddToCart }) => {
 
   return (
     <Row>
-      <Col md={5} className="mb-4">
-        <div className="product-image-container">
-          <Image 
-            src={product.image_url || 'https://via.placeholder.com/500x500?text=No+Image'} 
-            alt={product.name}
-            className="product-detail-image"
-            fluid
-          />
-        </div>
-      </Col>
-      
-      <Col md={7}>
-        <h1 className="mb-2">{product.name}</h1>
-        
-        <h2 className="product-price mb-3">
-          ${selectedVariant ? formatPrice(selectedVariant.price || product.price) : formatPrice(product.price)}
-        </h2>
-        
-        {isOutOfStock ? (
-          <Badge bg="danger" className="mb-3 fs-6">Out of Stock</Badge>
-        ) : (
-          <Badge bg="success" className="mb-3 fs-6">In Stock</Badge>
-        )}
-        
-        <div className="mb-4 product-description">
-          <p>{product.description}</p>
-        </div>
-        
-        <Form className="mb-4">
+      {/* Only render controls, not image/name/price, when hideMainInfo is true */}
+      <Col md={12} className="d-flex flex-column align-items-center justify-content-center">
+        <Form className="mb-4 w-100 d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
           {variants && variants.length > 0 && (
             <Input
               label="Variant"
@@ -155,60 +129,62 @@ const ProductDetail = ({ product, variants, onAddToCart }) => {
                   disabled: variant.stock <= 0
                 }))
               ]}
-              className="mb-3"
+              className="mb-0 variant-select"
             />
           )}
-          
-          <Form.Group className="mb-3">
-            <Form.Label>Quantity</Form.Label>
-            <div className="d-flex align-items-center quantity-selector">
-              <Button 
-                variant="outline-secondary" 
-                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                disabled={isOutOfStock}
-                icon={FaMinus}
-              />
-              <Input
-                type="number"
-                min="1"
-                max={availableStock}
-                value={quantity}
-                onChange={handleQuantityChange}
-                disabled={isOutOfStock}
-                className="mx-2"
-                inputClassName="text-center"
-                fullWidth={false}
-              />
-              <Button 
-                variant="outline-secondary" 
-                onClick={() => setQuantity(prev => Math.min(availableStock, prev + 1))}
-                disabled={isOutOfStock}
-                icon={FaPlus}
-              />
-            </div>
-          </Form.Group>
-          
-          <Button 
-            variant="primary" 
-            size="lg" 
-            onClick={handleAddToCart}
-            disabled={isOutOfStock}
-            isLoading={adding}
-            icon={FaShoppingCart}
-            fullWidth
-          >
-            Add to Cart
-          </Button>
+          {/* Quantity inside Add to Cart button */}
+          <div className="quantity-addtocart-group d-flex align-items-center bg-dark rounded-3 px-2 py-1" style={{boxShadow:'0 2px 8px rgba(74,107,245,0.10)'}}>
+            <Button 
+              variant="outline-light" 
+              onClick={() => {
+                const newQty = Math.max(1, quantity - 1);
+                setQuantity(newQty);
+              }}
+              disabled={isOutOfStock}
+              icon={FaMinus}
+              className="quantity-btn"
+              style={{border:'none', background:'none'}}
+            />
+            <input
+              type="number"
+              min="1"
+              max={availableStock}
+              value={quantity}
+              onChange={e => {
+                let val = parseInt(e.target.value);
+                if (isNaN(val) || val < 1) val = 1;
+                if (val > availableStock) val = availableStock;
+                setQuantity(val);
+              }}
+              disabled={isOutOfStock}
+              className="mx-2 text-center quantity-input"
+              style={{width:48, background:'#f4f8ff', color:'#232946', border:'2px solid #4a6bf5', borderRadius:'0.7rem', fontWeight:'bold', fontSize:'1.2rem', textAlign:'center', margin:'0 0.5rem', boxShadow:'0 2px 8px rgba(74,107,245,0.08)'}}
+            />
+            <Button 
+              variant="outline-light" 
+              onClick={() => {
+                const newQty = Math.min(availableStock, quantity + 1);
+                setQuantity(newQty);
+              }}
+              disabled={isOutOfStock}
+              icon={FaPlus}
+              className="quantity-btn"
+              style={{border:'none', background:'none'}}
+            />
+            <Button 
+              variant="primary" 
+              size="lg" 
+              onClick={handleAddToCart}
+              disabled={isOutOfStock}
+              isLoading={adding}
+              icon={FaShoppingCart}
+              className="ms-3 px-4 fw-bold add-to-cart-main-btn"
+              style={{borderRadius:'2rem', fontSize:'1.1rem', boxShadow:'0 4px 16px rgba(74,107,245,0.18)'}}
+            >
+              Add to Cart
+            </Button>
+          </div>
         </Form>
-        
-        <ListGroup variant="flush" className="product-details-list">
-          <ListGroup.Item>
-            <strong>Category:</strong> {product.category?.name || 'Uncategorized'}
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <strong>Availability:</strong> {isOutOfStock ? 'Out of Stock' : 'In Stock'}
-          </ListGroup.Item>
-        </ListGroup>
       </Col>
     </Row>
   );
@@ -217,12 +193,14 @@ const ProductDetail = ({ product, variants, onAddToCart }) => {
 ProductDetail.propTypes = {
   product: PropTypes.object.isRequired,
   variants: PropTypes.array,
-  onAddToCart: PropTypes.func
+  onAddToCart: PropTypes.func,
+  hideMainInfo: PropTypes.bool
 };
 
 ProductDetail.defaultProps = {
   variants: [],
-  onAddToCart: null
+  onAddToCart: null,
+  hideMainInfo: false
 };
 
 export default ProductDetail;

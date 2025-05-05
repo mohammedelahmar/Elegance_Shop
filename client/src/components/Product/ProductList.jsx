@@ -168,21 +168,21 @@ const ProductList = ({ isAdmin = false }) => {
         <>
           <Row className="mb-3">
             <Col>
-              <p>Showing {products.length} of {pagination.totalProducts} products</p>
+              <p style={{color:"white"}}>Showing {products.length} of {pagination.totalProducts} products</p>
             </Col>
           </Row>
           
-          <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+          <Row xs={1} sm={2} md={3} lg={4} className="g-4" >
             {products.map(product => (
-              <Col key={product._id}>
+              <Col key={product._id} >
                 <ProductCard product={product} />
               </Col>
             ))}
           </Row>
           
           {pagination.pages > 1 && (
-            <Row className="my-4">
-              <Col className="d-flex justify-content-center">
+            <Row className="my-4" >
+              <Col className="d-flex justify-content-center" >
                 <Pagination 
                   currentPage={pagination.page} 
                   totalPages={pagination.pages} 

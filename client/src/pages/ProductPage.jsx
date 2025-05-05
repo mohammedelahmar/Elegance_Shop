@@ -37,6 +37,15 @@ const ProductPage = () => {
     // Submit logic here
   }, 300);
   
+  // Helper to safely format price (handles MongoDB Decimal128)
+  const formatPrice = (price) => {
+    if (!price) return '0.00';
+    if (typeof price === 'object' && price.$numberDecimal) {
+      return parseFloat(price.$numberDecimal).toFixed(2);
+    }
+    return parseFloat(price).toFixed(2);
+  };
+
   // Fetch product data
   useEffect(() => {
     const fetchProductData = async () => {
@@ -200,65 +209,61 @@ const ProductPage = () => {
 
   return (
     <Container className="my-5 product-page">
-      {/* Breadcrumb navigation */}
-      <nav aria-label="breadcrumb" className="mb-4">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-          <li className="breadcrumb-item"><Link to="/products">Products</Link></li>
-          <li className="breadcrumb-item active" aria-current="page">{product.name}</li>
-        </ol>
-      </nav>
-      
-      {/* Product rating display */}
-      <div className="d-flex mb-3 align-items-center">
-        <div className="me-2">
-          {renderStarRating(averageRating)}
+      {/* Product Hero Section */}
+      <div className="product-hero-section mb-5 p-4 rounded-4 shadow-lg position-relative d-flex flex-column flex-md-row align-items-center justify-content-between" style={{background: 'linear-gradient(135deg, #232946 60%, #4a6bf5 100%)', minHeight: 320}}>
+        <div className="product-hero-img-wrapper bg-white rounded-4 shadow-sm p-3 me-md-5 mb-4 mb-md-0" style={{maxWidth: 340, minWidth: 220}}>
+          <img src={product.image_url || 'https://via.placeholder.com/400x400?text=No+Image'} alt={product.name} className="img-fluid product-hero-img" style={{maxHeight: 260, objectFit: 'contain'}} />
         </div>
-        <span className="text-muted">
-          {averageRating.toFixed(1)} ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
-        </span>
+        <div className="flex-grow-1 text-center text-md-start d-flex flex-column align-items-center align-items-md-start justify-content-center">
+          <h1 className="display-5 fw-bold text-white mb-2">{product.name}</h1>
+          <div className="d-flex align-items-center mb-3 justify-content-center justify-content-md-start">
+            <span className="me-2 fs-4 text-warning">{renderStarRating(averageRating)}</span>
+            <span className="text-light fs-5">{averageRating.toFixed(1)} <span className="fs-6 text-muted">({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})</span></span>
+          </div>
+          <div className="mb-3 d-flex align-items-center gap-3 justify-content-center justify-content-md-start">
+            <span className="badge bg-success fs-6 px-3 py-2">{product.category?.name || 'Uncategorized'}</span>
+            <span className="product-hero-price fw-bold" style={{fontSize:'2.2rem', color:'#00d4ff', background:'#181f2e', borderRadius:'1rem', padding:'0.3rem 1.2rem', boxShadow:'0 2px 12px rgba(0,212,255,0.10)'}}>${formatPrice(product.price)}</span>
+          </div>
+          {/* Add to Cart and Quantity Controls Inline */}
+          <div className="w-100 d-flex flex-column flex-md-row align-items-center justify-content-md-start mt-2">
+            <ProductDetail 
+              product={product}
+              variants={variants} 
+              onAddToCart={handleAddToCart}
+              hideMainInfo
+            />
+          </div>
+        </div>
       </div>
-      
-      {/* Product Detail Component */}
-      <ProductDetail 
-        product={product} 
-        variants={variants} 
-        onAddToCart={handleAddToCart}
-      />
-      
       {/* Tabs for Description, Reviews, etc. */}
       <Row className="mt-5">
         <Col>
-          <Tabs defaultActiveKey="reviews" className="mb-3">
+          <Tabs defaultActiveKey="reviews" className="mb-3 modern-tabs">
             <Tab eventKey="description" title="Description">
-              <Card>
+              <Card className="shadow-sm rounded-4">
                 <Card.Body>
-                  <p>{product.description}</p>
+                  <p className="product-description fs-5 text-secondary">{product.description}</p>
                 </Card.Body>
               </Card>
             </Tab>
-            
             <Tab eventKey="reviews" title={`Reviews (${reviews.length})`}>
-              <Card>
+              <Card className="shadow-sm rounded-4">
                 <Card.Body>
                   {/* Review Form */}
                   {isAuthenticated ? (
                     <div className="mb-4">
-                      <h5>Write a Review</h5>
-                      
+                      <h5 className="fw-bold mb-3">Write a Review</h5>
                       {reviewState.success && (
                         <Alert variant="success" dismissible onClose={() => setReviewState(prev => ({ ...prev, success: false }))}>
                           Your review has been submitted successfully!
                         </Alert>
                       )}
-                      
                       {reviewState.error && (
                         <Alert variant="danger" dismissible onClose={() => setReviewState(prev => ({ ...prev, error: null }))}>
                           {reviewState.error}
                         </Alert>
                       )}
-                      
-                      <Form onSubmit={handleSubmitReview}>
+                      <Form onSubmit={handleSubmitReview} className="review-form">
                         <Form.Group className="mb-3">
                           <Form.Label>Rating</Form.Label>
                           <Form.Select 
@@ -276,7 +281,6 @@ const ProductPage = () => {
                             <option value="1">1 - Poor</option>
                           </Form.Select>
                         </Form.Group>
-                        
                         <Form.Group className="mb-3">
                           <Form.Label>Comment</Form.Label>
                           <Form.Control 
@@ -290,7 +294,6 @@ const ProductPage = () => {
                             required
                           />
                         </Form.Group>
-                        
                         <Button 
                           type="submit" 
                           variant="primary"
@@ -305,32 +308,30 @@ const ProductPage = () => {
                       Please <Link to="/login">login</Link> to write a review.
                     </Alert>
                   )}
-                  
                   {/* Review List */}
-                  <h5>Customer Reviews</h5>
-                  
+                  <h5 className="fw-bold mt-4 mb-3">Customer Reviews</h5>
                   {reviews.length === 0 ? (
                     <Alert variant="light">
                       No reviews yet. Be the first to review this product!
                     </Alert>
                   ) : (
-                    reviews.map((review) => (
-                      <div key={review._id} className="review-item mb-3">
-                        <div className="d-flex justify-content-between">
-                          <div>
-                            <strong>{review.user?.Firstname || 'Anonymous'}</strong>
-                            <div className="text-muted small">
-                              {new Date(review.createdAt).toLocaleDateString()}
-                            </div>
+                    <div className="review-list-modern">
+                      {reviews.map((review) => (
+                        <div key={review._id} className="review-item-modern mb-4 p-3 rounded-3 shadow-sm bg-white d-flex align-items-start gap-3">
+                          <div className="review-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style={{width: 48, height: 48, fontSize: 22}}>
+                            {review.user?.Firstname ? review.user.Firstname[0] : 'A'}
                           </div>
-                          <div>
-                            {renderStarRating(review.rating)}
+                          <div className="flex-grow-1">
+                            <div className="d-flex justify-content-between align-items-center mb-1">
+                              <div className="fw-semibold">{review.user?.Firstname || 'Anonymous'}</div>
+                              <div className="text-warning fs-5">{renderStarRating(review.rating)}</div>
+                            </div>
+                            <div className="text-muted small mb-2">{new Date(review.createdAt).toLocaleDateString()}</div>
+                            <div className="fs-6 text-dark">{review.comment}</div>
                           </div>
                         </div>
-                        <p className="mt-2">{review.comment}</p>
-                        <hr />
-                      </div>
-                    ))
+                      ))}
+                    </div>
                   )}
                 </Card.Body>
               </Card>

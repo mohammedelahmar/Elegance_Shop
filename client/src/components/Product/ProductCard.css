@@ -1,3 +1,17 @@
+:root {
+  --dark-bg: #161c2d;
+  --dark-card-bg: #1e2634;
+  --dark-secondary-bg: #141b2d;
+  --accent-primary: #4a6bf5;
+  --accent-secondary: #6f88ff;
+  --accent-gradient: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  --accent-glow: 0 0 15px rgba(74, 107, 245, 0.6);
+  --dark-text: #ffffff;
+  --dark-text-muted: #a3aed0;
+  --dark-border: rgba(255, 255, 255, 0.08);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --hover-shadow: 0 15px 45px rgba(74, 107, 245, 0.3);
+}
 .product-card {
   transition: transform 0.3s, box-shadow 0.3s;
   border-radius: 8px;
@@ -6,7 +20,8 @@
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 20px rgb(100, 127, 252);
+  color: #415dce;
 }
 
 .product-image-container {
@@ -60,4 +75,142 @@
   font-weight: 600;
   font-size: 1.1rem;
   color: #0d6efd;
+}
+
+/* Featured Products Section with 3D Cards */
+.featured-products {
+  padding: 120px 0;
+  background-color: var(--dark-bg);
+  position: relative;
+}
+
+.featured-products::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(74, 107, 245, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.product-card {
+  background-color: var(--dark-card-bg);
+  border: 1px solid var(--dark-border);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.product-card:hover {
+  transform: translateY(-15px) rotateX(5deg);
+  box-shadow: var(--hover-shadow);
+  border-color: 0 15px 45px rgba(74, 107, 245, 0.3);
+}
+
+.product-img-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.7s ease;
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.1) translateZ(10px);
+  filter: brightness(1.1) contrast(1.1);
+}
+
+.product-discount {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 50px;
+  background: var(--accent-gradient);
+  color: white;
+  box-shadow: 0 5px 15px rgba(74, 107, 245, 0.4);
+  transform: translateZ(20px);
+  z-index: 2;
+}
+
+.product-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(22, 28, 45, 0.8) 0%, transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.product-card:hover .product-overlay {
+  opacity: 1;
+}
+
+.product-btn {
+  background: var(--accent-gradient);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s;
+  transform: translateY(40px);
+  opacity: 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.product-card:hover .product-btn {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.product-btn:hover {
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: var(--accent-glow);
+}
+
+.product-title {
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-top: 10px;
+  transition: all 0.3s;
+  color: white;
+}
+
+.product-card:hover .product-title {
+  color: var(--accent-primary);
+}
+
+.product-price {
+  font-weight: 800;
+  font-size: 1.4rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Product Sizes Pills */
+.product-sizes {
+  margin: 15px 0;
 }

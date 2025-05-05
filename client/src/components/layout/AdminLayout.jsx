@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import Header from './Header';
-import Footer from './Footer';
-import Sidebar from './Sidebar';
+import Header from '../layout/Header';
+import Footer from '../layout/Footer';
+import Sidebar from '../layout/Sidebar';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 

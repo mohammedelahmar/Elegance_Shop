@@ -1,11 +1,36 @@
-import React from 'react';
-import { Form, Row, Col } from 'react-bootstrap';
-import { FaSearch, FaFilter, FaSortAmountDown, FaSortAmountUp, FaTimes } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { Form, Badge, Collapse } from 'react-bootstrap';
+import { FaSearch, FaFilter, FaSortAmountDown, FaSortAmountUp, FaTimes, FaChevronDown, FaChevronUp, FaBars } from 'react-icons/fa';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 import PropTypes from 'prop-types';
+import './ProductFilter.css';
+
+// Filter Section Component for collapsible sections
+const FilterSection = ({ title, children, defaultOpen = true }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  
+  return (
+    <div className="filter-section">
+      <div 
+        className="filter-section-header"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="filter-title">{title}</span>
+        <span className="filter-icon">{isOpen ? <FaChevronUp /> : <FaChevronDown />}</span>
+      </div>
+      <Collapse in={isOpen}>
+        <div className="filter-section-content">
+          {children}
+        </div>
+      </Collapse>
+    </div>
+  );
+};
 
 const ProductFilter = ({ filters, categories, onFilterChange, onClearFilters }) => {
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
+
   const handleFilterChange = (e) => {
     const { name, value, type, checked } = e.target;
     onFilterChange(name, type === 'checkbox' ? checked : value);
@@ -14,121 +39,203 @@ const ProductFilter = ({ filters, categories, onFilterChange, onClearFilters }) 
   const toggleSortOrder = () => {
     onFilterChange('order', filters.order === 'asc' ? 'desc' : 'asc');
   };
+  
+  // Generate active filter tags
+  const getActiveFilters = () => {
+    const active = [];
+    
+    if (filters.keyword) active.push({ name: 'keyword', label: `Search: ${filters.keyword}` });
+    if (filters.category) {
+      const category = categories.find(c => c._id === filters.category);
+      if (category) active.push({ name: 'category', label: category.name });
+    }
+    if (filters.minPrice) active.push({ name: 'minPrice', label: `Min: $${filters.minPrice}` });
+    if (filters.maxPrice) active.push({ name: 'maxPrice', label: `Max: $${filters.maxPrice}` });
+    if (filters.inStock) active.push({ name: 'inStock', label: 'In Stock' });
+    
+    return active;
+  };
+  
+  const activeFilters = getActiveFilters();
 
   return (
-    <div className="filter-panel p-3">
-      <h5><FaFilter className="me-2" /> Filter Products</h5>
-      
-      <Form>
-        <Row>
-          <Col md={4}>
-            <Input
-              label="Search"
-              type="text"
-              placeholder="Search products..."
-              name="keyword"
-              value={filters.keyword}
-              onChange={handleFilterChange}
-              icon={FaSearch}
-            />
-          </Col>
+    <div className="product-filter-container">
+      {/* Filter Button to show the sidebar */}
+      <div className="filter-btn-container">
+        <Button 
+          variant="dark" 
+          onClick={() => setShowMobileFilter(!showMobileFilter)}
+          className="filter-toggle-btn"
+        >
+          <FaBars className="me-2" /> Filters
+        </Button>
+      </div>
+
+      {/* Sidebar overlay that appears when sidebar is open */}
+      {showMobileFilter && (
+        <div 
+          className="filter-overlay"
+          onClick={() => setShowMobileFilter(false)}
+        ></div>
+      )}
+
+      {/* Slide-in Sidebar Filter */}
+      <div className={`filter-sidebar ${showMobileFilter ? 'active' : ''}`}>
+        <div className="filter-sidebar-header">
+          <h5><FaFilter className="me-2" /> Filters</h5>
+          <Button 
+            variant="link" 
+            onClick={() => setShowMobileFilter(false)}
+            className="filter-close-btn"
+          >
+            <FaTimes />
+          </Button>
+        </div>
+
+        <div className="filter-sidebar-content">
+          {/* Active Filters */}
+          {activeFilters.length > 0 && (
+            <div className="active-filters-container">
+              <div className="d-flex justify-content-between">
+                <span className="active-filters-label">Active Filters</span>
+                <Button 
+                  variant="link" 
+                  onClick={onClearFilters}
+                  className="clear-all-btn"
+                >
+                  Clear All
+                </Button>
+              </div>
+              <div className="active-filters-list">
+                {activeFilters.map((filter, index) => (
+                  <Badge 
+                    key={index} 
+                    className="active-filter-badge"
+                  >
+                    {filter.label}
+                    <FaTimes 
+                      className="remove-filter-icon"
+                      onClick={() => onFilterChange(filter.name, filter.name === 'inStock' ? false : '')} 
+                    />
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Search Section */}
+          <FilterSection title="Search Products">
+            <div className="search-box simple-search">
+              <input
+                type="text"
+                placeholder="Search products..."
+                name="keyword"
+                value={filters.keyword}
+                onChange={handleFilterChange}
+                className="simple-search-input"
+                autoComplete="off"
+              />
+            </div>
+          </FilterSection>
           
-          <Col md={4}>
-            <Input
-              label="Category"
-              as="select"
-              name="category"
-              value={filters.category}
-              onChange={handleFilterChange}
-              options={[
-                { value: '', label: 'All Categories' },
-                ...(categories || []).map(category => ({
-                  value: category._id,
-                  label: category.name
-                }))
-              ]}
-            />
-          </Col>
+          {/* Category Section */}
+          <FilterSection title="Categories">
+            <ul className="categories-list">
+              <li 
+                className={`category-item ${filters.category === '' ? 'selected' : ''}`}
+                onClick={() => onFilterChange('category', '')}
+              >
+                All Categories
+              </li>
+              {categories.map(category => (
+                <li 
+                  key={category._id} 
+                  className={`category-item ${filters.category === category._id ? 'selected' : ''}`}
+                  onClick={() => onFilterChange('category', category._id)}
+                >
+                  {category.name}
+                </li>
+              ))}
+            </ul>
+          </FilterSection>
           
-          <Col md={4}>
-            <Form.Group className="mb-3">
-              <Form.Label>Sort By</Form.Label>
-              <div className="d-flex">
+          {/* Price Range Section */}
+          <FilterSection title="Price Range">
+            <div className="price-range-container simple-price-range">
+              <input
+                type="number"
+                placeholder="Min"
+                name="minPrice"
+                value={filters.minPrice}
+                onChange={handleFilterChange}
+                className="simple-price-input"
+                min="0"
+              />
+              <span className="price-separator">to</span>
+              <input
+                type="number"
+                placeholder="Max"
+                name="maxPrice"
+                value={filters.maxPrice}
+                onChange={handleFilterChange}
+                className="simple-price-input"
+                min="0"
+              />
+            </div>
+          </FilterSection>
+          
+          {/* Availability Section */}
+          <FilterSection title="Availability">
+            <div className="availability-option">
+              <label className="custom-stock-checkbox">
+                <input
+                  type="checkbox"
+                  id="in-stock-checkbox"
+                  name="inStock"
+                  checked={filters.inStock}
+                  onChange={handleFilterChange}
+                />
+                <span className="checkmark"></span>
+                In Stock Only
+              </label>
+            </div>
+          </FilterSection>
+          
+          {/* Sorting Section */}
+          <FilterSection title="Sort By">
+            <div className="sort-controls">
+              <div className="select-container">
                 <Input
                   as="select"
                   name="sortBy"
                   value={filters.sortBy}
                   onChange={handleFilterChange}
-                  className="me-2"
                   options={[
-                    { value: 'createdAt', label: 'Newest First' },
+                    { value: 'createdAt', label: 'Newest' },
                     { value: 'price', label: 'Price' },
                     { value: 'name', label: 'Name' }
                   ]}
                 />
-                <Button 
-                  variant="outline-secondary"
-                  onClick={toggleSortOrder}
-                  icon={filters.order === 'asc' ? FaSortAmountUp : FaSortAmountDown}
-                />
               </div>
-            </Form.Group>
-          </Col>
-        </Row>
-        
-        <Row>
-          <Col md={4}>
-            <Form.Label>Price Range</Form.Label>
-            <Row>
-              <Col>
-                <Input
-                  type="number"
-                  placeholder="Min"
-                  name="minPrice"
-                  value={filters.minPrice}
-                  onChange={handleFilterChange}
-                  className="mb-3"
-                />
-              </Col>
-              <Col>
-                <Input
-                  type="number"
-                  placeholder="Max"
-                  name="maxPrice"
-                  value={filters.maxPrice}
-                  onChange={handleFilterChange}
-                  className="mb-3"
-                />
-              </Col>
-            </Row>
-          </Col>
-          
-          <Col md={4} className="d-flex align-items-end">
-            <Form.Group className="mb-3 w-100">
-              <Form.Check
-                type="checkbox"
-                label="In Stock Only"
-                name="inStock"
-                checked={filters.inStock}
-                onChange={handleFilterChange}
-              />
-            </Form.Group>
-          </Col>
-          
-          <Col md={4} className="d-flex align-items-end justify-content-end">
-            <Button 
-              variant="secondary" 
-              className="mb-3" 
-              onClick={onClearFilters}
-              icon={FaTimes}
-            >
-              Clear Filters
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+              <Button 
+                variant="outline-secondary"
+                onClick={toggleSortOrder}
+                className="sort-direction-btn"
+              >
+                {filters.order === 'asc' ? <FaSortAmountUp /> : <FaSortAmountDown />}
+              </Button>
+            </div>
+          </FilterSection>
+        </div>
+      </div>
     </div>
   );
+};
+
+FilterSection.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  defaultOpen: PropTypes.bool
 };
 
 ProductFilter.propTypes = {
@@ -139,3 +246,4 @@ ProductFilter.propTypes = {
 };
 
 export default ProductFilter;
+

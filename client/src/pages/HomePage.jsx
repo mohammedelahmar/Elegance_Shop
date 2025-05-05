@@ -3,6 +3,7 @@ import { Container, Row, Col, Button, Card, Badge } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaStar, FaRegStar, FaArrowRight, FaEnvelope } from 'react-icons/fa';
+
 import './HomePage.css'; // Ensure CSS is imported
 
 const HomePage = () => {
@@ -116,17 +117,17 @@ const HomePage = () => {
                 <div className="mt-5 fade-in" style={{ animationDelay: "0.5s" }}>
                   <Button as={Link} to="/collection/spring" size="lg" className="hero-button me-3">
                     Spring Collection <FaArrowRight className="ms-2" />
-                  </Button>
+                  </Button> 
                   <Button as={Link} to="/sale" variant="outline-light" size="lg" className="hero-button-outline">
                     Summer Sale
                   </Button>
                 </div>
+                <br />
               </div>
             </Col>
           </Row>
         </Container>
       </div>
-
       {/* Welcome Message for Logged In Users */}
       {isAuthenticated && (
         <div className="welcome-banner">
@@ -139,7 +140,7 @@ const HomePage = () => {
                     <p className="text-muted mb-0">Your personalized style recommendations are ready</p>
                   </div>
                   <div>
-                    <Button as={Link} to="/profile" variant="outline-dark" className="me-2">
+                    <Button as={Link} to="/profile" variant="outline-dark" className="me-2" style={{ marginRight: '0.6rem' }}>
                       Style Profile
                     </Button>
                     {isAdmin && (
@@ -288,7 +289,7 @@ const HomePage = () => {
                   <p>Get the latest updates on new products and special sales</p>
                   
                   <div className="newsletter-form mt-4">
-                    <div className="input-group">
+                    <div className="input-group" style={{ backgroundColor: 'rgb(33, 43, 62)', borderRadius: '2rem' }}>
                       <input type="email" className="form-control" placeholder="Your email address" />
                       <Button variant="primary">Subscribe</Button>
                     </div>
@@ -301,7 +302,7 @@ const HomePage = () => {
       </section>
       
       {!isAuthenticated && (
-        <div className="signup-banner py-5">
+        <div className="signup-banner py-5" >
           <Container>
             <Row className="align-items-center">
               <Col md={7}>

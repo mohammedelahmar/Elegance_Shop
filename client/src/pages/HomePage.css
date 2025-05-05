@@ -72,6 +72,11 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   color: white;
 }
 
+.hero-section.about-hero-section,
+.hero-section.contact-hero-section {
+  background-image: none !important;
+}
+
 .hero-overlay {
   position: absolute;
   top: 0;
@@ -97,6 +102,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
   background: var(--accent-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: titleReveal 1.5s ease forwards;
 }
@@ -155,6 +161,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   box-shadow: 0 8px 25px rgba(74, 107, 245, 0.25);
   animation: fadeInUp 1s ease 0.8s forwards;
   opacity: 0;
+  margin-right:0.9rem ;
 }
 
 .hero-button:hover {
@@ -166,7 +173,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   padding: 15px 35px;
   font-weight: 600;
   font-size: 1.1rem;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgb(104, 131, 253);
   border-radius: 30px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation: fadeInUp 1s ease 1s forwards;
@@ -179,6 +186,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   background: rgba(74, 107, 245, 0.1);
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(74, 107, 245, 0.2);
+  color: rgb(104, 131, 253);
 }
 
 /* Welcome Banner */
@@ -229,6 +237,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   position: relative;
   background: var(--accent-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -396,6 +405,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   font-size: 1.4rem;
   background: var(--accent-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -745,7 +755,6 @@ body, .container, .container-fluid, .row, .col, section, main, div {
 }
 
 .newsletter-form .btn:hover {
-  transform: translateX(5px);
   box-shadow: var(--accent-glow);
 }
 

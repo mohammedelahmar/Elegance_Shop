@@ -30,8 +30,8 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <Card className="product-card h-100">
-      <div className="product-image-container">
+    <Card className="product-card h-100" style={{ backgroundColor: '#1e2634' }}>
+      <div className="product-image-container" >
         <Link to={`/products/${product._id}`}>
           <Card.Img 
             variant="top" 

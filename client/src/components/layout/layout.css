@@ -1,0 +1,23 @@
+/* Main layout styles */
+.main-content {
+  padding-top: 130px;
+  min-height: calc(100vh - 60px);
+  background-color: #161c2d;
+}
+
+@media (max-width: 991px) {
+  .main-content {
+    padding-top: 150px;
+    background-color: #161c2d;
+  }
+}
+
+/* Admin page specific styling */
+.admin-page-container {
+  margin-top: 20px;
+  background-color: #161c2d;
+}
+
+body {
+  background-color: #161c2d !important;
+}

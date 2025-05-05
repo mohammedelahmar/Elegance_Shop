@@ -3,7 +3,7 @@ import { Navbar, Nav, Container, Badge, NavDropdown, Form, InputGroup } from 're
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSelector } from 'react-redux';
-import { FaShoppingCart, FaUser, FaTags, FaClipboardList, FaHome, FaInfoCircle, FaEnvelope, FaSearch } from 'react-icons/fa';
+import { FaShoppingCart, FaUser, FaTags, FaClipboardList, FaHome, FaInfoCircle, FaEnvelope, FaSearch, FaCog } from 'react-icons/fa';
 import Button from '../UI/Button';
 import './Header.css';
 
@@ -111,114 +111,134 @@ const Header = () => {
             
             {isAuthenticated && isAdmin && (
               <NavDropdown 
-                title={<span className="admin-dropdown">Admin Panel</span>} 
+                title={<span className="admin-dropdown"><FaCog className="nav-icon" /> Admin</span>} 
                 id="admin-dropdown"
                 className={`${isActive('/admin') ? 'active' : ''}`}
               >
                 <NavDropdown.Item as={Link} to="/admin/dashboard" onClick={closeNavbar} className="dropdown-item">
                   Dashboard
                 </NavDropdown.Item>
+                
+                <div className="admin-dropdown-header">Products</div>
                 <NavDropdown.Item as={Link} to="/admin/products" onClick={closeNavbar} className="dropdown-item">
                   Products
                 </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/admin/categories" onClick={closeNavbar} className="dropdown-item">
+                  Categories
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/admin/variants" onClick={closeNavbar} className="dropdown-item">
+                  Variants
+                </NavDropdown.Item>
+                
+                <div className="admin-dropdown-header">Users & Orders</div>
                 <NavDropdown.Item as={Link} to="/admin/orders" onClick={closeNavbar} className="dropdown-item">
                   Orders
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/admin/users" onClick={closeNavbar} className="dropdown-item">
                   Users
                 </NavDropdown.Item>
+                
+                <div className="admin-dropdown-header">Other</div>
+                <NavDropdown.Item as={Link} to="/admin/reviews" onClick={closeNavbar} className="dropdown-item">
+                  Reviews
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/admin/addresses" onClick={closeNavbar} className="dropdown-item">
+                  Addresses
+                </NavDropdown.Item>
               </NavDropdown>
             )}
           </Nav>
 
-          {/* Animated Search Form */}
-          <Form className={`search-form ${searchExpanded ? 'expanded' : 'collapsed'}`}>
-            <div className="search-form-container">
-              <InputGroup>
-                <Form.Control
-                  type="search"
-                  placeholder="Search products..."
-                  className="search-input"
-                  aria-label="Search"
-                  onBlur={handleSearchBlur}
-                  ref={input => searchExpanded && input && input.focus()}
-                />
-                <div 
-                  className="search-icon-wrapper"
-                  onClick={handleSearchToggle}
-                >
-                  <FaSearch className="search-icon" />
-                </div>
-              </InputGroup>
-            </div>
-          </Form>
-
-          <div className="navbar-actions">
-            <Nav.Link 
-              as={Link} 
-              to="/cart" 
-              onClick={closeNavbar} 
-              className={`cart-link ${isActive('/cart') ? 'active' : ''}`}
-            >
-              <div className="cart-icon-container">
-                <FaShoppingCart className="cart-icon" />
-                {cartItemsCount > 0 && (
-                  <Badge className="cart-badge">
-                    {cartItemsCount}
-                  </Badge>
-                )}
-              </div>
-            </Nav.Link>
-
-            {isAuthenticated ? (
-              <NavDropdown 
-                title={
-                  <div className="user-dropdown-toggle">
-                    <FaUser className="user-icon" />
-                    <span className="user-name">{currentUser?.Firstname || 'Account'}</span>
+          <div className="d-flex align-items-center">
+            {/* Animated Search Form */}
+            <Form className={`search-form ${searchExpanded ? 'expanded' : 'collapsed'}`}>
+              <div className="search-form-container">
+                <InputGroup>
+                  <Form.Control
+                    type="search"
+                    placeholder="Search products..."
+                    className="search-input"
+                    aria-label="Search"
+                    onBlur={handleSearchBlur}
+                    ref={input => searchExpanded && input && input.focus()}
+                  />
+                  <div 
+                    className="search-icon-wrapper"
+                    onClick={handleSearchToggle}
+                  >
+                    <FaSearch className="search-icon" />
                   </div>
-                } 
-                id="user-dropdown"
-                align="end"
-              >
-                <div className="dropdown-user-header">
-                  <strong>Hello, {currentUser?.Firstname || 'User'}</strong>
-                </div>
-                <NavDropdown.Divider />
-                <NavDropdown.Item as={Link} to="/profile" onClick={closeNavbar} className="dropdown-item">
-                  My Profile
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/orders" onClick={closeNavbar} className="dropdown-item">
-                  <FaClipboardList className="me-2" />
-                  My Orders
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item onClick={() => { handleLogout(); closeNavbar(); }} className="dropdown-item logout">
-                  Logout
-                </NavDropdown.Item>
-              </NavDropdown>
-            ) : (
-              <div className="auth-buttons">
-                <Button 
-                  as={Link} 
-                  to="/login" 
-                  variant="text"
-                  onClick={closeNavbar}
-                  className="login-btn"
-                >
-                  Login
-                </Button>
-                <Button 
-                  as={Link} 
-                  to="/register" 
-                  variant="primary"
-                  onClick={closeNavbar}
-                  className="register-btn"
-                >
-                  Register
-                </Button>
+                </InputGroup>
               </div>
-            )}
+            </Form>
+
+            <div className="navbar-actions">
+              <Nav.Link 
+                as={Link} 
+                to="/cart" 
+                onClick={closeNavbar} 
+                className={`cart-link ${isActive('/cart') ? 'active' : ''}`}
+              >
+                <div className="cart-icon-container">
+                  <FaShoppingCart className="cart-icon" />
+                  {cartItemsCount > 0 && (
+                    <Badge className="cart-badge">
+                      {cartItemsCount}
+                    </Badge>
+                  )}
+                </div>
+              </Nav.Link>
+
+              {isAuthenticated ? (
+                <NavDropdown 
+                  title={
+                    <div className="user-dropdown-toggle">
+                      <FaUser className="user-icon" />
+                      <span className="user-name">{currentUser?.Firstname || 'Account'}</span>
+                    </div>
+                  } 
+                  id="user-dropdown"
+                  align="end"
+                >
+                  <div className="dropdown-user-header">
+                    <strong>Hello, {currentUser?.Firstname || 'User'}</strong>
+                  </div>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item as={Link} to="/profile" onClick={closeNavbar} className="dropdown-item">
+                    My Profile
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/orders" onClick={closeNavbar} className="dropdown-item">
+                    <FaClipboardList className="me-2" />
+                    My Orders
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={() => { handleLogout(); closeNavbar(); }} className="dropdown-item logout">
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <div className="auth-buttons">
+                  <Button 
+                    as={Link} 
+                    to="/login" 
+                    variant="text"
+                    onClick={closeNavbar}
+                    className="login-btn"
+                  >
+                    Login
+                  </Button>
+                  <Button 
+                    as={Link} 
+                    to="/register" 
+                    variant="primary"
+                    onClick={closeNavbar}
+                    className="register-btn"
+                  >
+                    Register
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </Navbar.Collapse>
       </Container>

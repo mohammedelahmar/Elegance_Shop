@@ -80,7 +80,7 @@ const ProductsPage = () => {
   };
 
   return (
-    <Container fluid className="py-3">
+    <Container fluid className="admin-page-container py-3">
       <Row className="mb-4 align-items-center">
         <Col>
           <h1 className="h3 mb-0">Product Management</h1>

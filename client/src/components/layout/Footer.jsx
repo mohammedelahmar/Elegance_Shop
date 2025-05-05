@@ -139,7 +139,7 @@ const Footer = () => {
   };
   
   return (
-    <footer className="footer" role="contentinfo">
+    <footer className="footer"role="contentinfo" >
       <div className="footer-top">
         <Container>
           <Row className="align-items-center py-4">
@@ -207,8 +207,8 @@ const Footer = () => {
                 Subscribe to receive updates on new collections, special offers and exclusive content.
               </p>
               <Form onSubmit={handleSubscribe} className="newsletter-form">
-                <div className="input-group">
-                  <Input
+                <div className="input-group" >
+                  <Input style={{width: '100%' , height: '100%'}}
                     type="email"
                     placeholder="Enter your email"
                     value={email}
@@ -217,7 +217,7 @@ const Footer = () => {
                     className="newsletter-input"
                     aria-label="Email for newsletter subscription"
                   />
-                  <Button 
+                  <Button style={{ height: '100%'}}
                     type="submit" 
                     icon={FaPaperPlane} 
                     isLoading={subscribeLoading}

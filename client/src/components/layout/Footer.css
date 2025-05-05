@@ -10,7 +10,7 @@
 
 /* Footer Top - Logo & Social */
 .footer-top {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgb(29, 35, 52) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding: 2rem 0;
 }
@@ -36,6 +36,7 @@
   margin-left: 2px;
   background: linear-gradient(45deg, #4a6bf5, #5e86ff);
   -webkit-background-clip: text;
+  background-clip: text; /* Add this standard property */
   -webkit-text-fill-color: transparent;
   text-shadow: none;
 }
@@ -206,20 +207,21 @@
 .input-group {
   display: flex;
   flex-direction: row;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-  border-radius: 6px;
+  border-radius: 30px;
   overflow: hidden;
+  height: 3.8rem;
 }
 
 .newsletter-input {
   flex: 1;
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+  border-top-left-radius: 2rem !important;
+  border-bottom-left-radius: 2rem !important;
+  background: rgba(250, 247, 247, 0.08) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #fff !important;
-  padding: 0.75rem 1.25rem !important;
-  height: 52px;
+  height: 59px;
   font-size: 0.95rem;
 }
 
@@ -242,7 +244,7 @@
   padding: 0 1.5rem !important;
   height: 52px;
   font-weight: 500;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.05rem;
   transition: all 0.3s ease !important;
 }
 
@@ -297,7 +299,7 @@
 
 /* Footer Bottom */
 .footer-bottom {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgb(29, 35, 52);
   font-size: 0.9rem;
   padding: 1.2rem 0;
   border-top: 1px solid rgba(255, 255, 255, 0.03);
@@ -372,7 +374,7 @@
 
 /* Trust Badges */
 .trust-badges {
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: rgb(29, 35, 52);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -518,6 +520,6 @@
   }
   
   .newsletter-input, .newsletter-button {
-    height: 48px;
+    height: 40px;
   }
 }

@@ -5,7 +5,12 @@
   transition: all 0.3s ease;
   padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  z-index: 1000;
+  z-index: 1030; /* Higher z-index to prevent conflicts */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
 }
 
 .navbar-scrolled {
@@ -51,6 +56,7 @@
   margin-left: 2px;
   background: linear-gradient(45deg, #4a6bf5, #5e86ff);
   -webkit-background-clip: text;
+  background-clip: text; /* Add this standard property */
   -webkit-text-fill-color: transparent;
   text-shadow: none;
 }
@@ -61,12 +67,13 @@
   font-weight: 500;
   color: #a3aed0 !important;
   position: relative;
-  padding: 0.6rem 0.5rem !important;
+  padding: 0.3rem 0.2rem !important;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   font-size: 0.95rem;
   letter-spacing: 0.3px;
+  height: 42px; /* Standardize height for all nav items */
 }
 
 .nav-item::after {
@@ -109,15 +116,40 @@
   align-items: center;
   font-weight: 500;
   color: #a3aed0;
+  position: relative;
+  height: 100%;
+}
+
+/* Style for the NavDropdown component containing admin menu */
+#admin-dropdown {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  margin: 0 0.8rem;
+  padding: 0.6rem 0.5rem !important;
+}
+
+/* Admin dropdown items organized in groups */
+.admin-dropdown-header {
+  padding: 8px 16px;
+  color: #4a6bf5;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: rgba(74, 107, 245, 0.05);
 }
 
 /* Enhanced Search form */
 .search-form {
   position: relative;
   margin-right: 1.2rem;
-  flex: 1;
-  max-width: 500px;
+  flex: 0 1 250px; /* Changed from flex: 1 to prevent stretching */
+  max-width: 250px;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  height: 42px;
 }
 
 .search-form-container {
@@ -125,17 +157,18 @@
   height: 42px;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .search-icon-wrapper {
   position: absolute;
-  right: 15px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 4;
   cursor: pointer;
   height: 36px;
-  width: 36px;
+  width: 33px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -145,6 +178,7 @@
 
 .search-icon-wrapper:hover {
   background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10;
 }
 
 .search-icon {
@@ -155,20 +189,22 @@
 
 /* Collapsed search state */
 .search-form.collapsed {
-  width: 40px;
+  width: 42px;
+  min-width: 42px;
   overflow: hidden;
+  flex: 0 0 42px;
 }
 
 .search-form.collapsed .search-input {
   width: 0;
-  padding: 0.6rem 0 !important;
+  padding: 0.2rem 0 !important;
   opacity: 0;
 }
 
 /* Expanded search state */
 .search-form.expanded {
   width: 250px;
-  max-width: 500px;
+  flex: 0 0 190px;
 }
 
 .search-form.expanded .search-input {
@@ -227,12 +263,18 @@
 .cart-link {
   margin: 0 1rem;
   position: relative;
+  height: 42px;
+  display: flex;
+  align-items: center;
 }
 
 .cart-icon-container {
   position: relative;
   padding: 0.5rem;
   transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cart-icon-container:hover {
@@ -289,6 +331,7 @@
   background-color: rgba(255, 255, 255, 0.06);
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  height: 42px; /* Match other elements height */
 }
 
 .user-dropdown-toggle:hover {
@@ -358,6 +401,7 @@
 .auth-buttons {
   display: flex;
   align-items: center;
+  height: 42px; /* Match height with other navbar elements */
 }
 
 .login-btn {
@@ -368,6 +412,9 @@
   font-size: 0.9rem;
   letter-spacing: 0.3px;
   padding: 0.5rem 1rem !important;
+  height: 42px;
+  display: flex;
+  align-items: center;
 }
 
 .login-btn:hover {
@@ -385,6 +432,9 @@
   box-shadow: 0 4px 15px rgba(74, 107, 245, 0.25);
   font-size: 0.9rem;
   letter-spacing: 0.3px;
+  height: 42px;
+  display: flex;
+  align-items: center;
 }
 
 .register-btn:hover {
@@ -395,6 +445,18 @@
 /* Navbar actions */
 .navbar-actions {
   display: flex;
+  align-items: center;
+  height: 42px;
+}
+
+/* Navbar container styling for better alignment */
+.navbar-collapse {
+  display: flex;
+  align-items: center;
+}
+
+#main-nav {
+  height: 42px;
   align-items: center;
 }
 
@@ -423,8 +485,15 @@
     padding: 1rem;
     border-radius: 0 0 10px 10px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    max-height: 80vh;
+    max-height: calc(100vh - 76px); /* Prevent overflow */
     overflow-y: auto;
+    margin-top: 0.5rem;
+    height: auto;
+    align-items: flex-start;
+  }
+  
+  #main-nav {
+    height: auto;
   }
   
   .navbar-actions {
@@ -432,17 +501,21 @@
     width: 100%;
     align-items: flex-start;
     margin-top: 1.5rem;
+    height: auto;
   }
   
   .search-form {
     width: 100%;
     margin: 1rem 0;
     max-width: none;
+    flex: auto;
+    height: auto;
   }
   
   .search-form.collapsed {
     width: 100% !important;
     overflow: visible;
+    flex: auto;
   }
   
   .search-form.collapsed .search-input {
@@ -464,16 +537,19 @@
     margin-top: 1rem;
     width: 100%;
     justify-content: space-between;
+    height: auto;
   }
   
   .cart-link {
     margin-left: 0;
+    height: auto;
   }
   
   .user-dropdown-toggle {
     width: 100%;
     justify-content: flex-start;
     margin-top: 0.5rem;
+    height: auto;
   }
   
   .nav-item::after {
@@ -489,4 +565,10 @@
     background-color: rgba(255, 255, 255, 0.03);
     border-radius: 4px;
   }
+  
+  .nav-item, #admin-dropdown, .login-btn, .register-btn {
+    height: auto;
+  }
 }
+
+

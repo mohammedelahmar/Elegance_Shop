@@ -4,7 +4,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import PrivateRoute from './PrivateRoute';
 import AdminRoute from './AdminRoute';
-import Layout from '../components/Layout/Layout';
+import Layout from '../components/layout/layout';
 
 // Lazy loading components for better performance
 const Home = lazy(() => import('../pages/HomePage'));
@@ -19,6 +19,8 @@ const OrderHistory = lazy(() => import('../pages/OrderHistoryPage'));
 const OrderDetail = lazy(() => import('../pages/OrderPage'));
 const Wishlist = lazy(() => import('../pages/WishlistPage'));
 const NotFound = lazy(() => import('../pages/NotFound'));
+const About = lazy(() => import('../pages/AboutPage'));
+const Contact = lazy(() => import('../pages/ContactPage'));
 
 // Admin pages
 const Dashboard = lazy(() => import('../pages/Admin/Dashboard'));
@@ -49,6 +51,8 @@ const AppRoutes = () => {
           <Route path="/products/:id" element={<ProductPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           
           {/* Protected routes - require authentication */}
           <Route element={<PrivateRoute />}>
