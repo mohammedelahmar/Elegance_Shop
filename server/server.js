@@ -46,6 +46,7 @@ app.use('/api/addresses', addressesRoutes);
 app.use('/api/variants', varianteProductRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/commandes', commandeRoutes);
 
 // API Documentation Route
 app.get('/api', (req, res) => {

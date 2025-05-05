@@ -5,7 +5,21 @@ const CommandeSchema = new mongoose.Schema({
     DateCommande: { type: Date, default: Date.now },
     total_amount: { type: mongoose.Schema.Types.Decimal128, required: true },
     status: { type: String, enum: ['pending', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
-}, { timestamps: true }); // Removed manual timestamps
+    isPaid: {
+        type: Boolean,
+        default: false
+    },
+    paidAt: {
+        type: Date
+    },
+    isDelivered: {
+        type: Boolean,
+        default: false
+    },
+    deliveredAt: {
+        type: Date
+    }
+}, { timestamps: true });
 
 const Commande = mongoose.model('Commande', CommandeSchema);
 export default Commande;

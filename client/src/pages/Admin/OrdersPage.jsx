@@ -125,13 +125,26 @@ const OrdersPage = () => {
       try {
         setActionLoading(true);
         setActionError(null);
-        await updateOrderToPaid(orderId, { id: Date.now(), status: 'COMPLETED', update_time: new Date().toISOString(), payer: { email_address: 'manual@admin.com' } });
+        
+        // Call API to mark as paid
+        await updateOrderToPaid(orderId);
         
         // Update the local state with the new data
         const updatedOrders = orders.map(order =>
-          order._id === orderId ? { ...order, isPaid: true, paidAt: new Date().toISOString() } : order
+          order._id === orderId ? { 
+            ...order, 
+            isPaid: true, 
+            paidAt: new Date().toISOString() 
+          } : order
         );
         setOrders(updatedOrders);
+        setFilteredOrders(prevFiltered => prevFiltered.map(order =>
+          order._id === orderId ? { 
+            ...order, 
+            isPaid: true, 
+            paidAt: new Date().toISOString() 
+          } : order
+        ));
         
         // If we're viewing the order details, update the selected order too
         if (selectedOrder && selectedOrder._id === orderId) {
