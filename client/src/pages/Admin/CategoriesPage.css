@@ -1,0 +1,75 @@
+/* Modern dark admin styles for CategoriesPage */
+
+.categories-admin-container {
+  background: #161c2d;
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  padding: 32px 24px 24px 24px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.categories-admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.categories-admin-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -1px;
+}
+
+.categories-admin-actions .btn-primary {
+  background: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(74,107,245,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.categories-admin-actions .btn-primary:hover {
+  background: linear-gradient(45deg, #6f88ff, #4a6bf5);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.categories-admin-actions .btn-outline-secondary {
+  border-radius: 12px;
+  color: #a3aed0;
+  border: 1.5px solid #232b42;
+  background: #181f2e;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.categories-admin-actions .btn-outline-secondary:hover {
+  background: #232b42;
+  color: #fff;
+}
+
+.categories-admin-card {
+  background: #1e2634;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .categories-admin-container {
+    padding: 12px 4px;
+    border-radius: 12px;
+  }
+  .categories-admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .categories-admin-title {
+    font-size: 1.3rem;
+  }
+}

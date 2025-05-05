@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import { FaPlus, FaSync } from 'react-icons/fa';
 import { getAllCategories } from '../../api/category';
 import CategoryList from '../../components/Admin/Categories/CategoryList';
@@ -7,6 +7,7 @@ import CategoryEdit from '../../components/Admin/Categories/CategoryEdit';
 import CategoryAdd from '../../components/Admin/Categories/CategoryAdd';
 import Loader from '../../components/UI/Loader';
 import Message from '../../components/UI/Message';
+import './CategoriesPage.css';
 
 const CategoriesPage = () => {
   const [categories, setCategories] = useState([]);
@@ -67,13 +68,11 @@ const CategoriesPage = () => {
   };
 
   return (
-    <Container fluid className="py-3">
-      <Row className="mb-4 align-items-center">
-        <Col>
-          <h1 className="h3 mb-0">Category Management</h1>
-        </Col>
-        <Col xs="auto">
-          <Button 
+    <div className="categories-admin-container">
+      <div className="categories-admin-header">
+        <h1 className="categories-admin-title">Category Management</h1>
+        <div className="categories-admin-actions">
+          <Button style={{ marginRight: "10px" }}
             variant="primary" 
             className="me-2" 
             onClick={handleShowAddModal}
@@ -86,23 +85,23 @@ const CategoriesPage = () => {
           >
             <FaSync /> Refresh
           </Button>
-        </Col>
-      </Row>
+        </div>
+      </div>
 
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Card>
-          <Card.Body>
+        <div className="categories-admin-card">
+          <Card.Body style={{ background: 'transparent', boxShadow: 'none', border: 'none' }}>
             <CategoryList 
               categories={categories} 
               onEditCategory={handleEditCategory} 
               onCategoryUpdated={handleRefresh}
             />
           </Card.Body>
-        </Card>
+        </div>
       )}
 
       {showEditModal && (
@@ -119,7 +118,7 @@ const CategoriesPage = () => {
         onHide={handleCloseAddModal}
         onCategoryAdded={handleCategoryAdded}
       />
-    </Container>
+    </div>
   );
 };
 

@@ -15,6 +15,9 @@ import RecentOrders from '../../components/Admin/Dashboard/RecentOrders';
 import SalesChart from '../../components/Admin/Dashboard/SalesChart';
 import TopProducts from '../../components/Admin/Dashboard/TopProducts';
 import RecentReviews from '../../components/Admin/Dashboard/RecentReviews';
+import AdminSidebar from '../../components/Admin/AdminSidebar';
+import AdminHeaderBar from '../../components/Admin/AdminHeaderBar';
+import './DashboardLayout.css';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -33,6 +36,7 @@ const Dashboard = () => {
   const [topProducts, setTopProducts] = useState([]);
   const [recentReviews, setRecentReviews] = useState([]);
   const [salesData, setSalesData] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -143,228 +147,192 @@ const Dashboard = () => {
   if (error) return <Message variant="danger">{error}</Message>;
 
   return (
-    <Container fluid className="py-4">
-      <Row className="mb-4">
-        <Col>
-          <h1 className="h3 mb-0">Dashboard</h1>
-          <p className="text-muted">Welcome to your store administration panel</p>
-        </Col>
-      </Row>
+    <div className="admin-dashboard-layout">
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="admin-dashboard-main">
+        <AdminHeaderBar onSidebarToggle={() => setSidebarOpen((v) => !v)} />
+        <main className="admin-dashboard-content">
+          <Container fluid className="py-4">
+            <Row className="mb-4">
+              <Col>
+                <h1 className="h3 mb-0">Dashboard</h1>
+                <p className="text-muted">Welcome to your store administration panel</p>
+              </Col>
+            </Row>
 
-      {/* Stats Cards */}
-      <Row className="mb-4 g-3">
-        <Col lg={3} sm={6}>
-          <Card className="dashboard-stat-card h-100 border-0 shadow-sm">
-            <Card.Body className="d-flex align-items-center">
-              <div className="rounded-circle bg-primary bg-opacity-15 p-3 me-3">
-                <FaMoneyBillWave className="text-primary" size={24} />
-              </div>
-              <div>
-                <h6 className="text-muted mb-1">Total Revenue</h6>
-                <h3 className="mb-0">${stats.revenue.toFixed(2)}</h3>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        
-        <Col lg={3} sm={6}>
-          <Card className="dashboard-stat-card h-100 border-0 shadow-sm">
-            <Card.Body className="d-flex align-items-center">
-              <div className="rounded-circle bg-success bg-opacity-15 p-3 me-3">
-                <FaShoppingCart className="text-success" size={24} />
-              </div>
-              <div>
-                <h6 className="text-muted mb-1">Orders</h6>
-                <h3 className="mb-0">{stats.ordersTotal}</h3>
-                <small className="text-muted">
-                  {stats.ordersProcessing} processing
-                </small>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        
-        <Col lg={3} sm={6}>
-          <Card className="dashboard-stat-card h-100 border-0 shadow-sm">
-            <Card.Body className="d-flex align-items-center">
-              <div className="rounded-circle bg-info bg-opacity-15 p-3 me-3">
-                <FaUsers className="text-info" size={24} />
-              </div>
-              <div>
-                <h6 className="text-muted mb-1">Customers</h6>
-                <h3 className="mb-0">{stats.usersTotal}</h3>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        
-        <Col lg={3} sm={6}>
-          <Card className="dashboard-stat-card h-100 border-0 shadow-sm">
-            <Card.Body className="d-flex align-items-center">
-              <div className="rounded-circle bg-warning bg-opacity-15 p-3 me-3">
-                <FaBox className="text-warning" size={24} />
-              </div>
-              <div>
-                <h6 className="text-muted mb-1">Products</h6>
-                <h3 className="mb-0">{stats.productsTotal}</h3>
-                <small className="text-muted">
-                  {stats.productsOutOfStock} out of stock
-                </small>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+            {/* Stats Cards */}
+            <Row className="mb-4 g-3">
+              <Col lg={3} sm={6}>
+                <Card className="dashboard-stat-card h-100 border-0 shadow-sm">
+                  <Card.Body className="d-flex align-items-center gap-3">
+                    <FaMoneyBillWave className="dashboard-stat-icon text-primary" size={32} />
+                    <div>
+                      <h6 className="text-muted mb-1">Total Revenue</h6>
+                      <h3 className="mb-0">${stats.revenue.toFixed(2)}</h3>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col lg={3} sm={6}>
+                <Card className="dashboard-stat-card h-100 border-0 shadow-sm">
+                  <Card.Body className="d-flex align-items-center gap-3">
+                    <FaShoppingCart className="dashboard-stat-icon text-success" size={32} />
+                    <div>
+                      <h6 className="text-muted mb-1">Orders</h6>
+                      <h3 className="mb-0">{stats.ordersTotal}</h3>
+                      <small className="text-muted">{stats.ordersProcessing} processing</small>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col lg={3} sm={6}>
+                <Card className="dashboard-stat-card h-100 border-0 shadow-sm">
+                  <Card.Body className="d-flex align-items-center gap-3">
+                    <FaUsers className="dashboard-stat-icon text-info" size={32} />
+                    <div>
+                      <h6 className="text-muted mb-1">Customers</h6>
+                      <h3 className="mb-0">{stats.usersTotal}</h3>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col lg={3} sm={6}>
+                <Card className="dashboard-stat-card h-100 border-0 shadow-sm">
+                  <Card.Body className="d-flex align-items-center gap-3">
+                    <FaBox className="dashboard-stat-icon text-warning" size={32} />
+                    <div>
+                      <h6 className="text-muted mb-1">Products</h6>
+                      <h3 className="mb-0">{stats.productsTotal}</h3>
+                      <small className="text-muted">{stats.productsOutOfStock} out of stock</small>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
 
-      {/* Quick Actions */}
-      <Row className="mb-4">
-        <Col>
-          <Card className="border-0 shadow-sm">
-            <Card.Body>
-              <h5 className="mb-4">Quick Actions</h5>
-              <div className="d-flex flex-wrap gap-2">
-                <Button 
-                  as={Link} 
-                  to="/admin/products" 
-                  variant="outline-primary"
-                  className="d-flex align-items-center"
-                >
-                  <FaBox className="me-2" /> Manage Products
-                </Button>
-                <Button 
-                  as={Link} 
-                  to="/admin/categories" 
-                  variant="outline-secondary"
-                  className="d-flex align-items-center"
-                >
-                  <FaTags className="me-2" /> Manage Categories
-                </Button>
-                <Button 
-                  as={Link} 
-                  to="/admin/orders" 
-                  variant="outline-success"
-                  className="d-flex align-items-center"
-                >
-                  <FaShippingFast className="me-2" /> Process Orders
-                </Button>
-                <Button 
-                  as={Link} 
-                  to="/admin/reviews" 
-                  variant="outline-warning"
-                  className="d-flex align-items-center"
-                >
-                  <FaStar className="me-2" /> Review Management
-                </Button>
-                <Button 
-                  as={Link} 
-                  to="/admin/users" 
-                  variant="outline-info"
-                  className="d-flex align-items-center"
-                >
-                  <FaUsers className="me-2" /> User Management
-                </Button>
-                <Button 
-                  as={Link} 
-                  to="/admin/products" 
-                  variant="outline-danger"
-                  className="d-flex align-items-center"
-                >
-                  <FaExclamationTriangle className="me-2" /> Low Stock Items
-                </Button>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* Charts and Recent Orders */}
-      <Row className="mb-4 g-3">
-        <Col lg={8}>
-          <Card className="border-0 shadow-sm h-100">
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <h5 className="mb-0">Sales Overview</h5>
-                <div>
-                  <Button 
-                    as={Link} 
-                    to="/admin/orders" 
-                    variant="link" 
-                    size="sm"
-                    className="text-decoration-none"
-                  >
-                    View All
-                  </Button>
+            {/* Quick Actions */}
+            <Row className="mb-4">
+              <Col>
+                <div className="dashboard-quick-actions">
+                  <Link to="/admin/products" className="dashboard-action-tile">
+                    <FaBox className="dashboard-action-icon text-primary" />
+                    Manage Products
+                  </Link>
+                  <Link to="/admin/categories" className="dashboard-action-tile">
+                    <FaTags className="dashboard-action-icon text-secondary" />
+                    Manage Categories
+                  </Link>
+                  <Link to="/admin/orders" className="dashboard-action-tile">
+                    <FaShippingFast className="dashboard-action-icon text-success" />
+                    Process Orders
+                  </Link>
+                  <Link to="/admin/reviews" className="dashboard-action-tile">
+                    <FaStar className="dashboard-action-icon text-warning" />
+                    Review Management
+                  </Link>
+                  <Link to="/admin/users" className="dashboard-action-tile">
+                    <FaUsers className="dashboard-action-icon text-info" />
+                    User Management
+                  </Link>
+                  <Link to="/admin/products" className="dashboard-action-tile">
+                    <FaExclamationTriangle className="dashboard-action-icon text-danger" />
+                    Low Stock Items
+                  </Link>
                 </div>
-              </div>
-              <SalesChart data={salesData} />
-            </Card.Body>
-          </Card>
-        </Col>
-        
-        <Col lg={4}>
-          <Card className="border-0 shadow-sm h-100">
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="mb-0">Recent Orders</h5>
-                <Button 
-                  as={Link} 
-                  to="/admin/orders" 
-                  variant="link" 
-                  size="sm"
-                  className="text-decoration-none"
-                >
-                  View All
-                </Button>
-              </div>
-              <RecentOrders orders={recentOrders} />
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+              </Col>
+            </Row>
 
-      {/* Top Products and Recent Reviews */}
-      <Row className="g-3">
-        <Col lg={8}>
-          <Card className="border-0 shadow-sm h-100">
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <h5 className="mb-0">Top Selling Products</h5>
-                <Button 
-                  as={Link} 
-                  to="/admin/products" 
-                  variant="link" 
-                  size="sm"
-                  className="text-decoration-none"
-                >
-                  View All Products
-                </Button>
-              </div>
-              <TopProducts products={topProducts} />
-            </Card.Body>
-          </Card>
-        </Col>
-        
-        <Col lg={4}>
-          <Card className="border-0 shadow-sm h-100">
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5 className="mb-0">Recent Reviews</h5>
-                <Button 
-                  as={Link} 
-                  to="/admin/reviews" 
-                  variant="link" 
-                  size="sm"
-                  className="text-decoration-none"
-                >
-                  View All
-                </Button>
-              </div>
-              <RecentReviews reviews={recentReviews} />
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+            {/* Charts and Recent Orders */}
+            <Row className="mb-4 g-3">
+              <Col lg={8}>
+                <Card className="border-0 shadow-sm h-100">
+                  <Card.Body>
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                      <h5 className="mb-0">Sales Overview</h5>
+                      <div>
+                        <Button 
+                          as={Link} 
+                          to="/admin/orders" 
+                          variant="link" 
+                          size="sm"
+                          className="text-decoration-none"
+                        >
+                          View All
+                        </Button>
+                      </div>
+                    </div>
+                    <SalesChart data={salesData} />
+                  </Card.Body>
+                </Card>
+              </Col>
+              
+              <Col lg={4}>
+                <Card className="border-0 shadow-sm h-100">
+                  <Card.Body>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h5 className="mb-0">Recent Orders</h5>
+                      <Button 
+                        as={Link} 
+                        to="/admin/orders" 
+                        variant="link" 
+                        size="sm"
+                        className="text-decoration-none"
+                      >
+                        View All
+                      </Button>
+                    </div>
+                    <RecentOrders orders={recentOrders} />
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+
+            {/* Top Products and Recent Reviews */}
+            <Row className="g-3">
+              <Col lg={8}>
+                <Card className="border-0 shadow-sm h-100">
+                  <Card.Body>
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                      <h5 className="mb-0">Top Selling Products</h5>
+                      <Button 
+                        as={Link} 
+                        to="/admin/products" 
+                        variant="link" 
+                        size="sm"
+                        className="text-decoration-none"
+                      >
+                        View All Products
+                      </Button>
+                    </div>
+                    <TopProducts products={topProducts} />
+                  </Card.Body>
+                </Card>
+              </Col>
+              
+              <Col lg={4}>
+                <Card className="border-0 shadow-sm h-100">
+                  <Card.Body>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <h5 className="mb-0">Recent Reviews</h5>
+                      <Button 
+                        as={Link} 
+                        to="/admin/reviews" 
+                        variant="link" 
+                        size="sm"
+                        className="text-decoration-none"
+                      >
+                        View All
+                      </Button>
+                    </div>
+                    <RecentReviews reviews={recentReviews} />
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+        </main>
+      </div>
+    </div>
   );
 };
 

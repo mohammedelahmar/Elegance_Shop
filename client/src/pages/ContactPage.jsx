@@ -94,7 +94,7 @@ const ContactPage = () => {
                     <Col md={6} className="mb-3">
                       <Form.Group controlId="contactName">
                         <Form.Label>Name</Form.Label>
-                        <Form.Control
+                        <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
                           type="text"
                           name="name"
                           value={form.name}
@@ -106,7 +106,7 @@ const ContactPage = () => {
                     <Col md={6} className="mb-3">
                       <Form.Group controlId="contactEmail">
                         <Form.Label>Email</Form.Label>
-                        <Form.Control
+                        <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
                           type="email"
                           name="email"
                           value={form.email}
@@ -118,7 +118,7 @@ const ContactPage = () => {
                   </Row>
                   <Form.Group controlId="contactMessage" className="mb-3">
                     <Form.Label>Message</Form.Label>
-                    <Form.Control
+                    <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
                       as="textarea"
                       name="message"
                       value={form.message}

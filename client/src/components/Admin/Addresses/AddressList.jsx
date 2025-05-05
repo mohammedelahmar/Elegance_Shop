@@ -4,6 +4,7 @@ import { FaEye, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 import { deleteAddress } from '../../../api/address';
 import Message from '../../UI/Message';
 import PropTypes from 'prop-types';
+import './AddressList.css';
 
 const AddressList = ({ addresses, onEditAddress, onViewAddress, onAddressDeleted }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,9 +51,9 @@ const AddressList = ({ addresses, onEditAddress, onViewAddress, onAddressDeleted
         </Message>
       )}
       
-      <div className="mb-3">
+      <div className="address-search-bar">
         <InputGroup>
-          <InputGroup.Text id="search-addon">
+          <InputGroup.Text id="search-addon" className="address-search-icon">
             <FaSearch />
           </InputGroup.Text>
           <Form.Control
@@ -62,19 +63,20 @@ const AddressList = ({ addresses, onEditAddress, onViewAddress, onAddressDeleted
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search"
             aria-describedby="search-addon"
+            className="address-search-input"
           />
         </InputGroup>
       </div>
 
       <div className="table-responsive">
-        <Table hover>
+        <Table hover className="address-table">
           <thead>
             <tr>
               <th>ID</th>
               <th>User</th>
               <th>Address</th>
               <th>City</th>
-              <th>Country</th>
+              <th>Country</th> 
               <th>Phone Number</th>
               <th>Actions</th>
             </tr>
@@ -92,7 +94,7 @@ const AddressList = ({ addresses, onEditAddress, onViewAddress, onAddressDeleted
                   <td>{address._id.substring(address._id.length - 6).toUpperCase()}</td>
                   <td>
                     {address.user ? (
-                      `${address.user.Firstname || ''} ${address.user.Lastname || ''}`
+                      `${address.user.Firstname || ''} ${address.user.Lastname || ''}`.trim() || address.user.email || 'Unknown User'
                     ) : (
                       'Unknown User'
                     )}

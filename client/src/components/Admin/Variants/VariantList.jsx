@@ -4,6 +4,7 @@ import { FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 import { deleteVariant } from '../../../api/variant';
 import Message from '../../UI/Message';
 import PropTypes from 'prop-types';
+import './VariantList.css';
 
 const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,7 +39,7 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
   };
 
   return (
-    <>
+    <div className="variant-list-card">
       {showDeleteMessage && (
         <Message 
           variant={messageType} 
@@ -49,9 +50,9 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
         </Message>
       )}
       
-      <div className="mb-3">
+      <div className="variant-search-bar">
         <InputGroup>
-          <InputGroup.Text id="search-addon">
+          <InputGroup.Text id="search-addon" className="variant-search-icon">
             <FaSearch />
           </InputGroup.Text>
           <Form.Control
@@ -61,6 +62,7 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search"
             aria-describedby="search-addon"
+            className="variant-search-input"
           />
         </InputGroup>
       </div>
@@ -72,7 +74,7 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
       )}
 
       <div className="table-responsive">
-        <Table hover>
+        <Table hover className="variant-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -98,13 +100,9 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
                     {variant.couleur ? (
                       <div className="d-flex align-items-center">
                         <div
-                          className="color-preview me-2"
+                          className="color-preview"
                           style={{
-                            backgroundColor: variant.couleur,
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            border: '1px solid #ddd'
+                            backgroundColor: variant.couleur
                           }}
                         ></div>
                         {variant.couleur}
@@ -144,7 +142,7 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
       <div className="mt-2 text-muted small">
         Showing {filteredVariants.length} of {variants.length} variants
       </div>
-    </>
+    </div>
   );
 };
 

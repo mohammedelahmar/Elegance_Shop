@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Badge, Button, ButtonGroup } from 'react-bootstrap';
 import { FaEye, FaCheck, FaTrash, FaStar, FaRegStar } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import './ReviewList.css';
 
 const ReviewList = ({ reviews, onViewReview, onDeleteReview, onApproveReview, isLoading }) => {
   const formatDate = (dateString) => {
@@ -29,8 +30,8 @@ const ReviewList = ({ reviews, onViewReview, onDeleteReview, onApproveReview, is
 
   return (
     <div className="table-responsive">
-      <Table hover className="align-middle">
-        <thead className="bg-light">
+      <Table hover className="review-table align-middle">
+        <thead>
           <tr>
             <th>Product</th>
             <th>User</th>

@@ -1,0 +1,115 @@
+/* Modern Variant List Styles - Matching CategoryList style */
+.variant-list-card {
+  background: #181f2e;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.13), 0 1.5px 8px rgba(0,0,0,0.18);
+  padding: 2.5rem 2rem 2rem 2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  border: 1.5px solid #232b42;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.variant-search-bar {
+  margin-bottom: 2.2rem;
+}
+
+.variant-search-input {
+  background: rgba(44, 54, 87, 0.95) !important;
+  color: #fff !important;
+  border: 2px solid #4a6bf5 !important;
+  border-radius: 2rem !important;
+  padding: 0.8rem 1.5rem 0.8rem 2.7rem !important;
+  font-size: 1.1rem !important;
+  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.10) !important;
+  outline: none !important;
+  transition: border 0.2s, box-shadow 0.2s !important;
+}
+
+.variant-search-input:focus {
+  border: 2px solid #90cdf4 !important;
+  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+}
+
+.variant-search-icon {
+  background: transparent !important;
+  border: none !important;
+  color: #90cdf4 !important;
+  font-size: 1.2rem !important;
+  padding-left: 1rem !important;
+}
+
+.variant-table {
+  background: transparent;
+  color: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.variant-table thead tr {
+  background: linear-gradient(90deg, #232946 60%, #4a6bf5 100%);
+  color: #fff;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.variant-table th, .variant-table td {
+  border: none;
+  vertical-align: middle;
+  font-size: 1.05rem;
+}
+
+.variant-table tbody tr {
+  background: rgba(22, 28, 45, 0.95);
+  transition: background 0.2s;
+}
+
+.variant-table tbody tr:hover {
+  background: rgba(74, 107, 245, 0.10);
+}
+
+.variant-table .btn-outline-primary {
+  border-color: #4a6bf5;
+  color: #4a6bf5;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+}
+
+.variant-table .btn-outline-primary:hover {
+  background: #4a6bf5;
+  color: #fff;
+}
+
+.variant-table .btn-outline-danger {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+}
+
+.variant-table .btn-outline-danger:hover {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.color-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid #4a6bf5;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@media (max-width: 767.98px) {
+  .variant-list-card {
+    padding: 1.2rem 0.5rem;
+    border-radius: 1rem;
+  }
+  
+  .variant-search-input {
+    font-size: 1rem !important;
+    padding: 0.7rem 1.2rem 0.7rem 2.2rem !important;
+  }
+}

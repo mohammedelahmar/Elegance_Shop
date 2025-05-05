@@ -6,7 +6,7 @@ import './HomePage.css';
 const TEAM = [
   { name: 'Mohammed Mehdi Boudir', role: 'Frontend Developer', img: '', icon: <FaRocket /> },
   { name: 'Mohammed El Ahmar', role: 'Backend Developer', img: '', icon: <FaTrophy /> },
-  { name: 'Yasser Amiri', role: 'UI/UX Designer', img: '', icon: <FaHeart /> },
+  { name: 'Yasser Amiri', role: 'Rapport Maker', img: '', icon: <FaHeart /> },
 ];
 
 const AboutPage = () => {
@@ -75,8 +75,8 @@ const AboutPage = () => {
               <Col md={4} sm={6} key={idx} className="fade-in" style={{ animationDelay: `${idx * 0.1}s` }}>
                 <Card className="category-card text-center p-4 h-100">
                   <div className="category-icon mb-3" style={{ fontSize: '2.5rem' }}>{member.icon}</div>
-                  <h4 className="category-name mb-2">{member.name}</h4>
-                  <p className="text-muted mb-0">{member.role}</p>
+                  <h4 className="category-name mb-2" style={{color:'#5d7afa'}}>{member.name}</h4>
+                  <p className="text-muted mb-0" style={{color:'#1e2852'}}>{member.role}</p>
                 </Card>
               </Col>
             ))}

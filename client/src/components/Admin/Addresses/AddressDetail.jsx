@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Card, Row, Col, Button, ListGroup } from 'react-bootstrap';
 import { FaUser, FaMapMarkedAlt, FaPhoneAlt, FaEdit } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import './AddressList.css';
 
 const AddressDetail = ({ address, show, onHide, onEdit }) => {
   if (!address) return null;
@@ -16,6 +17,7 @@ const AddressDetail = ({ address, show, onHide, onEdit }) => {
       onHide={onHide} 
       size="lg" 
       centered
+      dialogClassName="address-modal"
     >
       <Modal.Header closeButton>
         <Modal.Title>Address Details</Modal.Title>
@@ -23,7 +25,7 @@ const AddressDetail = ({ address, show, onHide, onEdit }) => {
       <Modal.Body>
         <Row className="mb-4">
           <Col md={6} className="mb-3">
-            <Card className="h-100">
+            <Card className="h-100 address-card">
               <Card.Header className="d-flex align-items-center">
                 <FaUser className="me-2" /> User Information
               </Card.Header>
@@ -49,7 +51,7 @@ const AddressDetail = ({ address, show, onHide, onEdit }) => {
             </Card>
           </Col>
           <Col md={6} className="mb-3">
-            <Card className="h-100">
+            <Card className="h-100 address-card">
               <Card.Header className="d-flex align-items-center">
                 <FaPhoneAlt className="me-2" /> Contact Information
               </Card.Header>
@@ -62,7 +64,7 @@ const AddressDetail = ({ address, show, onHide, onEdit }) => {
           </Col>
         </Row>
 
-        <Card>
+        <Card className="address-card">
           <Card.Header className="d-flex align-items-center">
             <FaMapMarkedAlt className="me-2" /> Address Details
           </Card.Header>
@@ -93,6 +95,10 @@ const AddressDetail = ({ address, show, onHide, onEdit }) => {
         <Button 
           variant="primary"
           onClick={onEdit}
+          style={{
+            background: '#4a6bf5', 
+            borderColor: '#4a6bf5'
+          }}
         >
           <FaEdit className="me-1" /> Edit Address
         </Button>

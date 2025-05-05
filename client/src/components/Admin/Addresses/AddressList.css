@@ -1,0 +1,160 @@
+/* Modern Address List Styles - Matching Category & Variant styles */
+.address-list-card {
+  background: #181f2e;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.13), 0 1.5px 8px rgba(0,0,0,0.18);
+  padding: 2.5rem 2rem 2rem 2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  border: 1.5px solid #232b42;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.address-search-bar {
+  margin-bottom: 2.2rem;
+}
+
+.address-search-input {
+  background: rgba(44, 54, 87, 0.95) !important;
+  color: #fff !important;
+  border: 2px solid #4a6bf5 !important;
+  border-radius: 2rem !important;
+  padding: 0.8rem 1.5rem 0.8rem 2.7rem !important;
+  font-size: 1.1rem !important;
+  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.10) !important;
+  outline: none !important;
+  transition: border 0.2s, box-shadow 0.2s !important;
+}
+
+.address-search-input:focus {
+  border: 2px solid #90cdf4 !important;
+  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+}
+
+.address-search-icon {
+  background: transparent !important;
+  border: none !important;
+  color: #90cdf4 !important;
+  font-size: 1.2rem !important;
+  padding-left: 1rem !important;
+}
+
+.address-table {
+  background: transparent;
+  color: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.address-table thead tr {
+  background: linear-gradient(90deg, #232946 60%, #4a6bf5 100%);
+  color: #fff;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.address-table th, .address-table td {
+  border: none;
+  vertical-align: middle;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.address-table tbody tr {
+  background: rgba(22, 28, 45, 0.95);
+  transition: background 0.2s;
+}
+
+.address-table tbody tr:hover {
+  background: rgba(74, 107, 245, 0.10);
+}
+
+.address-table .btn-outline-info {
+  border-color: #4cc9f0;
+  color: #4cc9f0;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+}
+
+.address-table .btn-outline-info:hover {
+  background: #4cc9f0;
+  color: #fff;
+}
+
+.address-table .btn-outline-primary {
+  border-color: #4a6bf5;
+  color: #4a6bf5;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+}
+
+.address-table .btn-outline-primary:hover {
+  background: #4a6bf5;
+  color: #fff;
+}
+
+.address-table .btn-outline-danger {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+}
+
+.address-table .btn-outline-danger:hover {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+/* Modal styles */
+.address-modal .modal-content {
+  background: #232b42;
+  color: #fff;
+  border-radius: 1rem;
+  border: 1px solid #323c5a;
+}
+
+.address-modal .modal-header {
+  border-bottom: 1px solid #323c5a;
+}
+
+.address-modal .modal-footer {
+  border-top: 1px solid #323c5a;
+}
+
+.address-modal .close {
+  color: #fff;
+}
+
+.address-card {
+  background: #181f2e;
+  border: 1px solid #323c5a;
+  border-radius: 0.75rem;
+}
+
+.address-card .card-header {
+  background: rgba(74, 107, 245, 0.15);
+  border-bottom: 1px solid #323c5a;
+}
+
+.address-card .list-group-item {
+  background: transparent;
+  border-color: #323c5a;
+}
+
+.address-page-header {
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .address-list-card {
+    padding: 1.2rem 0.5rem;
+    border-radius: 1rem;
+  }
+  
+  .address-search-input {
+    font-size: 1rem !important;
+    padding: 0.7rem 1.2rem 0.7rem 2.2rem !important;
+  }
+}

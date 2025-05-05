@@ -4,6 +4,7 @@ import { FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 import { deleteProduct } from '../../../api/product';
 import Message from '../../../components/UI/Message';
 import PropTypes from 'prop-types';
+import '../Categories/CategoryList.css'; // Use the same CSS as CategoryList for consistent style
 
 const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,13 +39,9 @@ const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
 
   const formatPrice = (price) => {
     if (!price) return '$0.00';
-    
-    // Handle Decimal128 format from MongoDB
     if (typeof price === 'object' && price.$numberDecimal) {
       return `$${parseFloat(price.$numberDecimal).toFixed(2)}`;
     }
-    
-    // Handle regular number or string
     return `$${parseFloat(price).toFixed(2)}`;
   };
 
@@ -60,96 +57,98 @@ const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
         </Message>
       )}
       
-      <div className="mb-3">
-        <InputGroup>
-          <InputGroup.Text id="search-addon">
-            <FaSearch />
-          </InputGroup.Text>
-          <Form.Control
-            type="text"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            aria-label="Search"
-            aria-describedby="search-addon"
-          />
-        </InputGroup>
-      </div>
+      <div className="category-list-card"> {/* Use same card class as CategoryList */}
+        <div className="category-search-bar mb-4"> {/* Use same search bar class */}
+          <InputGroup>
+            <InputGroup.Text id="search-addon" className="category-search-icon">
+              <FaSearch />
+            </InputGroup.Text>
+            <Form.Control
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              aria-label="Search"
+              aria-describedby="search-addon"
+              className="category-search-input"
+            />
+          </InputGroup>
+        </div>
 
-      <div className="table-responsive">
-        <Table hover>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Category</th>
-              <th>Stock</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProducts.length === 0 ? (
+        <div className="table-responsive">
+          <Table hover className="category-table"> {/* Use same table class */}
+            <thead>
               <tr>
-                <td colSpan="7" className="text-center py-3">
-                  No products found
-                </td>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Stock</th>
+                <th>Actions</th>
               </tr>
-            ) : (
-              filteredProducts.map(product => (
-                <tr key={product._id}>
-                  <td>{product._id.substring(product._id.length - 6).toUpperCase()}</td>
-                  <td>
-                    {product.image_url ? (
-                      <Image 
-                        src={product.image_url} 
-                        alt={product.name} 
-                        width="50" 
-                        height="50"
-                        className="object-fit-cover"
-                      />
-                    ) : (
-                      <div className="placeholder-image">No Image</div>
-                    )}
-                  </td>
-                  <td>{product.name}</td>
-                  <td>{formatPrice(product.price)}</td>
-                  <td>{product.category?.name || 'Uncategorized'}</td>
-                  <td>
-                    <Badge bg={product.stock_quantity > 0 ? 'success' : 'danger'}>
-                      {product.stock_quantity > 0 ? product.stock_quantity : 'Out of Stock'}
-                    </Badge>
-                  </td>
-                  <td>
-                    <div className="d-flex gap-2">
-                      <Button 
-                        variant="outline-primary" 
-                        size="sm" 
-                        onClick={() => onEditProduct(product)}
-                        title="Edit Product"
-                      >
-                        <FaEdit />
-                      </Button>
-                      
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        onClick={() => handleDeleteProduct(product._id, product.name)}
-                        title="Delete Product"
-                      >
-                        <FaTrash />
-                      </Button>
-                    </div>
+            </thead>
+            <tbody>
+              {filteredProducts.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-3">
+                    No products found
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </Table>
-      </div>
-      <div className="mt-2 text-muted small">
-        Showing {filteredProducts.length} of {products.length} products
+              ) : (
+                filteredProducts.map(product => (
+                  <tr key={product._id}>
+                    <td>{product._id.substring(product._id.length - 6).toUpperCase()}</td>
+                    <td>
+                      {product.image_url ? (
+                        <Image 
+                          src={product.image_url} 
+                          alt={product.name} 
+                          width="50" 
+                          height="50"
+                          className="object-fit-cover"
+                        />
+                      ) : (
+                        <div className="placeholder-image">No Image</div>
+                      )}
+                    </td>
+                    <td>{product.name}</td>
+                    <td>{formatPrice(product.price)}</td>
+                    <td>{product.category?.name || 'Uncategorized'}</td>
+                    <td>
+                      <Badge bg={product.stock_quantity > 0 ? 'success' : 'danger'}>
+                        {product.stock_quantity > 0 ? product.stock_quantity : 'Out of Stock'}
+                      </Badge>
+                    </td>
+                    <td>
+                      <div className="d-flex gap-2">
+                        <Button 
+                          variant="outline-primary" 
+                          size="sm" 
+                          onClick={() => onEditProduct(product)}
+                          title="Edit Product"
+                        >
+                          <FaEdit />
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => handleDeleteProduct(product._id, product.name)}
+                          title="Delete Product"
+                        >
+                          <FaTrash />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </div>
+        <div className="mt-2 text-muted small">
+          Showing {filteredProducts.length} of {products.length} products
+        </div>
       </div>
     </>
   );

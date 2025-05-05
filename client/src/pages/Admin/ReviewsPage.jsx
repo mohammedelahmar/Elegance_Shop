@@ -6,6 +6,7 @@ import ReviewList from '../../components/Admin/Reviews/ReviewList';
 import ReviewDetail from '../../components/Admin/Reviews/ReviewDetail';
 import Loader from '../../components/UI/Loader';
 import Message from '../../components/UI/Message';
+import '../../components/Admin/Reviews/ReviewList.css';  // Import the new CSS
 
 const ReviewsPage = () => {
   const [reviews, setReviews] = useState([]);
@@ -172,15 +173,16 @@ const ReviewsPage = () => {
   ).values()];
 
   return (
-    <Container fluid className="py-3">
+    <Container fluid className="py-3" style={{ background: '#111827', minHeight: '100vh', color: '#fff' }}>
       {/* Header Row */}
       <Row className="mb-4 align-items-center">
         <Col>
-          <h1 className="h3 mb-0">Review Management</h1>
+          <h1 className="h3 mb-0 review-page-header">Review Management</h1>
         </Col>
         <Col xs="auto">
           <Button 
-            variant="outline-primary" 
+            className="review-btn-primary"
+            variant="primary" 
             onClick={handleRefresh}
             disabled={loading}
           >
@@ -212,13 +214,13 @@ const ReviewsPage = () => {
         </Message>
       )}
 
-      {/* Search and Filters */}
-      <Card className="mb-4 shadow-sm">
-        <Card.Body>
+      <div className="review-list-card">
+        {/* Search and Filters */}
+        <div className="review-search-bar">
           <Row className="align-items-center">
             <Col md={4} className="mb-3 mb-md-0">
               <InputGroup>
-                <InputGroup.Text>
+                <InputGroup.Text className="review-search-icon">
                   <FaSearch />
                 </InputGroup.Text>
                 <Form.Control
@@ -226,6 +228,7 @@ const ReviewsPage = () => {
                   placeholder="Search reviews..."
                   value={searchTerm}
                   onChange={handleSearch}
+                  className="review-search-input"
                 />
               </InputGroup>
             </Col>
@@ -235,6 +238,7 @@ const ReviewsPage = () => {
                   <Form.Select 
                     value={ratingFilter} 
                     onChange={e => setRatingFilter(e.target.value)}
+                    className="review-filter-select"
                   >
                     <option value="">Filter by Rating</option>
                     <option value="5">5 Stars</option>
@@ -248,6 +252,7 @@ const ReviewsPage = () => {
                   <Form.Select 
                     value={productFilter} 
                     onChange={e => setProductFilter(e.target.value)}
+                    className="review-filter-select"
                   >
                     <option value="">Filter by Product</option>
                     {uniqueProducts.map(product => (
@@ -259,7 +264,7 @@ const ReviewsPage = () => {
                 </Col>
                 <Col md={4} className="text-md-end">
                   <Button 
-                    variant="outline-secondary" 
+                    variant="outline-primary" 
                     onClick={clearFilters}
                     className="w-100"
                   >
@@ -269,35 +274,31 @@ const ReviewsPage = () => {
               </Row>
             </Col>
           </Row>
-        </Card.Body>
-      </Card>
+        </div>
 
-      {/* Status Tabs */}
-      <Tabs
-        activeKey={activeTab}
-        onSelect={(k) => setActiveTab(k)}
-        className="mb-4"
-      >
-        <Tab eventKey="all" title="All Reviews" />
-        <Tab eventKey="highRating" title="High Ratings (4-5)" />
-        <Tab eventKey="lowRating" title="Low Ratings (1-2)" />
-      </Tabs>
+        {/* Status Tabs */}
+        <Tabs
+          activeKey={activeTab}
+          onSelect={(k) => setActiveTab(k)}
+          className="mb-4 review-tabs"
+        >
+          <Tab eventKey="all" title="All Reviews" />
+          <Tab eventKey="highRating" title="High Ratings (4-5)" />
+          <Tab eventKey="lowRating" title="Low Ratings (1-2)" />
+        </Tabs>
 
-      {/* Reviews List */}
-      {loading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
-      ) : filteredReviews.length === 0 ? (
-        <Card className="text-center p-5 shadow-sm">
-          <Card.Body>
+        {/* Reviews List */}
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">{error}</Message>
+        ) : filteredReviews.length === 0 ? (
+          <div className="text-center p-5">
             <h3 className="text-muted">No reviews found</h3>
             <p>No reviews match your current filters.</p>
-          </Card.Body>
-        </Card>
-      ) : (
-        <Card className="shadow-sm">
-          <Card.Body>
+          </div>
+        ) : (
+          <div>
             <ReviewList
               reviews={filteredReviews}
               onViewReview={handleViewReview}
@@ -305,9 +306,9 @@ const ReviewsPage = () => {
               onApproveReview={handleApproveReview}
               isLoading={actionLoading}
             />
-          </Card.Body>
-        </Card>
-      )}
+          </div>
+        )}
+      </div>
 
       {/* Review Detail Modal */}
       {selectedReview && (

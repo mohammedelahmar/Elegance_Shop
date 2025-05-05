@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FaSync } from 'react-icons/fa';
 import { getAllAddresses } from '../../api/address';
 import AddressList from '../../components/Admin/Addresses/AddressList';
@@ -7,6 +7,7 @@ import AddressEdit from '../../components/Admin/Addresses/AddressEdit';
 import AddressDetail from '../../components/Admin/Addresses/AddressDetail';
 import Loader from '../../components/UI/Loader';
 import Message from '../../components/UI/Message';
+import '../../components/Admin/Addresses/AddressList.css'; // Import the new CSS
 
 const AddressesPage = () => {
   const [addresses, setAddresses] = useState([]);
@@ -73,15 +74,20 @@ const AddressesPage = () => {
   };
 
   return (
-    <Container fluid className="py-3">
+    <Container fluid className="py-3" style={{ background: '#111827', minHeight: '100vh', color: '#fff' }}>
+      {/* Header Row */}
       <Row className="mb-4 align-items-center">
         <Col>
-          <h1 className="h3 mb-0">Address Management</h1>
+          <h1 className="h3 mb-0 address-page-header">Address Management</h1>
         </Col>
         <Col xs="auto">
           <Button 
-            variant="outline-primary" 
+            variant="primary" 
             onClick={handleRefresh}
+            style={{
+              background: '#4a6bf5', 
+              borderColor: '#4a6bf5'
+            }}
           >
             <FaSync /> Refresh
           </Button>
@@ -104,16 +110,14 @@ const AddressesPage = () => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Card>
-          <Card.Body>
-            <AddressList 
-              addresses={addresses} 
-              onEditAddress={handleEditAddress} 
-              onViewAddress={handleViewAddress}
-              onAddressDeleted={handleAddressDeleted}
-            />
-          </Card.Body>
-        </Card>
+        <div className="address-list-card">
+          <AddressList 
+            addresses={addresses} 
+            onEditAddress={handleEditAddress} 
+            onViewAddress={handleViewAddress}
+            onAddressDeleted={handleAddressDeleted}
+          />
+        </div>
       )}
 
       {showEditModal && (

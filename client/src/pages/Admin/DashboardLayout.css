@@ -1,0 +1,160 @@
+.admin-dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #181f2e;
+}
+.admin-dashboard-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+  background: #202c55;
+  transition: margin-left 0.3s cubic-bezier(.4,2,.6,1);
+  margin-left: 0;
+}
+@media (min-width: 768px) {
+  .admin-dashboard-main {
+    margin-left: 230px;
+  }
+}
+.admin-dashboard-content {
+  flex: 1 1 auto;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  background: #181f2e;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: #e6e6f0;
+}
+
+.admin-dashboard-content h1,
+.admin-dashboard-content h3,
+.admin-dashboard-content h5,
+.admin-dashboard-content h6 {
+  color: #fff;
+}
+
+.dashboard-stat-card {
+  background: rgba(35, 41, 70, 0.98) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 4px 24px rgba(74,107,245,0.10), 0 1.5px 8px rgba(0,0,0,0.18) !important;
+  border: none !important;
+  color: #e6e6f0;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.dashboard-stat-card:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 32px #4a6bf5, 0 1.5px 8px rgba(0,0,0,0.22) !important;
+}
+.dashboard-stat-card h3 {
+  color: #fff;
+  font-weight: 700;
+}
+.dashboard-stat-card h6,
+.dashboard-stat-card small {
+  color: #bfc8e6;
+}
+
+.dashboard-stat-icon {
+  margin-right: 0.5rem;
+  filter: drop-shadow(0 2px 8px #4a6bf5aa);
+}
+
+/* Quick Actions */
+.dashboard-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+.dashboard-action-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: rgba(35, 41, 70, 0.98);
+  color: #e6e6f0;
+  border-radius: 14px;
+  padding: 1.1rem 1.7rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+  box-shadow: 0 2px 12px rgba(74,107,245,0.10);
+  border: 1.5px solid #232946;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  text-decoration: none;
+}
+.dashboard-action-tile:hover {
+  background: #232946;
+  color: #4a6bf5;
+  box-shadow: 0 4px 18px #4a6bf5;
+  transform: translateY(-2px) scale(1.04);
+}
+.dashboard-action-tile .dashboard-action-icon {
+  font-size: 1.3rem;
+  color: #4a6bf5;
+}
+
+/* Card and chart containers */
+.card,
+.card-body {
+  background: rgba(35, 41, 70, 0.98) !important;
+  color: #e6e6f0 !important;
+  border-radius: 18px !important;
+  border: none !important;
+}
+
+/* ListGroup and Card dark mode for dashboard widgets */
+.admin-dashboard-content .card,
+.admin-dashboard-content .card-body,
+.admin-dashboard-content .list-group,
+.admin-dashboard-content .list-group-item {
+  background: rgba(35, 41, 70, 0.98) !important;
+  color: #e6e6f0 !important;
+  border: none !important;
+}
+.admin-dashboard-content .list-group-item {
+  border-bottom: 1px solid #232946 !important;
+}
+.admin-dashboard-content .list-group-item:last-child {
+  border-bottom: none !important;
+}
+
+/* Remove white backgrounds from tables in widgets */
+.admin-dashboard-content table,
+.admin-dashboard-content thead,
+.admin-dashboard-content tbody,
+.admin-dashboard-content tr,
+.admin-dashboard-content th,
+.admin-dashboard-content td {
+  background: transparent !important;
+  color: #e6e6f0 !important;
+  border-color: #232946 !important;
+}
+.admin-dashboard-content thead th {
+  color: #90cdf4 !important;
+  border-bottom: 2px solid #4a6bf5 !important;
+}
+
+/* Chart titles and links */
+.admin-dashboard-content .text-muted,
+.admin-dashboard-content p.text-muted {
+  color: #bfc8e6 !important;
+}
+
+/* Recent Orders, Top Products, etc. */
+.admin-dashboard-content .card {
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 767.98px) {
+  .admin-dashboard-content {
+    padding: 1rem 0.5rem;
+  }
+  .dashboard-quick-actions {
+    gap: 0.5rem;
+  }
+  .dashboard-action-tile {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+  }
+}

@@ -10,7 +10,6 @@ import { getVariantsByProduct } from '../api/variant';
 import { getProductReviews, createReview } from '../api/review';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import ProductDetail from '../components/Product/ProductDetail';
-import { debounce } from 'lodash';
 
 import './ProductPage.css';
 
@@ -31,11 +30,6 @@ const ProductPage = () => {
     error: null,
     success: false
   });
-  
-  // Create debounced submit function
-  const debouncedSubmit = debounce(async (formData) => {
-    // Submit logic here
-  }, 300);
   
   // Helper to safely format price (handles MongoDB Decimal128)
   const formatPrice = (price) => {
@@ -110,15 +104,14 @@ const ProductPage = () => {
     }));
     
     try {
-      const newReview = await createReview({
+      await createReview({
         product_id: id,  // Changed from product to product_id
         rating: reviewState.rating,
         commentaire: reviewState.comment  // Changed from comment to commentaire
       });
-      
-      // Add new review to the reviews list
-      setReviews([newReview, ...reviews]);
-      
+      // Fetch latest reviews from backend to get correct user info
+      const reviewsData = await getProductReviews(id);
+      setReviews(reviewsData.data || []);
       // Reset form
       setReviewState({
         rating: 5,
@@ -252,7 +245,7 @@ const ProductPage = () => {
                   {/* Review Form */}
                   {isAuthenticated ? (
                     <div className="mb-4">
-                      <h5 className="fw-bold mb-3">Write a Review</h5>
+                      <h5 className="fw-bold mb-3" style={{color:'white'}}>Write a Review</h5>
                       {reviewState.success && (
                         <Alert variant="success" dismissible onClose={() => setReviewState(prev => ({ ...prev, success: false }))}>
                           Your review has been submitted successfully!
@@ -265,7 +258,7 @@ const ProductPage = () => {
                       )}
                       <Form onSubmit={handleSubmitReview} className="review-form">
                         <Form.Group className="mb-3">
-                          <Form.Label>Rating</Form.Label>
+                          <Form.Label style={{marginRight:'1.5rem'}}>Rating</Form.Label>
                           <Form.Select 
                             value={reviewState.rating} 
                             onChange={(e) => setReviewState(prev => ({
@@ -309,47 +302,29 @@ const ProductPage = () => {
                     </Alert>
                   )}
                   {/* Review List */}
-                  <h5 className="fw-bold mt-4 mb-3">Customer Reviews</h5>
+                  <h5 className="fw-bold mt-4 mb-3" style={{color:'white'}}>Customer Reviews</h5>
                   {reviews.length === 0 ? (
                     <Alert variant="light">
                       No reviews yet. Be the first to review this product!
                     </Alert>
                   ) : (
-<<<<<<< HEAD
                     <div className="review-list-modern">
                       {reviews.map((review) => (
                         <div key={review._id} className="review-item-modern mb-4 p-3 rounded-3 shadow-sm bg-white d-flex align-items-start gap-3">
                           <div className="review-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style={{width: 48, height: 48, fontSize: 22}}>
-                            {review.user?.Firstname ? review.user.Firstname[0] : 'A'}
-=======
-                    reviews.map((review) => (
-                      <div key={review._id} className="review-item mb-3">
-                        <div className="d-flex justify-content-between">
-                          <div>
-                            <strong>{review.user_id?.Firstname || 'Anonymous'}</strong>
-                            <div className="text-muted small">
-                              {new Date(review.createdAt).toLocaleDateString()}
-                            </div>
->>>>>>> a5d21a1aca4a7efe583d553afb0f47a695eb72e2
+                            {review.user_id?.Firstname ? review.user_id.Firstname[0] : (review.user?.Firstname ? review.user.Firstname[0] : 'A')}
                           </div>
                           <div className="flex-grow-1">
                             <div className="d-flex justify-content-between align-items-center mb-1">
-                              <div className="fw-semibold">{review.user?.Firstname || 'Anonymous'}</div>
+                              <div className="fw-semibold">{review.user_id?.Firstname || review.user?.Firstname || 'Anonymous'}</div>
                               <div className="text-warning fs-5">{renderStarRating(review.rating)}</div>
                             </div>
                             <div className="text-muted small mb-2">{new Date(review.createdAt).toLocaleDateString()}</div>
-                            <div className="fs-6 text-dark">{review.comment}</div>
+                            <div className="fs-6 text-dark">{review.commentaire || review.comment}</div>
                           </div>
                         </div>
-<<<<<<< HEAD
                       ))}
                     </div>
-=======
-                        <p className="mt-2">{review.commentaire}</p>
-                        <hr />
-                      </div>
-                    ))
->>>>>>> a5d21a1aca4a7efe583d553afb0f47a695eb72e2
                   )}
                 </Card.Body>
               </Card>

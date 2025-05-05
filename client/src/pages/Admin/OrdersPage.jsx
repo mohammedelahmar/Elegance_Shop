@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, Form, InputGroup, Tab, Tabs } from 'react-bootstrap';
+import { Button, Form, InputGroup, Tab, Tabs } from 'react-bootstrap';
 import { FaSearch, FaSync, FaFileExport } from 'react-icons/fa';
 import { getAllOrders, updateOrderToDelivered, updateOrderToPaid } from '../../api/order';
 import OrderList from '../../components/Admin/Orders/OrderList';
@@ -7,6 +7,7 @@ import OrderDetail from '../../components/Admin/Orders/OrderDetail';
 import OrderStats from '../../components/Admin/Orders/OrderStats';
 import Loader from '../../components/UI/Loader';
 import Message from '../../components/UI/Message';
+import '../../components/Admin/Categories/CategoryList.css'; // Use the same CSS as CategoryList for consistent style
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -25,7 +26,7 @@ const OrdersPage = () => {
 
   // Fetch all orders
   useEffect(() => {
-    const fetchOrders = async () => {
+    async function fetchOrders() {
       try {
         setLoading(true);
         setError(null);
@@ -37,8 +38,7 @@ const OrdersPage = () => {
       } finally {
         setLoading(false);
       }
-    };
-
+    }
     fetchOrders();
   }, [refreshTrigger]);
 
@@ -177,13 +177,11 @@ const OrdersPage = () => {
   };
 
   return (
-    <Container fluid className="py-3">
+    <div className="category-list-card"> {/* Use same card class as CategoryList */}
       {/* Header Row */}
-      <Row className="mb-4 align-items-center">
-        <Col>
-          <h1 className="h3 mb-0">Order Management</h1>
-        </Col>
-        <Col xs="auto">
+      <div className="categories-admin-header mb-4 d-flex justify-content-between align-items-center">
+        <h1 className="categories-admin-title">Order Management</h1>
+        <div className="categories-admin-actions">
           <Button 
             variant="outline-success" 
             className="me-2" 
@@ -198,8 +196,8 @@ const OrdersPage = () => {
           >
             <FaSync /> Refresh
           </Button>
-        </Col>
-      </Row>
+        </div>
+      </div>
 
       {/* Statistics Cards */}
       {!loading && !error && (
@@ -207,33 +205,28 @@ const OrdersPage = () => {
       )}
 
       {/* Search and Filters */}
-      <Card className="mb-4 shadow-sm">
-        <Card.Body>
-          <Row className="align-items-center">
-            <Col md={6}>
-              <InputGroup>
-                <InputGroup.Text>
-                  <FaSearch />
-                </InputGroup.Text>
-                <Form.Control
-                  type="text"
-                  placeholder="Search by order ID or customer..."
-                  value={searchTerm}
-                  onChange={handleSearch}
-                />
-              </InputGroup>
-            </Col>
-            <Col md={6} className="mt-3 mt-md-0 text-md-end">
-              <span className="me-2">
-                <strong>Total:</strong> {filteredOrders.length} orders
-              </span>
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
+      <div className="category-search-bar mb-4">
+        <InputGroup>
+          <InputGroup.Text id="search-addon" className="category-search-icon">
+            <FaSearch />
+          </InputGroup.Text>
+          <Form.Control
+            type="text"
+            placeholder="Search by order ID or customer..."
+            value={searchTerm}
+            onChange={handleSearch}
+            aria-label="Search"
+            aria-describedby="search-addon"
+            className="category-search-input"
+          />
+        </InputGroup>
+        <div className="mt-2 text-muted small text-end">
+          <strong>Total:</strong> {filteredOrders.length} orders
+        </div>
+      </div>
 
       {/* Status Tabs */}
-      <Tabs
+      <Tabs 
         activeKey={activeTab}
         onSelect={(k) => setActiveTab(k)}
         className="mb-4"
@@ -263,24 +256,20 @@ const OrdersPage = () => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : filteredOrders.length === 0 ? (
-        <Card className="text-center p-5 shadow-sm">
-          <Card.Body>
-            <h3 className="text-muted">No orders found</h3>
-            <p>No orders match your current filters.</p>
-          </Card.Body>
-        </Card>
+        <div className="text-center p-5">
+          <h3 className="text-muted">No orders found</h3>
+          <p>No orders match your current filters.</p>
+        </div>
       ) : (
-        <Card className="shadow-sm">
-          <Card.Body>
-            <OrderList
-              orders={filteredOrders}
-              onViewOrder={handleViewOrder}
-              onMarkPaid={handleMarkPaid}
-              onMarkDelivered={handleMarkDelivered}
-              isLoading={actionLoading}
-            />
-          </Card.Body>
-        </Card>
+        <div className="table-responsive">
+          <OrderList
+            orders={filteredOrders}
+            onViewOrder={handleViewOrder}
+            onMarkPaid={handleMarkPaid}
+            onMarkDelivered={handleMarkDelivered}
+            isLoading={actionLoading}
+          />
+        </div>
       )}
 
       {/* Order Detail Modal */}
@@ -294,7 +283,7 @@ const OrdersPage = () => {
           isLoading={actionLoading}
         />
       )}
-    </Container>
+    </div>
   );
 };
 

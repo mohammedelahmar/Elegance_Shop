@@ -150,28 +150,6 @@ const Header = () => {
           </Nav>
 
           <div className="d-flex align-items-center">
-            {/* Animated Search Form */}
-            <Form className={`search-form ${searchExpanded ? 'expanded' : 'collapsed'}`}>
-              <div className="search-form-container">
-                <InputGroup>
-                  <Form.Control
-                    type="search"
-                    placeholder="Search products..."
-                    className="search-input"
-                    aria-label="Search"
-                    onBlur={handleSearchBlur}
-                    ref={input => searchExpanded && input && input.focus()}
-                  />
-                  <div 
-                    className="search-icon-wrapper"
-                    onClick={handleSearchToggle}
-                  >
-                    <FaSearch className="search-icon" />
-                  </div>
-                </InputGroup>
-              </div>
-            </Form>
-
             <div className="navbar-actions">
               <Nav.Link 
                 as={Link} 
