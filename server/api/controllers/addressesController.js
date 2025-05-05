@@ -1,19 +1,19 @@
 import Adresses from "../../models/Adresses.js";
 import asyncHandler from "express-async-handler";
 
-
 // @desc    Create new address
 // @route   POST /api/addresses
 // @access  Private
 
 const addAdresse = asyncHandler(async (req, res) => {
-   const { user, address, ville, country, code_postal, phone_number } = req.body;
+   // Rename ville to city and code_postal to postal_code to match model schema
+   const { user, address, city, country, postal_code, phone_number } = req.body;
    const adresse = new Adresses({
-            user,
+            user: user || req.user._id, // Default to logged in user if not provided
             address,
-            ville,
+            city,                  // Changed from ville to city
             country,
-            code_postal,
+            postal_code,          // Changed from code_postal to postal_code
             phone_number
    });
    const createdAdresse = await adresse.save();
@@ -48,16 +48,17 @@ const getAllAdresses = asyncHandler(async (req, res) => {
 // @access  Private
 
 const updateAdresse = asyncHandler(async (req, res) => {
-     const { user, address, ville, country, code_postal, phone_number } = req.body;
+     // Also fix the update function
+     const { user, address, city, country, postal_code, phone_number } = req.body;
      const adresse = await Adresses.findById(req.params.id);
 
      if(adresse){
-          adresse.user = user;
-          adresse.address = address;
-          adresse.ville = ville;
-          adresse.country = country;
-          adresse.code_postal = code_postal;
-          adresse.phone_number = phone_number;
+          adresse.user = user || adresse.user;
+          adresse.address = address || adresse.address;
+          adresse.city = city || adresse.city;         // Changed from ville to city
+          adresse.country = country || adresse.country;
+          adresse.postal_code = postal_code || adresse.postal_code;   // Changed from code_postal to postal_code
+          adresse.phone_number = phone_number || adresse.phone_number;
           
           const updatedAdresse = await adresse.save();
           res.json(updatedAdresse);

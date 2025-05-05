@@ -111,9 +111,9 @@ const ProductPage = () => {
     
     try {
       const newReview = await createReview({
-        product: id,
+        product_id: id,  // Changed from product to product_id
         rating: reviewState.rating,
-        comment: reviewState.comment
+        commentaire: reviewState.comment  // Changed from comment to commentaire
       });
       
       // Add new review to the reviews list
@@ -315,11 +315,22 @@ const ProductPage = () => {
                       No reviews yet. Be the first to review this product!
                     </Alert>
                   ) : (
+<<<<<<< HEAD
                     <div className="review-list-modern">
                       {reviews.map((review) => (
                         <div key={review._id} className="review-item-modern mb-4 p-3 rounded-3 shadow-sm bg-white d-flex align-items-start gap-3">
                           <div className="review-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style={{width: 48, height: 48, fontSize: 22}}>
                             {review.user?.Firstname ? review.user.Firstname[0] : 'A'}
+=======
+                    reviews.map((review) => (
+                      <div key={review._id} className="review-item mb-3">
+                        <div className="d-flex justify-content-between">
+                          <div>
+                            <strong>{review.user_id?.Firstname || 'Anonymous'}</strong>
+                            <div className="text-muted small">
+                              {new Date(review.createdAt).toLocaleDateString()}
+                            </div>
+>>>>>>> a5d21a1aca4a7efe583d553afb0f47a695eb72e2
                           </div>
                           <div className="flex-grow-1">
                             <div className="d-flex justify-content-between align-items-center mb-1">
@@ -330,8 +341,15 @@ const ProductPage = () => {
                             <div className="fs-6 text-dark">{review.comment}</div>
                           </div>
                         </div>
+<<<<<<< HEAD
                       ))}
                     </div>
+=======
+                        <p className="mt-2">{review.commentaire}</p>
+                        <hr />
+                      </div>
+                    ))
+>>>>>>> a5d21a1aca4a7efe583d553afb0f47a695eb72e2
                   )}
                 </Card.Body>
               </Card>

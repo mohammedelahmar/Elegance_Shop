@@ -6,7 +6,7 @@ import axios from './axios';
  * @returns {Promise} - Promise with payment confirmation
  */
 export const processPayment = async (paymentData) => {
-  const { data } = await axios.post('/payment/process', paymentData);
+  const { data } = await axios.post('/payment', paymentData);
   return data;
 };
 

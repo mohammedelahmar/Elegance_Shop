@@ -3,6 +3,23 @@ import { Table, Badge, Button, ButtonGroup } from 'react-bootstrap';
 import { FaEye, FaCheck, FaTruck } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 
+// Helper function to safely format price values
+const formatPrice = (price) => {
+  if (!price && price !== 0) return '0.00';
+  
+  // Handle MongoDB Decimal128 format
+  if (typeof price === 'object' && price.$numberDecimal) {
+    return parseFloat(price.$numberDecimal).toFixed(2);
+  }
+  
+  // Handle regular number or string
+  try {
+    return parseFloat(price).toFixed(2);
+  } catch (e) {
+    return '0.00';
+  }
+};
+
 const OrderList = ({ orders, onViewOrder, onMarkPaid, onMarkDelivered, isLoading }) => {
   return (
     <div className="table-responsive">
@@ -26,10 +43,10 @@ const OrderList = ({ orders, onViewOrder, onMarkPaid, onMarkDelivered, isLoading
               </td>
               <td>{new Date(order.createdAt).toLocaleDateString()}</td>
               <td>
-                <div>{order.user?.name || 'Guest'}</div>
-                <small className="text-muted">{order.user?.email}</small>
+                <div>{order.user_id?.Firstname || ''} {order.user_id?.Lastname || 'Guest'}</div>
+                <small className="text-muted">{order.user_id?.email}</small>
               </td>
-              <td>${order.totalPrice.toFixed(2)}</td>
+              <td>${formatPrice(order.totalPrice || order.total_amount)}</td>
               <td>
                 {order.isPaid ? (
                   <Badge bg="success">

@@ -1,0 +1,44 @@
+.checkout-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.step.active .step-number {
+  background-color: #007bff;
+  color: white;
+}
+
+.step-title {
+  font-size: 0.9rem;
+}
+
+.step-connector {
+  flex-grow: 1;
+  height: 2px;
+  background-color: #e9ecef;
+  margin: 0 10px;
+}
+
+.step-connector.active {
+  background-color: #007bff;
+}

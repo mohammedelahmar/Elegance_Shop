@@ -37,6 +37,14 @@ const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
   };
 
   const formatPrice = (price) => {
+    if (!price) return '$0.00';
+    
+    // Handle Decimal128 format from MongoDB
+    if (typeof price === 'object' && price.$numberDecimal) {
+      return `$${parseFloat(price.$numberDecimal).toFixed(2)}`;
+    }
+    
+    // Handle regular number or string
     return `$${parseFloat(price).toFixed(2)}`;
   };
 

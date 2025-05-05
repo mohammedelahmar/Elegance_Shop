@@ -39,6 +39,7 @@ const getProducts = asyncHandler(async (req, res) => {
 
   // Execute query with pagination
   const products = await Product.find(queryObject)
+    .populate('category')  // Add this line
     .limit(limit)
     .skip(skip)
     .sort(req.query.sortBy ? { [req.query.sortBy]: req.query.order === 'desc' ? -1 : 1 } : { createdAt: -1 });
@@ -61,7 +62,7 @@ const getProducts = asyncHandler(async (req, res) => {
 // @route  GET /api/products/:id
 // @access Public
 const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).populate('category');
   if (product) {
     res.json(product);
   } else {
