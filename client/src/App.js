@@ -10,17 +10,17 @@ import './App.css';
 
 function App() {
   return (
-    <Provider store={store}>
-      <AuthProvider>
-        <CartProvider>
-          <WishlistProvider>
+    <AuthProvider>
+      <CartProvider>
+        <WishlistProvider>
+          <Provider store={store}>
             <BrowserRouter>
               <AppRoutes />
             </BrowserRouter>
-          </WishlistProvider>
-        </CartProvider>
-      </AuthProvider>
-    </Provider>
+          </Provider>
+        </WishlistProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

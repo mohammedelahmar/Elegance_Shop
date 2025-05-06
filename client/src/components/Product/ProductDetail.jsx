@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
+import WishlistButton from '../wishlist/WishlistButton';
 
 // Add this helper function near the top of the component
 const formatPrice = (price) => {
@@ -124,7 +125,10 @@ const ProductDetail = ({ product, variants, onAddToCart }) => {
       </Col>
       
       <Col md={7}>
-        <h1 className="mb-2">{product.name}</h1>
+        <div className="d-flex justify-content-between align-items-start">
+          <h1 className="mb-2">{product.name}</h1>
+          <WishlistButton productId={product._id} size="lg" />
+        </div>
         
         <h2 className="product-price mb-3">
           ${selectedVariant ? formatPrice(selectedVariant.price || product.price) : formatPrice(product.price)}
@@ -137,7 +141,7 @@ const ProductDetail = ({ product, variants, onAddToCart }) => {
         )}
         
         <div className="mb-4 product-description">
-          <p>{product.description}</p>
+          <p>{product.description || 'No description available.'}</p>
         </div>
         
         <Form className="mb-4">

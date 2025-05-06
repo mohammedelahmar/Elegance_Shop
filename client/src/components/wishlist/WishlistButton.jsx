@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import Button from '../UI/Button';
+import './WishlistButton.css';
 
 const WishlistButton = ({ productId, size = "sm", className = "" }) => {
   const [processing, setProcessing] = useState(false);
@@ -15,8 +16,10 @@ const WishlistButton = ({ productId, size = "sm", className = "" }) => {
   const isLiked = isInWishlist(productId);
   
   const handleToggleWishlist = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     
     if (!isAuthenticated) {
       navigate('/login?redirect=wishlist');
@@ -25,7 +28,9 @@ const WishlistButton = ({ productId, size = "sm", className = "" }) => {
     
     setProcessing(true);
     try {
-      await toggleItem(productId);
+      console.log(`Toggling product ${productId} in wishlist`); // Debug log
+      const result = await toggleItem(productId);
+      console.log("Toggle result:", result); // Debug log
     } catch (error) {
       console.error('Failed to update wishlist:', error);
     } finally {
@@ -37,12 +42,14 @@ const WishlistButton = ({ productId, size = "sm", className = "" }) => {
     <Button
       variant={isLiked ? "danger" : "outline-danger"}
       size={size}
-      className={className}
+      className={`wishlist-btn ${className}`}
       onClick={handleToggleWishlist}
       isLoading={processing}
       title={isLiked ? "Remove from wishlist" : "Add to wishlist"}
-      icon={isLiked ? FaHeart : FaRegHeart}
-    />
+      aria-label={isLiked ? "Remove from wishlist" : "Add to wishlist"}
+    >
+      {isLiked ? <FaHeart /> : <FaRegHeart />}
+    </Button>
   );
 };
 

@@ -3,7 +3,8 @@ import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSelector } from 'react-redux';
-import { FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
+import { FaShoppingCart, FaUser, FaSearch, FaHeart } from 'react-icons/fa';
+import { useWishlist } from '../../context/WishlistContext';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
 
@@ -12,6 +13,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const { wishlistCount } = useWishlist();
 
   // Get cart state from Redux
   const { cartItems = [] } = useSelector((state) => state.cart || {});
@@ -83,6 +85,16 @@ const Header = () => {
           </form>
 
           <Nav className="ms-auto">
+            <Nav.Link as={Link} to="/wishlist" className="me-3" onClick={closeNavbar}>
+              <FaHeart className="me-1" />
+              Wishlist
+              {wishlistCount > 0 && (
+                <Badge bg="danger" pill className="ms-1">
+                  {wishlistCount}
+                </Badge>
+              )}
+            </Nav.Link>
+
             <Nav.Link as={Link} to="/cart" className="me-3" onClick={closeNavbar}>
               <FaShoppingCart className="me-1" />
               Cart

@@ -1,0 +1,16 @@
+.wishlist-btn {
+  transition: all 0.2s ease;
+}
+
+.wishlist-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Add animation when toggling */
+.wishlist-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.wishlist-btn:active svg {
+  transform: scale(1.3);
+}

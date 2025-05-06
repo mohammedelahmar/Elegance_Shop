@@ -1,5 +1,5 @@
-import { createContext, useState, useContext, useEffect } from 'react';
-import { getWishlist, addToWishlist, removeFromWishlist } from '../api/wishlist';
+import { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import { getWishlist, addToWishlist, removeFromWishlist, clearWishlist as apiClearWishlist } from '../api/wishlist';
 import { useAuth } from './AuthContext';
 
 // Create context
@@ -16,33 +16,40 @@ export const WishlistProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const { isAuthenticated } = useAuth();
 
-  // Fetch wishlist when user logs in
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchWishlist();
-    } else {
-      // Clear wishlist when user logs out
-      setWishlistItems([]);
-    }
-  }, [isAuthenticated]);
-
-  // Fetch wishlist items from API
-  const fetchWishlist = async () => {
+  // Use useCallback to memoize the fetchWishlist function
+  const fetchWishlist = useCallback(async () => {
     if (!isAuthenticated) return;
     
     setLoading(true);
     setError(null);
     try {
       const data = await getWishlist();
-      // Handle the API response correctly - it returns products array
-      setWishlistItems(data.products || []);
+      console.log("Wishlist data:", data); // Debug log
+      
+      // Check if data is populated correctly
+      if (data && data.products && Array.isArray(data.products)) {
+        setWishlistItems(data.products);
+      } else if (data && Array.isArray(data)) {
+        setWishlistItems(data);
+      } else {
+        setWishlistItems([]);
+      }
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to fetch wishlist');
       console.error('Error fetching wishlist:', error);
+      setError(error.response?.data?.message || 'Failed to fetch wishlist');
     } finally {
       setLoading(false);
     }
-  };
+  }, [isAuthenticated]); // Only depend on isAuthenticated
+
+  // Fetch wishlist when user authentication status changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchWishlist();
+    } else {
+      setWishlistItems([]);
+    }
+  }, [isAuthenticated, fetchWishlist]);
 
   // Add item to wishlist
   const addItem = async (productId) => {
@@ -89,9 +96,29 @@ export const WishlistProvider = ({ children }) => {
     }
   };
 
-  // Check if a product is in the wishlist
+  // Also update the isInWishlist function to handle possible structure differences
   const isInWishlist = (productId) => {
-    return wishlistItems.some(item => item._id === productId);
+    return wishlistItems.some(item => 
+      (item._id === productId) || 
+      (item.product && item.product._id === productId)
+    );
+  };
+
+  // Add this function to your provider
+  const clearWishlist = async () => {
+    if (!isAuthenticated) {
+      throw new Error('You must be logged in to clear your wishlist');
+    }
+    
+    setError(null);
+    try {
+      const data = await apiClearWishlist();
+      setWishlistItems([]);
+      return data;
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to clear wishlist');
+      throw error;
+    }
   };
 
   // Context value
@@ -104,7 +131,8 @@ export const WishlistProvider = ({ children }) => {
     addItem,
     removeItem,
     toggleItem,
-    isInWishlist
+    isInWishlist,
+    clearWishlist
   };
 
   return <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>;
