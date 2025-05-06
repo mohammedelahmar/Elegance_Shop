@@ -3,7 +3,12 @@ import { Navbar, Nav, Container, Badge, NavDropdown, Form, InputGroup } from 're
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSelector } from 'react-redux';
+<<<<<<< HEAD
 import { FaShoppingCart, FaUser, FaTags, FaClipboardList, FaHome, FaInfoCircle, FaEnvelope, FaSearch, FaCog } from 'react-icons/fa';
+=======
+import { FaShoppingCart, FaUser, FaSearch, FaHeart } from 'react-icons/fa';
+import { useWishlist } from '../../context/WishlistContext';
+>>>>>>> 22cdfcb56051e958198f4c0ce92695c5f23cf4bf
 import Button from '../UI/Button';
 import './Header.css';
 
@@ -12,8 +17,13 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
+<<<<<<< HEAD
   const [scrolled, setScrolled] = useState(false);
   const [searchExpanded, setSearchExpanded] = useState(false);
+=======
+  const [searchTerm, setSearchTerm] = useState('');
+  const { wishlistCount } = useWishlist();
+>>>>>>> 22cdfcb56051e958198f4c0ce92695c5f23cf4bf
 
   // Get cart state from Redux
   const { cartItems = [] } = useSelector((state) => state.cart || {});
@@ -149,6 +159,7 @@ const Header = () => {
             )}
           </Nav>
 
+<<<<<<< HEAD
           <div className="d-flex align-items-center">
             <div className="navbar-actions">
               <Nav.Link 
@@ -156,6 +167,53 @@ const Header = () => {
                 to="/cart" 
                 onClick={closeNavbar} 
                 className={`cart-link ${isActive('/cart') ? 'active' : ''}`}
+=======
+          <form className="d-flex me-3 my-2 my-lg-0" onSubmit={handleSearch}>
+            <div className="d-flex">
+              <Input
+                type="search"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                icon={FaSearch}
+                iconPosition="right"
+                className="me-2"
+                fullWidth={false}
+              />
+            </div>
+          </form>
+
+          <Nav className="ms-auto">
+            <Nav.Link as={Link} to="/wishlist" className="me-3" onClick={closeNavbar}>
+              <FaHeart className="me-1" />
+              Wishlist
+              {wishlistCount > 0 && (
+                <Badge bg="danger" pill className="ms-1">
+                  {wishlistCount}
+                </Badge>
+              )}
+            </Nav.Link>
+
+            <Nav.Link as={Link} to="/cart" className="me-3" onClick={closeNavbar}>
+              <FaShoppingCart className="me-1" />
+              Cart
+              {cartItemsCount > 0 && (
+                <Badge bg="danger" pill className="ms-1">
+                  {cartItemsCount}
+                </Badge>
+              )}
+            </Nav.Link>
+
+            {isAuthenticated ? (
+              <NavDropdown 
+                title={
+                  <span>
+                    <FaUser className="me-1" />
+                    {currentUser?.Firstname || 'Account'}
+                  </span>
+                } 
+                id="user-dropdown"
+>>>>>>> 22cdfcb56051e958198f4c0ce92695c5f23cf4bf
               >
                 <div className="cart-icon-container">
                   <FaShoppingCart className="cart-icon" />

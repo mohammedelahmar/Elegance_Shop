@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/action';
 import { FaShoppingCart } from 'react-icons/fa';
 import Button from '../UI/Button';
+import WishlistButton from '../wishlist/WishlistButton';
 import './ProductCard.css';
 import PropTypes from 'prop-types';
 
@@ -30,32 +31,39 @@ const ProductCard = ({ product }) => {
   };
 
   return (
+<<<<<<< HEAD
     <Card className="product-card h-100" style={{ backgroundColor: '#1e2634' }}>
       <div className="product-image-container" >
         <Link to={`/products/${product._id}`}>
+=======
+    <Card className="product-card h-100">
+      <Link to={`/products/${product._id}`} className="product-card-link">
+        <div className="product-image-container">
+>>>>>>> 22cdfcb56051e958198f4c0ce92695c5f23cf4bf
           <Card.Img 
             variant="top" 
             src={product.image_url || 'https://via.placeholder.com/300x300?text=No+Image'} 
-            className="product-image"
             alt={product.name}
+            className="product-image" 
           />
-        </Link>
-        {product.stock_quantity <= 0 && (
-          <Badge bg="danger" className="out-of-stock-badge">Out of Stock</Badge>
-        )}
-      </div>
+          {product.stock_quantity <= 0 && (
+            <Badge className="out-of-stock-badge">Out of Stock</Badge>
+          )}
+        </div>
+      </Link>
       <Card.Body className="d-flex flex-column">
-        <Link to={`/products/${product._id}`} className="product-title-link">
-          <Card.Title className="product-title">{product.name}</Card.Title>
-        </Link>
-        <Card.Text className="text-muted mb-0 product-category">
-          {product.category?.name || 'Uncategorized'}
-        </Card.Text>
-        <div className="mt-auto">
-          <div className="d-flex justify-content-between align-items-center mt-2">
-            <span className="product-price">
-              ${formatPrice(product.price)}
-            </span>
+        <div className="flex-grow-1">
+          <Card.Title className="product-title">
+            <Link to={`/products/${product._id}`}>
+              {product.name}
+            </Link>
+          </Card.Title>
+          <Card.Text className="product-price">
+            ${formatPrice(product.price)}
+          </Card.Text>
+        </div>
+        <div className="d-flex justify-content-between align-items-center mt-2">
+          <div className="d-flex">
             <Button 
               variant="outline-primary" 
               size="sm" 
@@ -65,6 +73,9 @@ const ProductCard = ({ product }) => {
             >
               Add
             </Button>
+            <div className="ms-2">
+              <WishlistButton productId={product._id} size="sm" />
+            </div>
           </div>
         </div>
       </Card.Body>

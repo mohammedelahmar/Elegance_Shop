@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Nav, Collapse } from 'react-bootstrap';
+import { Nav, Collapse, Badge } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   FaHome, 
@@ -14,9 +14,11 @@ import {
   FaAngleUp,
   FaSignOutAlt,
   FaPuzzlePiece,
-  FaMapMarkerAlt
+  FaMapMarkerAlt,
+  FaHeart
 } from 'react-icons/fa';
 import Button from '../UI/Button';
+import { useWishlist } from '../../context/WishlistContext';
 import './Sidebar.css';
 
 const Sidebar = () => {
@@ -38,6 +40,8 @@ const Sidebar = () => {
   const isActive = (path) => {
     return pathname === path || pathname.startsWith(`${path}/`);
   };
+
+  const { wishlistCount } = useWishlist();
   
   return (
     <div className="sidebar text-white">
@@ -174,6 +178,16 @@ const Sidebar = () => {
           className={isActive('/admin/addresses') ? 'active' : ''}
         >
           <FaMapMarkerAlt className="sidebar-icon" /> Addresses
+        </Nav.Link>
+
+        <Nav.Link as={Link} to="/wishlist" className="d-flex align-items-center">
+          <FaHeart className="me-2" />
+          <span>Wishlist</span>
+          {wishlistCount > 0 && (
+            <Badge bg="danger" pill className="ms-1">
+              {wishlistCount}
+            </Badge>
+          )}
         </Nav.Link>
 
         <div className="mt-auto p-3">

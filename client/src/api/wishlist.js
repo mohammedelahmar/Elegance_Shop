@@ -28,3 +28,12 @@ export const removeFromWishlist = async (productId) => {
   const { data } = await axios.delete(`/wishlist/${productId}`);
   return data;
 };
+
+/**
+ * Clear all products from wishlist
+ * @returns {Promise} - Promise with empty wishlist
+ */
+export const clearWishlist = async () => {
+  const { data } = await axios.delete('/wishlist');
+  return data;
+};

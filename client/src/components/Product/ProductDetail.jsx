@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
+import WishlistButton from '../wishlist/WishlistButton';
 
 // Add this helper function near the top of the component
 const formatPrice = (price) => {
@@ -112,9 +113,44 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
 
   return (
     <Row>
+<<<<<<< HEAD
       {/* Only render controls, not image/name/price, when hideMainInfo is true */}
       <Col md={12} className="d-flex flex-column align-items-center justify-content-center">
         <Form className="mb-4 w-100 d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
+=======
+      <Col md={5} className="mb-4">
+        <div className="product-image-container">
+          <Image 
+            src={product.image_url || 'https://via.placeholder.com/500x500?text=No+Image'} 
+            alt={product.name}
+            className="product-detail-image"
+            fluid
+          />
+        </div>
+      </Col>
+      
+      <Col md={7}>
+        <div className="d-flex justify-content-between align-items-start">
+          <h1 className="mb-2">{product.name}</h1>
+          <WishlistButton productId={product._id} size="lg" />
+        </div>
+        
+        <h2 className="product-price mb-3">
+          ${selectedVariant ? formatPrice(selectedVariant.price || product.price) : formatPrice(product.price)}
+        </h2>
+        
+        {isOutOfStock ? (
+          <Badge bg="danger" className="mb-3 fs-6">Out of Stock</Badge>
+        ) : (
+          <Badge bg="success" className="mb-3 fs-6">In Stock</Badge>
+        )}
+        
+        <div className="mb-4 product-description">
+          <p>{product.description || 'No description available.'}</p>
+        </div>
+        
+        <Form className="mb-4">
+>>>>>>> 22cdfcb56051e958198f4c0ce92695c5f23cf4bf
           {variants && variants.length > 0 && (
             <Input
               label="Variant"

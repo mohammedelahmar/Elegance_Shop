@@ -4,11 +4,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import WishlistList from '../components/wishlist/WishlistList';
-import { FaHeart, FaArrowLeft } from 'react-icons/fa';
+import { FaHeart, FaArrowLeft, FaTrash } from 'react-icons/fa';
 import './WishlistPage.css';
 
 const WishlistPage = () => {
-  const { wishlistItems, loading, error, fetchWishlist } = useWishlist();
+  const { wishlistItems, loading, error, fetchWishlist, clearWishlist } = useWishlist();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -19,9 +19,10 @@ const WishlistPage = () => {
       return;
     }
     
-    // Refresh wishlist data when page loads
+    // Only fetch once when the component mounts or authentication changes
     fetchWishlist();
-  }, [isAuthenticated, navigate, fetchWishlist]);
+    // Remove fetchWishlist from the dependency array to prevent the loop
+  }, [isAuthenticated, navigate]); // fetchWishlist removed from dependency array
 
   return (
     <Container className="py-5 wishlist-page">
@@ -44,6 +45,20 @@ const WishlistPage = () => {
               <h5 className="mb-0">
                 Saved Items ({wishlistItems?.length || 0})
               </h5>
+              {wishlistItems?.length > 0 && (
+                <Button 
+                  variant="outline-danger" 
+                  size="sm"
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to clear your wishlist?')) {
+                      clearWishlist();
+                    }
+                  }}
+                >
+                  <FaTrash className="me-2" />
+                  Clear All
+                </Button>
+              )}
             </Card.Header>
             <Card.Body>
               <WishlistList 

@@ -8,6 +8,23 @@ import PropTypes from 'prop-types';
 import Button from '../UI/Button';
 import './WishlistItem.css';
 
+// Add this helper function at the top of your WishlistItem component
+const formatPrice = (price) => {
+  if (!price) return '0.00';
+  
+  // Handle MongoDB Decimal128 format
+  if (typeof price === 'object' && price.$numberDecimal) {
+    return parseFloat(price.$numberDecimal).toFixed(2);
+  }
+  
+  // Handle regular number or string
+  try {
+    return parseFloat(price).toFixed(2);
+  } catch (e) {
+    return '0.00';
+  }
+};
+
 const WishlistItem = ({ product }) => {
   const [removing, setRemoving] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
@@ -65,7 +82,7 @@ const WishlistItem = ({ product }) => {
           </Col>
           
           <Col xs={6} md={2} className="mt-3 mt-md-0 text-md-end">
-            <h5 className="mb-0 text-primary">${product.price?.toFixed(2) || '0.00'}</h5>
+          <h5 className="mb-0 text-primary">${formatPrice(product.price)}</h5>
           </Col>
           
           <Col xs={6} md={3} className="mt-3 mt-md-0 d-flex justify-content-end">
