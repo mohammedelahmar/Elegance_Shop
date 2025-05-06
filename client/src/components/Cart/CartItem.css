@@ -1,16 +1,131 @@
 .cart-item-image {
   max-height: 100px;
+  max-width: 100%;
   object-fit: contain;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .quantity-control .form-control {
   width: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f8f9fa;
+  font-weight: 600;
+  text-align: center;
 }
 
 .cart-item {
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  padding: 1.2rem 0;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .cart-item:hover {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.cart-item:hover .cart-item-image {
+  transform: scale(1.05);
+}
+
+.cart-item-title {
+  color: #f8f9fa;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.cart-item-title:hover {
+  color: #4a9fff;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0.3rem;
+  max-width: fit-content;
+}
+
+.quantity-control .btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #f8f9fa;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-control .btn:hover {
+  background: rgba(74, 107, 245, 0.3);
+  color: white;
+}
+
+.cart-item-price {
+  color: #4a9fff;
+  font-weight: 700;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.cart-item:hover .cart-item-price {
+  transform: scale(1.05);
+}
+
+.cart-item-remove {
+  background: rgba(233, 69, 96, 0.1);
+  border: none;
+  color: #f8f9fa;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-item-remove:hover {
+  background: rgba(233, 69, 96, 0.3);
+  transform: rotate(90deg);
+}
+
+.cart-item-unit-price {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+/* Animation for removing item */
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-20px); }
+}
+
+.cart-item.removing {
+  animation: fadeOut 0.5s forwards;
+}
+
+@media (max-width: 768px) {
+  .cart-item {
+    padding: 1rem 0;
+  }
+  
+  .cart-item-image {
+    max-height: 80px;
+  }
+  
+  .quantity-control {
+    margin-top: 0.5rem;
+  }
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Col, Card, Image } from 'react-bootstrap';
+import { Row, Col, Card, Badge, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import Button from '../UI/Button';
 import './WishlistItem.css';
 
-// Add this helper function at the top of your WishlistItem component
 const formatPrice = (price) => {
   if (!price) return '0.00';
   
@@ -26,8 +25,8 @@ const formatPrice = (price) => {
 };
 
 const WishlistItem = ({ product }) => {
+  const [adding, setAdding] = useState(false);
   const [removing, setRemoving] = useState(false);
-  const [addingToCart, setAddingToCart] = useState(false);
   const { removeItem } = useWishlist();
   const { addItem } = useCart();
 
@@ -43,70 +42,78 @@ const WishlistItem = ({ product }) => {
   };
 
   const handleAddToCart = async () => {
-    setAddingToCart(true);
+    setAdding(true);
     try {
       await addItem(product._id, 1);
-      // Could show a success message here
+      // Optionally remove from wishlist after adding to cart
+      // await removeItem(product._id);
     } catch (error) {
       console.error('Failed to add to cart:', error);
     } finally {
-      setAddingToCart(false);
+      setAdding(false);
     }
   };
 
   return (
-    <Card className="wishlist-item mb-3">
+    <Card className="wishlist-item">
       <Card.Body>
         <Row className="align-items-center">
+          {/* Product image column */}
           <Col xs={3} md={2}>
             <Link to={`/products/${product._id}`}>
-              <Image 
-                src={product.image_url || 'https://via.placeholder.com/100x100?text=No+Image'} 
-                alt={product.name} 
-                fluid 
-                className="wishlist-item-image" 
-              />
+              <div className="wishlist-item-image-container">
+                <Image 
+                  src={product.image_url} 
+                  alt={product.name} 
+                  className="wishlist-item-image" 
+                />
+              </div>
             </Link>
           </Col>
           
-          <Col xs={9} md={5}>
+          {/* Product info column */}
+          <Col xs={6} md={6}>
             <Link to={`/products/${product._id}`} className="text-decoration-none">
-              <h5 className="mb-1">{product.name}</h5>
+              <h5 className="wishlist-item-title">{product.name}</h5>
             </Link>
-            <p className="text-muted mb-0 small">
+            <span className="wishlist-item-category">
               {product.category?.name || 'Uncategorized'}
-            </p>
-            {product.stock_quantity <= 0 && (
-              <span className="text-danger small">Out of stock</span>
-            )}
+            </span>
           </Col>
           
-          <Col xs={6} md={2} className="mt-3 mt-md-0 text-md-end">
-          <h5 className="mb-0 text-primary">${formatPrice(product.price)}</h5>
-          </Col>
-          
-          <Col xs={6} md={3} className="mt-3 mt-md-0 d-flex justify-content-end">
-            <Button 
-              variant="outline-primary" 
-              className="me-2"
-              disabled={product.stock_quantity <= 0}
-              onClick={handleAddToCart}
-              isLoading={addingToCart}
-              title="Add to cart"
-              icon={FaShoppingCart}
-            >
-              <span className="d-none d-md-inline">Add to Cart</span>
-            </Button>
-            
-            <Button 
-              variant="outline-danger" 
-              onClick={handleRemove}
-              isLoading={removing}
-              title="Remove from wishlist"
-              icon={FaTrash}
-            >
-              <span className="d-none d-md-inline">Remove</span>
-            </Button>
+          {/* Price and actions column */}
+          <Col xs={3} md={4}>
+            <div className="d-flex justify-content-end align-items-center flex-wrap">
+              <div className="wishlist-item-price-container me-3">
+                <span className="wishlist-item-price">${formatPrice(product.price)}</span>
+              </div>
+              
+              <div className="wishlist-item-actions">
+                <Button 
+                  variant="primary" 
+                  size="sm" 
+                  onClick={handleAddToCart}
+                  disabled={adding || product.stock_quantity <= 0}
+                  isLoading={adding}
+                  className="add-to-cart-btn me-2"
+                >
+                  <FaShoppingCart className="me-1" />
+                  <span className="d-none d-md-inline">Add</span>
+                </Button>
+                
+                <Button 
+                  variant="outline-danger" 
+                  size="sm" 
+                  onClick={handleRemove}
+                  disabled={removing}
+                  isLoading={removing}
+                  className="remove-btn"
+                >
+                  <FaTrash className="me-1" />
+                  <span className="d-none d-md-inline">Remove</span>
+                </Button>
+              </div>
+            </div>
           </Col>
         </Row>
       </Card.Body>

@@ -30,27 +30,29 @@ const ProductCard = ({ product }) => {
     return parseFloat(price).toFixed(2);
   };
 
+  const handleImageError = (e) => {
+    e.target.src = 'https://via.placeholder.com/300x300?text=No+Image';
+  };
+
   return (
-<<<<<<< HEAD
     <Card className="product-card h-100" style={{ backgroundColor: '#1e2634' }}>
-      <div className="product-image-container" >
+      <div className="product-image-container">
         <Link to={`/products/${product._id}`}>
-=======
-    <Card className="product-card h-100">
-      <Link to={`/products/${product._id}`} className="product-card-link">
-        <div className="product-image-container">
->>>>>>> 22cdfcb56051e958198f4c0ce92695c5f23cf4bf
-          <Card.Img 
-            variant="top" 
-            src={product.image_url || 'https://via.placeholder.com/300x300?text=No+Image'} 
+          <Card.Img
+            variant="top"
+            src={product.image_url || 'https://via.placeholder.com/300x300?text=No+Image'}
             alt={product.name}
-            className="product-image" 
+            className="product-image"
+            onError={handleImageError}
           />
-          {product.stock_quantity <= 0 && (
-            <Badge className="out-of-stock-badge">Out of Stock</Badge>
-          )}
-        </div>
-      </Link>
+        </Link>
+        {product.discount_percentage > 0 && (
+          <div className="discount-badge">-{product.discount_percentage}%</div>
+        )}
+        {product.stock_quantity <= 0 && (
+          <Badge className="out-of-stock-badge">Out of Stock</Badge>
+        )}
+      </div>
       <Card.Body className="d-flex flex-column">
         <div className="flex-grow-1">
           <Card.Title className="product-title">

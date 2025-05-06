@@ -571,4 +571,91 @@
   }
 }
 
+/* Wishlist & Cart Link Styling */
+.wishlist-link, .cart-link {
+  position: relative;
+  margin: 0 0.8rem !important;
+  padding: 0.6rem 0.5rem !important;
+  height: 42px; /* Match height with other nav items */
+}
+
+/* Badge styling for cart and wishlist */
+.item-badge {
+  position: absolute;
+  top: 0;
+  right: -6px;
+  background: linear-gradient(45deg, #e94057, #f27121);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  height: 18px;
+  width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(233, 64, 87, 0.4);
+  transform: scale(1);
+  animation: pulse 2s infinite;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+@keyframes badge-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(0.5); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.item-badge.new-item {
+  animation: badge-pop 0.5s;
+}
+
+.wishlist-link:hover .item-badge, 
+.cart-link:hover .item-badge {
+  animation: badge-pulse 1s infinite;
+}
+
+/* Icon styling for consistent look */
+.wishlist-link .nav-icon, 
+.cart-link .nav-icon {
+  margin-right: 0.4rem;
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+/* Icon animation on hover */
+.wishlist-link:hover .nav-icon, 
+.cart-link:hover .nav-icon {
+  transform: translateY(-2px);
+}
+
+/* Mobile responsiveness adjustments */
+@media (max-width: 991px) {
+  .wishlist-link, .cart-link {
+    width: 100%;
+    margin: 0.3rem 0 !important;
+    padding: 0.75rem 1rem !important;
+  }
+  
+  .item-badge {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-left: 0.5rem !important;
+    display: inline-flex;
+  }
+}
+
 

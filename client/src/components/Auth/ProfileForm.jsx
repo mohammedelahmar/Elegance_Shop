@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Alert } from 'react-bootstrap';
+import { Form, Alert, Row, Col } from 'react-bootstrap';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
-import Input from '../UI/Input';
+import { ProfileInput, ProfileTextarea } from './ProfileInput';
 import Button from '../UI/Button';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaSave, FaPhone, FaMapMarkerAlt, FaEnvelope } from 'react-icons/fa';
 
 const ProfileForm = () => {
   const { currentUser, updateProfile } = useAuth();
@@ -33,6 +34,9 @@ const ProfileForm = () => {
   
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear messages when form changes
+    if (success) setSuccess('');
+    if (error) setError('');
   };
   
   const handleSubmit = async (e) => {
@@ -53,61 +57,108 @@ const ProfileForm = () => {
   
   return (
     <Form onSubmit={handleSubmit}>
-      {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Alert 
+            variant="danger" 
+            dismissible 
+            onClose={() => setError('')}
+            className="mb-4"
+          >
+            {error}
+          </Alert>
+        </motion.div>
+      )}
       
-      <Input
-        label="First Name"
-        name="Firstname"
-        value={formData.Firstname}
-        onChange={handleChange}
-        required
-      />
+      {success && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Alert 
+            variant="success" 
+            dismissible 
+            onClose={() => setSuccess('')}
+            className="mb-4"
+          >
+            <div className="d-flex align-items-center">
+              <div className="me-2">✓</div> {success}
+            </div>
+          </Alert>
+        </motion.div>
+      )}
       
-      <Input
-        label="Last Name"
-        name="Lastname"
-        value={formData.Lastname}
-        onChange={handleChange}
-        required
-      />
+      <h3 className="form-section-header">Personal Information</h3>
       
-      <Input
+      <Row>
+        <Col md={6}>
+          <ProfileInput
+            label="First Name"
+            name="Firstname"
+            value={formData.Firstname}
+            onChange={handleChange}
+            required
+            icon={FaUser}
+          />
+        </Col>
+        
+        <Col md={6}>
+          <ProfileInput
+            label="Last Name"
+            name="Lastname"
+            value={formData.Lastname}
+            onChange={handleChange}
+            required
+            icon={FaUser}
+          />
+        </Col>
+      </Row>
+      
+      <ProfileInput
         label="Email Address"
         type="email"
         name="email"
         value={formData.email}
         onChange={handleChange}
         required
-        disabled // Email should not be editable
-        helperText="Email cannot be changed"
+        disabled
+        icon={FaEnvelope}
+        helperText="Email cannot be changed for security reasons"
       />
       
-      <Input
+      <ProfileInput
         label="Phone Number"
         type="tel"
         name="phone_number"
         value={formData.phone_number}
         onChange={handleChange}
         required
+        icon={FaPhone}
       />
       
-      <Input
+      <ProfileTextarea
         label="Address"
         name="address"
         value={formData.address}
         onChange={handleChange}
+        icon={FaMapMarkerAlt}
+        placeholder="Enter your full address"
       />
       
-      <Button 
-        type="submit"
-        fullWidth
-        isLoading={loading}
-        icon={FaUser}
-        variant="success"
-      >
-        Update Profile
-      </Button>
+      <div className="d-flex justify-content-end mt-4">
+        <Button 
+          type="submit"
+          isLoading={loading}
+          className="update-profile-btn"
+        >
+          <FaSave className="me-2" /> Update Profile
+        </Button>
+      </div>
     </Form>
   );
 };

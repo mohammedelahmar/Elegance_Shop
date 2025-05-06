@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { Row, Col, Image, Badge, ListGroup, Form } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Image, Badge, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/action';
 import { useCart } from '../../context/CartContext';
-import { FaShoppingCart, FaPlus, FaMinus } from 'react-icons/fa';
+import { FaShoppingCart, FaPlus, FaMinus, FaCheckCircle } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
 import WishlistButton from '../wishlist/WishlistButton';
+import { motion, AnimatePresence } from 'framer-motion'; // Add this import for animations
+import './ProductDetail.css'; // Create this file for the animations
 
-// Add this helper function near the top of the component
+// Helper function for price formatting
 const formatPrice = (price) => {
   if (!price) return '0.00';
   
@@ -26,16 +28,22 @@ const formatPrice = (price) => {
 const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
   const dispatch = useDispatch();
   const cart = useCart();
-  // Safely access addItem, or provide a fallback function
   const addItem = cart?.addItem || (async () => console.log('Cart context not available'));
   const navigate = useNavigate();
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
+  const [addSuccess, setAddSuccess] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const availableStock = selectedVariant 
     ? (selectedVariant.stock || 0) 
     : (product?.stock_quantity || 0);
+
+  // Fade-in animation on component mount
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value);
@@ -96,13 +104,20 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
         onAddToCart(itemToAdd);
       }
       
-      if (window.confirm('Item added to cart. View cart now?')) {
-        navigate('/cart');
-      }
+      // Show success animation instead of alert
+      setAddSuccess(true);
+      setTimeout(() => {
+        setAddSuccess(false);
+        // Only show the prompt after the success animation completes
+        setTimeout(() => {
+          if (window.confirm('Item added to cart. View cart now?')) {
+            navigate('/cart');
+          }
+        }, 300);
+      }, 1500);
       
     } catch (err) {
       console.error('Error adding to cart:', err);
-      // Add user-friendly error notification here
       alert('Failed to add item to cart. Please try again.');
     } finally {
       setAdding(false);
@@ -112,117 +127,208 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
   const isOutOfStock = availableStock <= 0;
 
   return (
-    <Row>
-<<<<<<< HEAD
-      {/* Only render controls, not image/name/price, when hideMainInfo is true */}
-      <Col md={12} className="d-flex flex-column align-items-center justify-content-center">
-        <Form className="mb-4 w-100 d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
-=======
-      <Col md={5} className="mb-4">
-        <div className="product-image-container">
-          <Image 
-            src={product.image_url || 'https://via.placeholder.com/500x500?text=No+Image'} 
-            alt={product.name}
-            className="product-detail-image"
-            fluid
-          />
-        </div>
-      </Col>
-      
-      <Col md={7}>
-        <div className="d-flex justify-content-between align-items-start">
-          <h1 className="mb-2">{product.name}</h1>
-          <WishlistButton productId={product._id} size="lg" />
-        </div>
-        
-        <h2 className="product-price mb-3">
-          ${selectedVariant ? formatPrice(selectedVariant.price || product.price) : formatPrice(product.price)}
-        </h2>
-        
-        {isOutOfStock ? (
-          <Badge bg="danger" className="mb-3 fs-6">Out of Stock</Badge>
-        ) : (
-          <Badge bg="success" className="mb-3 fs-6">In Stock</Badge>
-        )}
-        
-        <div className="mb-4 product-description">
-          <p>{product.description || 'No description available.'}</p>
-        </div>
-        
-        <Form className="mb-4">
->>>>>>> 22cdfcb56051e958198f4c0ce92695c5f23cf4bf
-          {variants && variants.length > 0 && (
-            <Input
-              label="Variant"
-              as="select"
-              onChange={handleVariantChange}
-              value={selectedVariant?._id || ''}
-              options={[
-                { value: '', label: 'Select Variant' },
-                ...variants.map(variant => ({
-                  value: variant._id,
-                  label: `${variant.taille || ''} ${variant.couleur || ''} ${variant.stock <= 0 ? '(Out of Stock)' : ''}`,
-                  disabled: variant.stock <= 0
-                }))
-              ]}
-              className="mb-0 variant-select"
-            />
-          )}
-          {/* Quantity inside Add to Cart button */}
-          <div className="quantity-addtocart-group d-flex align-items-center bg-dark rounded-3 px-2 py-1" style={{boxShadow:'0 2px 8px rgba(74,107,245,0.10)'}}>
-            <Button 
-              variant="outline-light" 
-              onClick={() => {
-                const newQty = Math.max(1, quantity - 1);
-                setQuantity(newQty);
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Row>
+        <Col md={12} className="d-flex flex-column align-items-center justify-content-center">
+          {/* Wishlist button with hover animation */}
+          <motion.div 
+            className="d-flex justify-content-end w-100 mb-3"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <WishlistButton productId={product._id} size="lg" />
+          </motion.div>
+          
+          <Form className="mb-4 w-100 d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
+            {variants && variants.length > 0 && (
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="w-100"
+                style={{ maxWidth: "250px" }}
+              >
+                <Input
+                  label="Variant"
+                  as="select"
+                  onChange={handleVariantChange}
+                  value={selectedVariant?._id || ''}
+                  options={[
+                    { value: '', label: 'Select Variant' },
+                    ...variants.map(variant => ({
+                      value: variant._id,
+                      label: `${variant.taille || ''} ${variant.couleur || ''} ${variant.stock <= 0 ? '(Out of Stock)' : ''}`,
+                      disabled: variant.stock <= 0
+                    }))
+                  ]}
+                  className="mb-0 variant-select"
+                />
+              </motion.div>
+            )}
+            
+            {/* Quantity controls with animations */}
+            <motion.div 
+              className="quantity-addtocart-group d-flex align-items-center bg-dark rounded-4 px-3 py-2"
+              style={{
+                boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+                border: '1px solid rgba(74,107,245,0.2)',
+                background: 'linear-gradient(145deg, #1a1f35 0%, #232946 100%)'
               }}
-              disabled={isOutOfStock}
-              icon={FaMinus}
-              className="quantity-btn"
-              style={{border:'none', background:'none'}}
-            />
-            <input
-              type="number"
-              min="1"
-              max={availableStock}
-              value={quantity}
-              onChange={e => {
-                let val = parseInt(e.target.value);
-                if (isNaN(val) || val < 1) val = 1;
-                if (val > availableStock) val = availableStock;
-                setQuantity(val);
-              }}
-              disabled={isOutOfStock}
-              className="mx-2 text-center quantity-input"
-              style={{width:48, background:'#f4f8ff', color:'#232946', border:'2px solid #4a6bf5', borderRadius:'0.7rem', fontWeight:'bold', fontSize:'1.2rem', textAlign:'center', margin:'0 0.5rem', boxShadow:'0 2px 8px rgba(74,107,245,0.08)'}}
-            />
-            <Button 
-              variant="outline-light" 
-              onClick={() => {
-                const newQty = Math.min(availableStock, quantity + 1);
-                setQuantity(newQty);
-              }}
-              disabled={isOutOfStock}
-              icon={FaPlus}
-              className="quantity-btn"
-              style={{border:'none', background:'none'}}
-            />
-            <Button 
-              variant="primary" 
-              size="lg" 
-              onClick={handleAddToCart}
-              disabled={isOutOfStock}
-              isLoading={adding}
-              icon={FaShoppingCart}
-              className="ms-3 px-4 fw-bold add-to-cart-main-btn"
-              style={{borderRadius:'2rem', fontSize:'1.1rem', boxShadow:'0 4px 16px rgba(74,107,245,0.18)'}}
+              whileHover={{ boxShadow: '0 10px 25px rgba(74,107,245,0.25)' }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              Add to Cart
-            </Button>
-          </div>
-        </Form>
-      </Col>
-    </Row>
+              <motion.div
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <Button 
+                  variant="outline-light" 
+                  onClick={() => {
+                    const newQty = Math.max(1, quantity - 1);
+                    setQuantity(newQty);
+                  }}
+                  disabled={isOutOfStock}
+                  className="quantity-btn"
+                  style={{
+                    border: 'none', 
+                    background: 'rgba(255,255,255,0.05)',
+                    borderRadius: '50%',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <FaMinus size={14} />
+                </Button>
+              </motion.div>
+              
+              <motion.input
+                type="number"
+                min="1"
+                max={availableStock}
+                value={quantity}
+                onChange={e => {
+                  let val = parseInt(e.target.value);
+                  if (isNaN(val) || val < 1) val = 1;
+                  if (val > availableStock) val = availableStock;
+                  setQuantity(val);
+                }}
+                disabled={isOutOfStock}
+                className="mx-2 text-center quantity-input"
+                style={{
+                  width: 56, 
+                  background: 'rgba(244,248,255,0.9)',
+                  color: '#232946', 
+                  border: '2px solid #4a6bf5',
+                  borderRadius: '0.9rem',
+                  fontWeight: 'bold',
+                  fontSize: '1.2rem',
+                  textAlign: 'center',
+                  margin: '0 0.7rem',
+                  boxShadow: '0 4px 12px rgba(74,107,245,0.15)',
+                  transition: 'all 0.3s ease'
+                }}
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 0.3 }}
+              />
+              
+              <motion.div
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <Button 
+                  variant="outline-light" 
+                  onClick={() => {
+                    const newQty = Math.min(availableStock, quantity + 1);
+                    setQuantity(newQty);
+                  }}
+                  disabled={isOutOfStock}
+                  className="quantity-btn"
+                  style={{
+                    border: 'none', 
+                    background: 'rgba(255,255,255,0.05)',
+                    borderRadius: '50%',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <FaPlus size={14} />
+                </Button>
+              </motion.div>
+              
+              <motion.div
+                className="ms-4"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  onClick={handleAddToCart}
+                  disabled={isOutOfStock || adding}
+                  isLoading={adding && !addSuccess}
+                  className="px-4 fw-bold add-to-cart-main-btn"
+                  style={{
+                    borderRadius: '2rem',
+                    fontSize: '1.1rem',
+                    boxShadow: '0 8px 20px rgba(74,107,245,0.25)',
+                    background: 'linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%)',
+                    border: 'none',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <AnimatePresence>
+                    {addSuccess ? (
+                      <motion.div
+                        key="success"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <FaCheckCircle className="me-2" size={18} />
+                        Added!
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="cart"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <FaShoppingCart className="me-2" size={18} />
+                        Add to Cart
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Button>
+              </motion.div>
+            </motion.div>
+          </Form>
+        </Col>
+      </Row>
+    </motion.div>
   );
 };
 

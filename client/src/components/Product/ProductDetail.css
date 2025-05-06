@@ -1,0 +1,92 @@
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74,107,245,0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(74,107,245,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74,107,245,0);
+  }
+}
+
+.add-to-cart-main-btn {
+  transition: all 0.3s ease;
+}
+
+.add-to-cart-main-btn:not(:disabled):hover {
+  transform: translateY(-2px);
+  animation: pulse 1.5s infinite;
+}
+
+.quantity-btn {
+  transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+.quantity-input {
+  transition: all 0.3s ease;
+}
+
+.quantity-input:focus {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(74,107,245,0.3) !important;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-detail-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Success animation */
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.success-animation {
+  animation: successPulse 0.5s ease-in-out;
+}
+
+/* Wishlist button animation */
+.wishlist-button {
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.wishlist-button:hover {
+  transform: scale(1.15);
+}
+
+.wishlist-button.active {
+  animation: heartBeat 0.6s ease-in-out;
+}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.3); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.3); }
+  70% { transform: scale(1); }
+}

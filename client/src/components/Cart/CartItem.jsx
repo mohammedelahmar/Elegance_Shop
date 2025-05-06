@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Row, Col, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
 import './CartItem.css';
@@ -9,6 +10,8 @@ import './CartItem.css';
 const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   const [quantity, setQuantity] = useState(item.quantity);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const itemRef = useRef(null);
 
   const handleQuantityChange = (e) => {
     const newQuantity = parseInt(e.target.value);
@@ -32,10 +35,20 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   };
 
   const handleRemoveItem = async () => {
+    setIsRemoving(true);
     try {
-      await onRemove(item._id);
+      if (itemRef.current) {
+        itemRef.current.classList.add('removing');
+        // Wait for animation to complete before removing
+        setTimeout(async () => {
+          await onRemove(item._id);
+        }, 500);
+      } else {
+        await onRemove(item._id);
+      }
     } catch (error) {
       console.error('Failed to remove item:', error);
+      setIsRemoving(false);
     }
   };
 
@@ -57,80 +70,117 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   const totalPrice = productPrice * quantity;
 
   return (
-    <Row className="cart-item align-items-center py-3 border-bottom">
-      <Col xs={3} md={2}>
-        <Link to={productUrl}>
-          <Image src={productImageUrl} alt={productName} fluid rounded className="cart-item-image" />
-        </Link>
-      </Col>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      ref={itemRef}
+    >
+      <Row className="cart-item align-items-center">
+        {/* Product image */}
+        <Col xs={3} md={2}>
+          <Link to={productUrl}>
+            <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
+              <Image src={productImageUrl} alt={productName} fluid rounded className="cart-item-image" />
+            </motion.div>
+          </Link>
+        </Col>
 
-      <Col xs={9} md={4}>
-        <Link to={productUrl} className="text-decoration-none text-dark">
-          <h5 className="mb-1">{productName}</h5>
-        </Link>
-        {item.variant && (
-          <p className="text-muted mb-0 small">
-            Variant: {item.variant.taille} {item.variant.couleur}
-          </p>
-        )}
-        <Button 
-          variant="link" 
-          className="text-danger p-0 mt-2 d-md-none" 
-          onClick={handleRemoveItem}
-          icon={FaTrash}
-          size="sm"
-        >
-          Remove
-        </Button>
-      </Col>
-
-      <Col xs={6} md={3} className="mt-3 mt-md-0">
-        <div className="d-flex align-items-center quantity-control">
+        {/* Product info */}
+        <Col xs={9} md={4}>
+          <Link to={productUrl} className="text-decoration-none">
+            <motion.h5 
+              className="cart-item-title mb-1"
+              whileHover={{ color: "#4a9fff" }}
+              transition={{ duration: 0.2 }}
+            >
+              {productName}
+            </motion.h5>
+          </Link>
+          {item.variant && (
+            <p className="text-white-50 mb-0 small">
+              Variant: <span className="badge bg-secondary bg-opacity-25">{item.variant.taille} {item.variant.couleur}</span>
+            </p>
+          )}
           <Button 
-            variant="outline-secondary" 
-            size="sm" 
-            onClick={() => handleQuantityUpdate(quantity - 1)} 
-            disabled={quantity <= 1 || isUpdating}
-            icon={FaMinus}
-          />
-          
-          <Input
-            type="number"
-            min="1"
-            value={quantity}
-            onChange={handleQuantityChange}
-            onBlur={() => handleQuantityUpdate(quantity)}
-            className="mx-2"
-            inputClassName="text-center"
-            fullWidth={false}
-            disabled={isUpdating}
-          />
-          
-          <Button 
-            variant="outline-secondary" 
-            size="sm" 
-            onClick={() => handleQuantityUpdate(quantity + 1)}
-            disabled={isUpdating}
-            icon={FaPlus}
-          />
-        </div>
-      </Col>
+            variant="link" 
+            className="text-danger p-0 mt-2 d-md-none" 
+            onClick={handleRemoveItem}
+            disabled={isRemoving}
+            icon={FaTrash}
+            size="sm"
+          >
+            Remove
+          </Button>
+        </Col>
 
-      <Col xs={6} md={2} className="text-end">
-        <h5 className="mb-0">${totalPrice.toFixed(2)}</h5>
-        <small className="text-muted">${productPrice.toFixed(2)} each</small>
-      </Col>
+        {/* Quantity controls */}
+        <Col xs={6} md={3} className="mt-3 mt-md-0">
+          <motion.div 
+            className="quantity-control"
+            whileHover={{ boxShadow: '0 4px 12px rgba(74,107,245,0.15)' }}
+          >
+            <Button 
+              variant="outline-secondary" 
+              size="sm" 
+              onClick={() => handleQuantityUpdate(quantity - 1)} 
+              disabled={quantity <= 1 || isUpdating || isRemoving}
+              icon={FaMinus}
+              className="rounded-circle"
+            />
+            
+            <Input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={handleQuantityChange}
+              onBlur={() => handleQuantityUpdate(quantity)}
+              className="mx-2"
+              inputClassName="text-center"
+              fullWidth={false}
+              disabled={isUpdating || isRemoving}
+              style={{ background: 'rgba(255,255,255,0.1)', color: '#fff' }}
+            />
+            
+            <Button 
+              variant="outline-secondary" 
+              size="sm" 
+              onClick={() => handleQuantityUpdate(quantity + 1)}
+              disabled={isUpdating || isRemoving}
+              icon={FaPlus}
+              className="rounded-circle"
+            />
+          </motion.div>
+        </Col>
 
-      <Col md={1} className="text-end d-none d-md-block">
-        <Button 
-          variant="outline-danger" 
-          size="sm" 
-          onClick={handleRemoveItem}
-          title="Remove item"
-          icon={FaTrash}
-        />
-      </Col>
-    </Row>
+        {/* Price */}
+        <Col xs={6} md={2} className="text-end">
+          <motion.h5 
+            className="cart-item-price mb-0"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            ${totalPrice.toFixed(2)}
+          </motion.h5>
+          <small className="cart-item-unit-price">${productPrice.toFixed(2)} each</small>
+        </Col>
+
+        {/* Remove button (desktop) */}
+        <Col md={1} className="text-end d-none d-md-block">
+          <motion.div whileHover={{ rotate: 90 }} transition={{ duration: 0.2 }}>
+            <Button 
+              variant="outline-danger" 
+              size="sm" 
+              onClick={handleRemoveItem}
+              disabled={isRemoving}
+              title="Remove item"
+              className="cart-item-remove"
+              icon={FaTrash}
+            />
+          </motion.div>
+        </Col>
+      </Row>
+    </motion.div>
   );
 };
 
