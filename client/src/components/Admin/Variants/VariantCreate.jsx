@@ -4,17 +4,47 @@ import PropTypes from 'prop-types';
 import Input from '../../UI/Input';
 import Button from '../../UI/Button';
 import { createVariant } from '../../../api/variant';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaCheck } from 'react-icons/fa';
+import { CLOTHING_SIZES, NUMERIC_SIZES, SHOE_SIZES, COMMON_COLORS } from '../../../constants/sizes';
 
 const VariantCreate = ({ show, onHide, onVariantCreated, products, defaultProductId }) => {
   const [formData, setFormData] = useState({
     product_id: '',
     taille: '',
     couleur: '',
-    stock: 0
+    stock: 0,
+    sizeType: 'clothing' // Default size type
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Get the appropriate size options based on the selected size type
+  const getSizeOptions = () => {
+    switch(formData.sizeType) {
+      case 'numeric':
+        return NUMERIC_SIZES;
+      case 'shoe':
+        return SHOE_SIZES;
+      case 'clothing':
+      default:
+        return CLOTHING_SIZES;
+    }
+  };
+  
+  // Add this function inside your component
+  const getColorStyle = (colorName) => {
+    const colorEntry = COMMON_COLORS.find(c => 
+      c.value.toLowerCase() === colorName.toLowerCase() || 
+      c.label.toLowerCase() === colorName.toLowerCase()
+    );
+    return {
+      backgroundColor: colorEntry ? colorEntry.hex : colorName,
+      width: '30px',
+      height: '30px',
+      borderRadius: '50%',
+      border: '1px solid #ddd'
+    };
+  };
 
   useEffect(() => {
     if (show && defaultProductId) {
@@ -66,7 +96,8 @@ const VariantCreate = ({ show, onHide, onVariantCreated, products, defaultProduc
       product_id: defaultProductId || '',
       taille: '',
       couleur: '',
-      stock: 0
+      stock: 0,
+      sizeType: 'clothing'
     });
     setLoading(false);
   };
@@ -97,13 +128,66 @@ const VariantCreate = ({ show, onHide, onVariantCreated, products, defaultProduc
             ]}
           />
           
+          {/* Size Type Selection */}
+          <Form.Group className="mb-3">
+            <Form.Label>Size Type</Form.Label>
+            <Form.Select
+              name="sizeType"
+              value={formData.sizeType}
+              onChange={handleChange}
+            >
+              <option value="clothing">Clothing (XS, S, M, L, XL...)</option>
+              <option value="numeric">Numeric (36, 38, 40...)</option>
+              <option value="shoe">Shoe Sizes</option>
+            </Form.Select>
+          </Form.Group>
+          
+          {/* Size Selection */}
           <Input
             label="Size"
+            as="select"
             name="taille"
             value={formData.taille}
             onChange={handleChange}
-            placeholder="e.g. S, M, L, XL"
+            required
+            options={[
+              { value: '', label: 'Select Size' },
+              ...getSizeOptions()
+            ]}
           />
+          
+          <Form.Label>Common Colors</Form.Label>
+          <div className="d-flex flex-wrap gap-2 mb-3">
+            {COMMON_COLORS.map(color => (
+              <div 
+                key={color.value}
+                onClick={() => setFormData(prev => ({ ...prev, couleur: color.value }))}
+                className={`color-preset ${formData.couleur === color.value ? 'selected' : ''}`}
+                style={{ 
+                  backgroundColor: color.hex,
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '50%',
+                  border: '1px solid #ddd',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'relative'
+                }}
+                title={color.label}
+              >
+                {formData.couleur === color.value && (
+                  <FaCheck 
+                    style={{ 
+                      color: ['White', 'Yellow', 'Beige'].includes(color.label) ? '#000' : '#fff',
+                      fontSize: '14px'
+                    }} 
+                  />
+                )}
+              </div>
+            ))}
+          </div>
           
           <Row>
             <Col>
@@ -119,13 +203,8 @@ const VariantCreate = ({ show, onHide, onVariantCreated, products, defaultProduc
               {formData.couleur && (
                 <div
                   className="color-preview"
-                  style={{
-                    backgroundColor: formData.couleur,
-                    width: '30px',
-                    height: '30px',
-                    borderRadius: '50%',
-                    border: '1px solid #ddd'
-                  }}
+                  style={getColorStyle(formData.couleur)}
+                  title={formData.couleur}
                 ></div>
               )}
             </Col>

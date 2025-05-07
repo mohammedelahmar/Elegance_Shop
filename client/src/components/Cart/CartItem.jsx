@@ -7,6 +7,25 @@ import Button from '../UI/Button';
 import Input from '../UI/Input';
 import './CartItem.css';
 
+// Import COMMON_COLORS at the top of the file
+import { COMMON_COLORS } from '../../constants/sizes';
+
+const getColorStyle = (colorName) => {
+  if (!colorName) return {};
+  
+  const colorEntry = COMMON_COLORS.find(c => 
+    c.value.toLowerCase() === colorName.toLowerCase() || 
+    c.label.toLowerCase() === colorName.toLowerCase()
+  );
+  return {
+    backgroundColor: colorEntry ? colorEntry.hex : colorName,
+    width: "18px",
+    height: "18px",
+    borderRadius: "50%",
+    border: "1px solid #ddd"
+  };
+};
+
 const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   const [quantity, setQuantity] = useState(item.quantity);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -101,6 +120,23 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
             <p className="text-white-50 mb-0 small">
               Variant: <span className="badge bg-secondary bg-opacity-25">{item.variant.taille} {item.variant.couleur}</span>
             </p>
+          )}
+          {item.variant_id && (
+            <div className="d-flex align-items-center mb-2">
+              <p className="text-muted mb-0 small me-2">
+                <strong>Size:</strong> {item.variant_id.taille}
+              </p>
+              {item.variant_id.couleur && (
+                <div className="d-flex align-items-center">
+                  <span className="text-muted small me-1"><strong>Color:</strong></span>
+                  <div
+                    className="color-swatch"
+                    style={getColorStyle(item.variant_id.couleur)}
+                    title={item.variant_id.couleur}
+                  ></div>
+                </div>
+              )}
+            </div>
           )}
           <Button 
             variant="link" 

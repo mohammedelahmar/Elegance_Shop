@@ -4,11 +4,15 @@ import {
   createVarianteProduct, 
   getVarianteProductById, 
   updateVarianteProduct, 
-  deleteVarianteProduct 
+  deleteVarianteProduct,
+  getVarianteProductsByProduct
 } from '../controllers/varianteProductController.js';
 import { protect, admin } from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
+
+// This route must come BEFORE the /:id route
+router.get('/product/:productId', protect, getVarianteProductsByProduct);
 
 router.get('/', protect, getVarianteProducts);
 router.post('/', protect, admin, createVarianteProduct);

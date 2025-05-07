@@ -1,5 +1,6 @@
 import VarianteProduct from '../../models/VarianteProduct.js';
 import Product from '../../models/Product.js';
+import mongoose from 'mongoose';
 
 /**
  * @desc    Get all variante products
@@ -90,6 +91,41 @@ const getVarianteProductById = async (req, res, next) => {
 };
 
 /**
+ * @desc    Get variante products by product ID
+ * @route   GET /api/variants/product/:productId
+ * @access  Private
+ */
+const getVarianteProductsByProduct = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    
+    // Validate the ID format
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      res.status(400);
+      throw new Error('Invalid product ID format');
+    }
+    
+    // Check if product exists
+    const productExists = await Product.findById(productId);
+    if (!productExists) {
+      res.status(404);
+      throw new Error('Product not found');
+    }
+    
+    const varianteProducts = await VarianteProduct.find({ product_id: productId })
+      .populate('product_id', 'name price image_url');
+    
+    res.status(200).json({
+      success: true,
+      count: varianteProducts.length,
+      data: varianteProducts
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * @desc    Update variante product
  * @route   PUT /api/variants/:id
  * @access  Private/Admin
@@ -149,6 +185,7 @@ export {
   getVarianteProducts,
   createVarianteProduct,
   getVarianteProductById,
+  getVarianteProductsByProduct,
   updateVarianteProduct,
   deleteVarianteProduct
 };

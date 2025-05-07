@@ -248,6 +248,10 @@ const Dashboard = () => {
                     <FaBox className="dashboard-action-icon text-primary" />
                     Manage Products
                   </Link>
+                  <Link to="/admin/variants" className="dashboard-action-tile">
+                    <FaBox className="dashboard-action-icon text-primary" />
+                    Manage Variants Products
+                  </Link>
                   <Link to="/admin/categories" className="dashboard-action-tile">
                     <FaTags className="dashboard-action-icon text-secondary" />
                     Manage Categories

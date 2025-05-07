@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, InputGroup, Form } from 'react-bootstrap';
+import { Table, Button, InputGroup, Form, Badge } from 'react-bootstrap';
 import { FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 import { deleteVariant } from '../../../api/variant';
 import Message from '../../UI/Message';
@@ -39,7 +39,7 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
   };
 
   return (
-    <div className="variant-list-card">
+    <>
       {showDeleteMessage && (
         <Message 
           variant={messageType} 
@@ -50,9 +50,9 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
         </Message>
       )}
       
-      <div className="variant-search-bar">
+      <div className="mb-3">
         <InputGroup>
-          <InputGroup.Text id="search-addon" className="variant-search-icon">
+          <InputGroup.Text id="search-addon">
             <FaSearch />
           </InputGroup.Text>
           <Form.Control
@@ -62,7 +62,6 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search"
             aria-describedby="search-addon"
-            className="variant-search-input"
           />
         </InputGroup>
       </div>
@@ -74,7 +73,7 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
       )}
 
       <div className="table-responsive">
-        <Table hover className="variant-table">
+        <Table hover>
           <thead>
             <tr>
               <th>ID</th>
@@ -95,14 +94,22 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
               filteredVariants.map(variant => (
                 <tr key={variant._id}>
                   <td>{variant._id.substring(variant._id.length - 6).toUpperCase()}</td>
-                  <td>{variant.taille || '-'}</td>
+                  <td>
+                    <span className="size-badge">
+                      {variant.taille || '-'}
+                    </span>
+                  </td>
                   <td>
                     {variant.couleur ? (
                       <div className="d-flex align-items-center">
                         <div
-                          className="color-preview"
+                          className="color-preview me-2"
                           style={{
-                            backgroundColor: variant.couleur
+                            backgroundColor: variant.couleur,
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            border: '1px solid #ddd'
                           }}
                         ></div>
                         {variant.couleur}
@@ -111,7 +118,13 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
                       '-'
                     )}
                   </td>
-                  <td>{variant.stock}</td>
+                  <td>
+                    <Badge bg={variant.stock > 0 ? (variant.stock <= 5 ? 'warning' : 'success') : 'danger'}>
+                      {variant.stock > 0 ? 
+                        `${variant.stock} in stock` : 
+                        'Out of stock'}
+                    </Badge>
+                  </td>
                   <td>
                     <div className="d-flex gap-2">
                       <Button 
@@ -142,7 +155,7 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
       <div className="mt-2 text-muted small">
         Showing {filteredVariants.length} of {variants.length} variants
       </div>
-    </div>
+    </>
   );
 };
 

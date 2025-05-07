@@ -5,22 +5,46 @@ import Input from '../../UI/Input';
 import Button from '../../UI/Button';
 import { updateVariant } from '../../../api/variant';
 import { FaSave } from 'react-icons/fa';
+import { CLOTHING_SIZES, NUMERIC_SIZES, SHOE_SIZES } from '../../../constants/sizes';
 
 const VariantEdit = ({ variant, productId, show, onHide, onVariantUpdated }) => {
   const [formData, setFormData] = useState({
     taille: '',
     couleur: '',
-    stock: 0
+    stock: 0,
+    sizeType: 'clothing'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Determine size type based on the size value
+  const determineSizeType = (size) => {
+    if (CLOTHING_SIZES.some(s => s.value === size)) return 'clothing';
+    if (NUMERIC_SIZES.some(s => s.value === size)) return 'numeric';
+    if (SHOE_SIZES.some(s => s.value === size)) return 'shoe';
+    return 'clothing';
+  };
+
+  // Get the appropriate size options based on the selected size type
+  const getSizeOptions = () => {
+    switch(formData.sizeType) {
+      case 'numeric':
+        return NUMERIC_SIZES;
+      case 'shoe':
+        return SHOE_SIZES;
+      case 'clothing':
+      default:
+        return CLOTHING_SIZES;
+    }
+  };
 
   useEffect(() => {
     if (variant) {
       setFormData({
         taille: variant.taille || '',
         couleur: variant.couleur || '',
-        stock: variant.stock || 0
+        stock: variant.stock || 0,
+        sizeType: determineSizeType(variant.taille)
       });
     }
   }, [variant]);
@@ -68,12 +92,32 @@ const VariantEdit = ({ variant, productId, show, onHide, onVariantUpdated }) => 
         <Modal.Body>
           {error && <div className="alert alert-danger">{error}</div>}
           
+          {/* Size Type Selection */}
+          <Form.Group className="mb-3">
+            <Form.Label>Size Type</Form.Label>
+            <Form.Select
+              name="sizeType"
+              value={formData.sizeType}
+              onChange={handleChange}
+            >
+              <option value="clothing">Clothing (XS, S, M, L, XL...)</option>
+              <option value="numeric">Numeric (36, 38, 40...)</option>
+              <option value="shoe">Shoe Sizes</option>
+            </Form.Select>
+          </Form.Group>
+          
+          {/* Size Selection */}
           <Input
             label="Size"
+            as="select"
             name="taille"
             value={formData.taille}
             onChange={handleChange}
-            placeholder="e.g. S, M, L, XL"
+            required
+            options={[
+              { value: '', label: 'Select Size' },
+              ...getSizeOptions()
+            ]}
           />
           
           <Row>

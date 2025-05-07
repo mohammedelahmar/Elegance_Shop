@@ -7,7 +7,7 @@ import OrderDetail from '../../components/Admin/Orders/OrderDetail';
 import OrderStats from '../../components/Admin/Orders/OrderStats';
 import Loader from '../../components/UI/Loader';
 import Message from '../../components/UI/Message';
-import '../../components/Admin/Categories/CategoryList.css'; // Use the same CSS as CategoryList for consistent style
+import '../../components/Admin/Categories/CategoryList.css'; // Keep existing CSS
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -26,7 +26,7 @@ const OrdersPage = () => {
 
   // Fetch all orders
   useEffect(() => {
-    async function fetchOrders() {
+    const fetchOrders = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -38,7 +38,8 @@ const OrdersPage = () => {
       } finally {
         setLoading(false);
       }
-    }
+    };
+
     fetchOrders();
   }, [refreshTrigger]);
 
@@ -66,7 +67,8 @@ const OrdersPage = () => {
         order => 
           order._id.toLowerCase().includes(term) ||
           (order.user && order.user.name && order.user.name.toLowerCase().includes(term)) ||
-          (order.user && order.user.email && order.user.email.toLowerCase().includes(term))
+          (order.user && order.user.email && order.user.email.toLowerCase().includes(term)) ||
+          (order.user_id && order.user_id.email && order.user_id.email.toLowerCase().includes(term))
       );
     }
     
@@ -103,6 +105,13 @@ const OrdersPage = () => {
           order._id === orderId ? { ...order, isDelivered: true, deliveredAt: new Date().toISOString() } : order
         );
         setOrders(updatedOrders);
+        setFilteredOrders(prevFiltered => prevFiltered.map(order =>
+          order._id === orderId ? { 
+            ...order, 
+            isDelivered: true, 
+            deliveredAt: new Date().toISOString() 
+          } : order
+        ));
         
         // If we're viewing the order details, update the selected order too
         if (selectedOrder && selectedOrder._id === orderId) {
@@ -163,19 +172,50 @@ const OrdersPage = () => {
   };
 
   const handleExportOrders = () => {
+    // Helper function to safely format price values
+    const formatPrice = (price) => {
+      if (!price && price !== 0) return '0.00';
+      
+      // Handle MongoDB Decimal128 format
+      if (typeof price === 'object' && price.$numberDecimal) {
+        return parseFloat(price.$numberDecimal).toFixed(2);
+      }
+      
+      // Handle regular number or string
+      try {
+        return parseFloat(price).toFixed(2);
+      } catch (e) {
+        return '0.00';
+      }
+    };
+
     // Generate CSV content from filtered orders
     const headers = ['Order ID', 'Customer', 'Email', 'Date', 'Total', 'Paid', 'Delivered'];
     const csvContent = [
       headers.join(','),
-      ...filteredOrders.map(order => [
-        order._id,
-        order.user?.name || 'Unknown User',
-        order.user?.email || '-',
-        new Date(order.createdAt).toLocaleDateString(),
-        order.totalPrice.toFixed(2),
-        order.isPaid ? 'Yes' : 'No',
-        order.isDelivered ? 'Yes' : 'No'
-      ].join(','))
+      ...filteredOrders.map(order => {
+        // Handle different user field structures
+        let userName = 'Unknown User';
+        let userEmail = '-';
+        
+        if (order.user_id) {
+          userName = `${order.user_id.Firstname || ''} ${order.user_id.Lastname || ''}`.trim();
+          userEmail = order.user_id.email || '-';
+        } else if (order.user) {
+          userName = order.user.name || 'Unknown User';
+          userEmail = order.user.email || '-';
+        }
+        
+        return [
+          order._id,
+          userName,
+          userEmail,
+          new Date(order.createdAt).toLocaleDateString(),
+          formatPrice(order.totalPrice || order.total_amount),
+          order.isPaid ? 'Yes' : 'No',
+          order.isDelivered ? 'Yes' : 'No'
+        ].join(',');
+      })
     ].join('\n');
     
     // Create a blob and trigger download
@@ -190,7 +230,7 @@ const OrdersPage = () => {
   };
 
   return (
-    <div className="category-list-card"> {/* Use same card class as CategoryList */}
+    <div className="category-list-card"> {/* Keep existing class for consistent styling */}
       {/* Header Row */}
       <div className="categories-admin-header mb-4 d-flex justify-content-between align-items-center">
         <h1 className="categories-admin-title">Order Management</h1>
@@ -263,27 +303,37 @@ const OrdersPage = () => {
         </Message>
       )}
 
-      {/* Orders List */}
-      {loading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
-      ) : filteredOrders.length === 0 ? (
-        <div className="text-center p-5">
-          <h3 className="text-muted">No orders found</h3>
-          <p>No orders match your current filters.</p>
-        </div>
-      ) : (
-        <div className="table-responsive">
-          <OrderList
-            orders={filteredOrders}
-            onViewOrder={handleViewOrder}
-            onMarkPaid={handleMarkPaid}
-            onMarkDelivered={handleMarkDelivered}
-            isLoading={actionLoading}
-          />
-        </div>
-      )}
+      {/* Orders List - Using IIFE pattern for cleaner conditional rendering */}
+      {(() => {
+        if (loading) {
+          return <Loader />;
+        }
+        
+        if (error) {
+          return <Message variant="danger">{error}</Message>;
+        }
+        
+        if (filteredOrders.length === 0) {
+          return (
+            <div className="text-center p-5">
+              <h3 className="text-muted">No orders found</h3>
+              <p>No orders match your current filters.</p>
+            </div>
+          );
+        }
+        
+        return (
+          <div className="table-responsive">
+            <OrderList
+              orders={filteredOrders}
+              onViewOrder={handleViewOrder}
+              onMarkPaid={handleMarkPaid}
+              onMarkDelivered={handleMarkDelivered}
+              isLoading={actionLoading}
+            />
+          </div>
+        );
+      })()}
 
       {/* Order Detail Modal */}
       {selectedOrder && (
