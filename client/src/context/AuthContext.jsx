@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { login as loginApi, register as registerApi } from '../api/auth';
+import { login as loginApi, register as registerApi, forgotPasswordApi, resetPasswordApi } from '../api/auth';
 import { getUserProfile, updateUserProfile } from '../api/user';
 
 // Create context
@@ -88,6 +88,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Request password reset
+  const forgotPassword = async (email) => {
+    setError(null);
+    try {
+      const data = await forgotPasswordApi(email);
+      return data;
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to send reset email');
+      throw error;
+    }
+  };
+
+  // Reset password with token
+  const resetPassword = async (token, password) => {
+    setError(null);
+    try {
+      const data = await resetPasswordApi(token, password);
+      return data;
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to reset password');
+      throw error;
+    }
+  };
+
   // Check if user is admin
   const isAdmin = () => {
     return currentUser?.role === 'admin';
@@ -105,6 +129,8 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     updateProfile,
+    forgotPassword,
+    resetPassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

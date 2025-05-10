@@ -9,6 +9,8 @@ const UserSchema = new mongoose.Schema({
     phone_number: { type: String, required: true, unique: true },
     address: { type: String, required: true },
     role: { type: String, enum: ['client', 'admin'], default: 'client' },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
 }, { timestamps: true }); // Removed manual timestamp fields
 
 const User = mongoose.model('User', UserSchema);

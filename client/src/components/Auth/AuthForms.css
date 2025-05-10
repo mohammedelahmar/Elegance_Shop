@@ -1,0 +1,40 @@
+.reset-password-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.auth-icon {
+  font-size: 3rem;
+  color: #4a9fff;
+  margin-bottom: 1.5rem;
+}
+
+.auth-form-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #f8f9fa;
+}
+
+.auth-form-subtitle {
+  color: #adb5bd;
+  margin-bottom: 2rem;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-divider-text {
+  padding: 0 1rem;
+  color: #adb5bd;
+}

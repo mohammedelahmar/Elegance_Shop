@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
 import { Form, Alert } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
-import { FaSignInAlt } from 'react-icons/fa';
+import { FaKey } from 'react-icons/fa';
 
-const LoginForm = () => {
+const ForgotPasswordForm = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const { forgotPassword } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
     
     try {
-      await login(email, password);
-      navigate('/'); // Redirect to home page after successful login
+      const data = await forgotPassword(email);
+      setSuccess(data.message || 'Password reset email sent! Please check your inbox.');
+      setEmail('');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to login');
+      setError(err.response?.data?.message || 'Failed to send reset email');
     } finally {
       setLoading(false);
     }
@@ -33,22 +34,20 @@ const LoginForm = () => {
   return (
     <Form onSubmit={handleSubmit}>
       {error && <Alert variant="danger">{error}</Alert>}
+      {success && <Alert variant="success">{success}</Alert>}
+      
+      <div className="text-center mb-4">
+        <FaKey size={40} className="text-primary mb-2" />
+        <h2>Forgot Password</h2>
+        <p className="text-muted">Enter your email to receive a password reset link</p>
+      </div>
       
       <Input
         label="Email Address"
         type="email"
-        placeholder="Enter email"
+        placeholder="Enter your email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      
-      <Input
-        label="Password"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
         required
       />
       
@@ -56,20 +55,16 @@ const LoginForm = () => {
         type="submit" 
         fullWidth 
         isLoading={loading}
-        icon={FaSignInAlt}
+        icon={FaKey}
       >
-        Login
+        Send Reset Link
       </Button>
       
-      <div className="d-flex justify-content-end mb-3">
-        <Link to="/forgot-password">Forgot Password?</Link>
-      </div>
-      
       <div className="mt-3 text-center">
-        Don't have an account? <Link to="/register">Register here</Link>
+        <Link to="/login">Back to Login</Link>
       </div>
     </Form>
   );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;

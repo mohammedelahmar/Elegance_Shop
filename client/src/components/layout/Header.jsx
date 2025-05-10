@@ -18,6 +18,7 @@ import {
 import { useWishlist } from '../../context/WishlistContext';
 import Button from '../UI/Button';
 import Input from '../UI/Input';
+import { FaEye } from 'react-icons/fa';
 import './Header.css';
 
 const Header = () => {
@@ -124,6 +125,9 @@ const Header = () => {
               <FaInfoCircle className="nav-icon" />
               <span>About</span>
             </Nav.Link>
+            <Nav.Link as={Link} to="/recently-viewed" className="nav-item">
+  <FaEye /> Recently Viewed
+</Nav.Link>
             
             <Nav.Link 
               as={Link} 

@@ -8,7 +8,9 @@ import {
   deleteUser,
   getUserById,
   updateUser,
-  promoteToAdmin
+  promoteToAdmin,
+  changePassword,  // Import the new function
+  resetPassword    // Import the resetPassword function
 } from '../controllers/userController.js';
 import { protect, admin } from '../../middlewares/authMiddleware.js';
 import {
@@ -18,6 +20,8 @@ import {
   idValidation,
   updateUserValidation
 } from '../validators/userValidators.js';
+import bcrypt from 'bcryptjs';
+
 
 const router = express.Router();
 
@@ -29,6 +33,12 @@ router.post('/login', loginValidation, loginUser);
 router.route('/profile')
   .get(protect, getUserProfile)
   .put(protect, updateProfileValidation, updateUserProfile);
+
+// Add the change password route
+router.put('/change-password', protect, changePassword);
+
+// Separate endpoint for password reset
+router.put('/password/reset/:token', resetPassword);
 
 // Admin routes
 router.route('/')

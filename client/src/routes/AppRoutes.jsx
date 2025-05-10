@@ -4,7 +4,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import PrivateRoute from './PrivateRoute';
 import AdminRoute from './AdminRoute';
-import Layout from '../components/layout/layout';
+import Layout from '../components/Layout/Layout';
 
 // Lazy loading components for better performance
 const Home = lazy(() => import('../pages/HomePage'));
@@ -21,6 +21,11 @@ const Wishlist = lazy(() => import('../pages/WishlistPage'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 const About = lazy(() => import('../pages/AboutPage'));
 const Contact = lazy(() => import('../pages/ContactPage'));
+const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
+const RecentlyViewedPage = lazy(() => import('../pages/RecentlyViewedPage'));
+const AddressFormPage = lazy(() => import('../pages/AddressFormPage'));
+const ResetPassword = lazy(() => import('../pages/ResetPasswordPage'));
 
 // Admin pages
 const Dashboard = lazy(() => import('../pages/Admin/Dashboard'));
@@ -53,7 +58,11 @@ const AppRoutes = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/password-reset/:token" element={<ResetPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/recently-viewed" element={<RecentlyViewedPage />} />
+
           {/* Protected routes - require authentication */}
           <Route element={<PrivateRoute />}>
             <Route path="/cart" element={<Cart />} />
@@ -62,8 +71,10 @@ const AppRoutes = () => {
             <Route path="/orders" element={<OrderHistory />} />
             <Route path="/orders/:id" element={<OrderDetail />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/address/new" element={<AddressFormPage />} />
+            <Route path="/address/edit" element={<AddressFormPage />} />
           </Route>
-          
+
           {/* Admin routes - require admin role */}
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<Dashboard />} />
@@ -76,7 +87,7 @@ const AppRoutes = () => {
             <Route path="/admin/reviews" element={<ReviewManagement />} />
             <Route path="/admin/addresses" element={<AddressManagement />} />
           </Route>
-          
+
           {/* Catch all route for 404 */}
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<Navigate to="/404" replace />} />

@@ -1,0 +1,113 @@
+.quick-view-modal .modal-content {
+     background: linear-gradient(145deg, #232946 0%, #1a1f36 100%);
+     border-radius: 16px;
+     color: #e0e0e0;
+     border: 1px solid rgba(255, 255, 255, 0.05);
+     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+   }
+   
+   .quick-view-modal .modal-header {
+     border-bottom-color: rgba(255, 255, 255, 0.1);
+     padding: 1.5rem;
+   }
+   
+   .quick-view-modal .modal-body {
+     padding: 1.5rem;
+   }
+   
+   .quick-view-title {
+     color: #90cdf4;
+     font-weight: 600;
+   }
+   
+   .quick-view-img-container {
+     background: rgba(255, 255, 255, 0.05);
+     border-radius: 12px;
+     padding: 1.5rem;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     margin-bottom: 1rem;
+   }
+   
+   .quick-view-img {
+     max-height: 300px;
+     object-fit: contain;
+   }
+   
+   .product-name {
+     font-size: 1.6rem;
+     font-weight: 600;
+     margin-bottom: 0.5rem;
+     color: #fff;
+   }
+   
+   .price-section .product-price {
+     font-size: 1.5rem;
+     font-weight: 700;
+     color: #4a6bf5;
+   }
+   
+   .product-description {
+     font-size: 0.95rem;
+     line-height: 1.5;
+     margin-top: 1rem;
+   }
+   
+   .stock-badge {
+     font-size: 0.9rem;
+     padding: 0.4rem 0.8rem;
+   }
+   
+   .action-buttons {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 0.8rem;
+     margin-top: 1.5rem;
+   }
+   
+   .add-cart-btn {
+     background: linear-gradient(135deg, #4a6bf5 0%, #3755d8 100%);
+     border: none;
+     padding: 0.6rem 1.2rem;
+     font-weight: 600;
+     border-radius: 8px;
+     transition: all 0.3s ease;
+   }
+   
+   .add-cart-btn:hover:not(:disabled) {
+     background: linear-gradient(135deg, #5a7bf5 0%, #4765e8 100%);
+     transform: translateY(-2px);
+     box-shadow: 0 8px 15px rgba(74, 107, 245, 0.4);
+   }
+   
+   .wishlist-button-container {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+   }
+   
+   .view-details-btn {
+     border-color: #4a6bf5;
+     color: #4a6bf5;
+     font-weight: 500;
+     transition: all 0.3s ease;
+   }
+   
+   .view-details-btn:hover {
+     background: rgba(74, 107, 245, 0.1);
+     border-color: #4a6bf5;
+     color: #6f88ff;
+   }
+   
+   .close-btn {
+     color: #fff;
+     font-size: 1.2rem;
+     opacity: 0.7;
+     padding: 0.5rem;
+   }
+   
+   .close-btn:hover {
+     opacity: 1;
+     color: #fff;
+   }

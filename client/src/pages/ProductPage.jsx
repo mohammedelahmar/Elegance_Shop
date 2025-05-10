@@ -10,6 +10,8 @@ import { getVariantsByProduct } from '../api/variant';
 import { getProductReviews, createReview } from '../api/review';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import ProductDetail from '../components/Product/ProductDetail';
+import RecentlyViewed from '../components/Product/RecentlyViewed';
+import useRecentlyViewed from '../hooks/useRecentlyViewed';
 
 import './ProductPage.css';
 
@@ -30,6 +32,8 @@ const ProductPage = () => {
     error: null,
     success: false
   });
+  
+  const { addProduct } = useRecentlyViewed();
   
   // Helper to safely format price (handles MongoDB Decimal128)
   const formatPrice = (price) => {
@@ -75,6 +79,18 @@ const ProductPage = () => {
     
     fetchProductData();
   }, [id]);
+  
+  useEffect(() => {
+    // Add product to recently viewed when loaded
+    if (product && Object.keys(product).length > 0) {
+      addProduct({
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        image_url: product.image_url
+      });
+    }
+  }, [product, id, addProduct]);
   
   // Calculate average rating
   const calculateAverageRating = () => {
@@ -332,6 +348,9 @@ const ProductPage = () => {
           </Tabs>
         </Col>
       </Row>
+      <Container>
+        <RecentlyViewed />
+      </Container>
     </Container>
   );
 };

@@ -1,15 +1,65 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Card, Nav, Spinner } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Nav, Spinner, Button, ListGroup } from 'react-bootstrap';
 import { motion } from 'framer-motion';
+import { Link, Navigate } from 'react-router-dom';
 import ProfileForm from '../components/Auth/ProfileForm';
+import ChangePasswordForm from '../components/Auth/ChangePasswordForm'; // Import the new component
 import { useAuth } from '../context/AuthContext';
-import { Navigate } from 'react-router-dom';
-import { FaUser, FaShoppingBag, FaAddressCard, FaLock, FaHeart } from 'react-icons/fa';
+import { useWishlist } from '../context/WishlistContext';
+import { FaUser, FaShoppingBag, FaAddressCard, FaLock, FaHeart, FaEye, FaShoppingCart, FaPlus, FaEdit, FaTrash, FaMapMarkerAlt, FaCity, FaGlobe, FaPhone } from 'react-icons/fa';
+import RecentlyViewed from '../components/Product/RecentlyViewed';
+import WishlistList from '../components/wishlist/WishlistList';
 import './ProfilePage.css';
+import axios from '../api/axios';
+import Message from '../components/UI/Message';
 
 const ProfilePage = () => {
   const { isAuthenticated, loading, currentUser } = useAuth();
+  const { wishlistItems, loading: wishlistLoading, error: wishlistError, fetchWishlist } = useWishlist();
   const [activeTab, setActiveTab] = useState('personal');
+  const [addresses, setAddresses] = useState([]);
+  const [addressesLoading, setAddressesLoading] = useState(false);
+  const [addressesError, setAddressesError] = useState(null);
+
+  // Fetch wishlist when the wishlist tab is activated
+  useEffect(() => {
+    if (activeTab === 'wishlist' && isAuthenticated) {
+      fetchWishlist();
+    }
+  }, [activeTab, isAuthenticated, fetchWishlist]);
+
+  // Fetch addresses when the addresses tab is activated
+  useEffect(() => {
+    if (activeTab === 'addresses' && isAuthenticated) {
+      fetchUserAddresses();
+    }
+  }, [activeTab, isAuthenticated]);
+
+  const fetchUserAddresses = async () => {
+    try {
+      setAddressesLoading(true);
+      setAddressesError(null);
+      // Make API call to get user addresses
+      const { data } = await axios.get('/addresses/user');
+      setAddresses(data);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+      setAddressesError(error.response?.data?.message || 'Failed to load addresses');
+    } finally {
+      setAddressesLoading(false);
+    }
+  };
+
+  const handleDeleteAddress = async (id) => {
+    if (window.confirm('Are you sure you want to delete this address?')) {
+      try {
+        await axios.delete(`/addresses/${id}`);
+        fetchUserAddresses(); // Refresh the list
+      } catch (error) {
+        setAddressesError(error.response?.data?.message || 'Failed to delete address');
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -97,18 +147,34 @@ const ProfilePage = () => {
                         onClick={() => setActiveTab('wishlist')}
                       >
                         <FaHeart /> Wishlist
+                        {wishlistItems.length > 0 && (
+                          <span className="badge rounded-pill bg-primary bg-opacity-25 ms-2">
+                            {wishlistItems.length}
+                          </span>
+                        )}
                       </Nav.Link>
                       <Nav.Link 
                         className={`profile-nav-link ${activeTab === 'addresses' ? 'active' : ''}`}
                         onClick={() => setActiveTab('addresses')}
                       >
                         <FaAddressCard /> Addresses
+                        {addresses.length > 0 && (
+                          <span className="badge rounded-pill bg-primary bg-opacity-25 ms-2">
+                            {addresses.length}
+                          </span>
+                        )}
                       </Nav.Link>
                       <Nav.Link 
                         className={`profile-nav-link ${activeTab === 'security' ? 'active' : ''}`}
                         onClick={() => setActiveTab('security')}
                       >
                         <FaLock /> Security
+                      </Nav.Link>
+                      <Nav.Link 
+                        className={`profile-nav-link ${activeTab === 'recent' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('recent')}
+                      >
+                        <FaEye /> Recently Viewed
                       </Nav.Link>
                     </Nav>
                   </div>
@@ -124,7 +190,25 @@ const ProfilePage = () => {
                         {activeTab === 'addresses' && 'My Addresses'}
                         {activeTab === 'security' && 'Security Settings'}
                         {activeTab === 'wishlist' && 'My Wishlist'}
+                        {activeTab === 'recent' && 'Recently Viewed Items'}
                       </h3>
+                      
+                      {activeTab === 'wishlist' && wishlistItems.length > 0 && (
+                        <Link to="/wishlist" className="btn btn-primary btn-sm">
+                          <FaShoppingCart className="me-1" /> View Full Wishlist
+                        </Link>
+                      )}
+
+                      {activeTab === 'addresses' && (
+                        <Button 
+                          variant="primary"
+                          size="sm"
+                          as={Link}
+                          to="/address/new" // Changed from /checkout?newAddress=true
+                        >
+                          <FaPlus className="me-1" /> Add New Address
+                        </Button>
+                      )}
                     </div>
                     
                     {activeTab === 'personal' && (
@@ -134,6 +218,9 @@ const ProfilePage = () => {
                         transition={{ duration: 0.3 }}
                       >
                         <ProfileForm />
+                        <div className="mt-5">
+                          <RecentlyViewed />
+                        </div>
                       </motion.div>
                     )}
                     
@@ -148,32 +235,171 @@ const ProfilePage = () => {
                     )}
                     
                     {activeTab === 'wishlist' && (
-                      <div className="text-center py-4">
-                        <FaHeart size={40} className="text-white-50 mb-3" />
-                        <h5 className="text-white">Your Wishlist</h5>
-                        <p className="text-white-50">
-                          Products you've saved will appear here
-                        </p>
-                      </div>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <WishlistList 
+                          products={wishlistItems} 
+                          loading={wishlistLoading}
+                          error={wishlistError}
+                        />
+                      </motion.div>
                     )}
                     
                     {activeTab === 'addresses' && (
-                      <div className="text-center py-4">
-                        <FaAddressCard size={40} className="text-white-50 mb-3" />
-                        <h5 className="text-white">Your Addresses</h5>
-                        <p className="text-white-50">
-                          You can manage your shipping addresses here
-                        </p>
-                      </div>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {addressesLoading ? (
+                          <div className="text-center py-4">
+                            <Spinner animation="border" variant="primary" style={{ 
+                              width: "2.5rem", 
+                              height: "2.5rem",
+                              color: "#4a9fff"
+                            }} />
+                            <p className="mt-3 text-white-50">Loading your addresses...</p>
+                          </div>
+                        ) : addressesError ? (
+                          <Message variant="danger">{addressesError}</Message>
+                        ) : addresses.length === 0 ? (
+                          <div className="text-center py-4">
+                            <FaAddressCard size={40} className="text-white-50 mb-3" />
+                            <h5 className="text-white">No Addresses Found</h5>
+                            <p className="text-white-50">
+                              You haven't added any addresses yet.
+                            </p>
+                            <Button 
+                              variant="primary"
+                              className="mt-3"
+                              as={Link}
+                              to="/address/new" // Changed from /checkout?newAddress=true
+                            >
+                              <FaPlus className="me-2" /> Add Your First Address
+                            </Button>
+                          </div>
+                        ) : (
+                          <Row>
+                            {addresses.map((address, index) => (
+                              <Col md={6} className="mb-4" key={address._id} style={{'--index': index}}>
+                                <Card className="address-card h-100">
+                                  <Card.Body>
+                                    <div className="d-flex justify-content-between mb-3">
+                                      <h5 className="mb-0">Shipping Address</h5>
+                                      <div className="address-card-actions">
+                                        <Button 
+                                          variant="link" 
+                                          size="sm" 
+                                          className="p-1 me-2 text-info"
+                                          as={Link}
+                                          to={`/address/edit?id=${address._id}`} // Changed from /checkout?editAddress=
+                                        >
+                                          <FaEdit />
+                                        </Button>
+                                        <Button 
+                                          variant="link" 
+                                          size="sm" 
+                                          className="p-1 text-danger"
+                                          onClick={() => handleDeleteAddress(address._id)}
+                                        >
+                                          <FaTrash />
+                                        </Button>
+                                      </div>
+                                    </div>
+                                    
+                                    <ListGroup variant="flush">
+                                      <ListGroup.Item className="d-flex align-items-start">
+                                        <FaMapMarkerAlt className="me-3" />
+                                        <div className="flex-grow-1">{address.address}</div>
+                                      </ListGroup.Item>
+                                      <ListGroup.Item className="d-flex align-items-start">
+                                        <FaCity className="me-3" />
+                                        <div className="flex-grow-1">{address.city}, {address.postal_code}</div>
+                                      </ListGroup.Item>
+                                      <ListGroup.Item className="d-flex align-items-start">
+                                        <FaGlobe className="me-3" />
+                                        <div className="flex-grow-1">{address.country}</div>
+                                      </ListGroup.Item>
+                                      <ListGroup.Item className="d-flex align-items-start">
+                                        <FaPhone className="me-3" />
+                                        <div className="flex-grow-1">{address.phone_number}</div>
+                                      </ListGroup.Item>
+                                    </ListGroup>
+                                  </Card.Body>
+                                </Card>
+                              </Col>
+                            ))}
+                          </Row>
+                        )}
+                      </motion.div>
                     )}
                     
                     {activeTab === 'security' && (
-                      <div className="text-center py-4">
-                        <FaLock size={40} className="text-white-50 mb-3" />
-                        <h5 className="text-white">Security Settings</h5>
-                        <p className="text-white-50">
-                          Change password and security settings
-                        </p>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <ChangePasswordForm />
+                        
+                        <hr className="my-5 border-top border-secondary" />
+                        
+                        <div className="security-section">
+                          <h3 className="form-section-header">Account Security</h3>
+                          
+                          <Card className="bg-dark border-0 mb-3">
+                            <Card.Body>
+                              <div className="d-flex align-items-center">
+                                <div className="security-icon me-3">
+                                  <FaLock size={24} />
+                                </div>
+                                <div>
+                                  <h5 className="mb-1">Two-Factor Authentication</h5>
+                                  <p className="text-white-50 mb-0">Add an extra layer of security to your account</p>
+                                </div>
+                                <Button 
+                                  variant="outline-primary" 
+                                  size="sm" 
+                                  className="ms-auto"
+                                  disabled
+                                >
+                                  Coming Soon
+                                </Button>
+                              </div>
+                            </Card.Body>
+                          </Card>
+                          
+                          <Card className="bg-dark border-0">
+                            <Card.Body>
+                              <div className="d-flex align-items-center">
+                                <div className="security-icon me-3">
+                                  <FaUser size={24} />
+                                </div>
+                                <div>
+                                  <h5 className="mb-1">Account Activity</h5>
+                                  <p className="text-white-50 mb-0">Review your recent sign-in activity</p>
+                                </div>
+                                <Button 
+                                  variant="outline-primary" 
+                                  size="sm" 
+                                  className="ms-auto"
+                                  disabled
+                                >
+                                  Coming Soon
+                                </Button>
+                              </div>
+                            </Card.Body>
+                          </Card>
+                        </div>
+                      </motion.div>
+                    )}
+                    
+                    {activeTab === 'recent' && (
+                      <div className="mt-4">
+                        <RecentlyViewed />
                       </div>
                     )}
                   </Card>

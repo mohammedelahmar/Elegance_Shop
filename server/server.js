@@ -16,6 +16,7 @@ import addressesRoutes from './api/routes/addressesRoutes.js';
 import varianteProductRoutes from './api/routes/varianteProductRoutes.js';
 import reviewRoutes from './api/routes/reviewRoutes.js';
 import cartRoutes from './api/routes/cartRoutes.js';
+import passwordRoutes from './api/routes/passwordRoutes.js'; // Add this line to import your password routes
 
 // Middleware imports
 import errorMiddleware from './middlewares/errorMiddleware.js';
@@ -36,6 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // API Routes
+app.use('/api/password', passwordRoutes); // Make sure you mount the password routes correctly
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);

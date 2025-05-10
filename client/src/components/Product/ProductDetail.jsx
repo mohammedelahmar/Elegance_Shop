@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import WishlistButton from '../wishlist/WishlistButton';
 import SizeGuide from './SizeGuide';
+import useRecentlyViewed from '../../hooks/useRecentlyViewed';
 import './ProductDetail.css';
 
 // Existing helper functions remain the same
@@ -56,6 +57,7 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
   const cart = useCart();
   const addItem = cart?.addItem || (async () => console.log('Cart context not available'));
   const navigate = useNavigate();
+  const { addProduct } = useRecentlyViewed();
   
   // States remain the same
   const [selectedVariant, setSelectedVariant] = useState(null);
@@ -173,6 +175,18 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
       }
     }
   }, [selectedVariant]);
+
+  useEffect(() => {
+    if (product && Object.keys(product).length > 0) {
+      // Add product to recently viewed
+      addProduct({
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        image_url: product.image_url
+      });
+    }
+  }, [product, addProduct]);
 
   const handleSizeChange = (e) => {
     setSelectedSize(e.target.value);

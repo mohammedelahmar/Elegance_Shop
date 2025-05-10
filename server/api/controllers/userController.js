@@ -259,6 +259,70 @@ const promoteToAdmin = asyncHandler(async (req, res) => {
     }
 });
 
+//---------------------------------------------------------------------------------------------------------------------//
+
+// @desc    Change user password
+// @route   PUT /api/users/change-password
+// @access  Private
+const changePassword = asyncHandler(async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    
+    if (!currentPassword || !newPassword) {
+        res.status(400);
+        throw new Error('Please provide current password and new password');
+    }
+    
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
+    }
+    
+    // Check if current password is correct
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    
+    if (!isMatch) {
+        res.status(401);
+        throw new Error('Current password is incorrect');
+    }
+    
+    // Hash new password and update
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    
+    res.status(200).json({ message: 'Password updated successfully' });
+});
+
+//---------------------------------------------------------------------------------------------------------------------//
+
+// @desc   Reset user password with token
+// @route  PUT /password/reset/:token
+const resetPassword = asyncHandler(async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+    
+    // Find user by reset token
+    const user = await User.findOne({ resetPasswordToken: token });
+    
+    if (!user) {
+        res.status(400);
+        throw new Error('Invalid or expired password reset token');
+    }
+    
+    // Hash the new password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Update user's password and clear reset token
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    
+    await user.save();
+    
+    res.json({ message: 'Password has been reset successfully' });
+});
+
 export {
     registerUser,
     loginUser,
@@ -268,5 +332,7 @@ export {
     deleteUser,
     getUserById,
     updateUser,
-    promoteToAdmin
+    promoteToAdmin,
+    changePassword,
+    resetPassword
 };

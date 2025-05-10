@@ -22,3 +22,24 @@ export const login = async (email, password) => {
   const { data } = await axios.post('/users/login', { email, password });
   return data;
 };
+
+/**
+ * Request password reset
+ * @param {string} email - User's email address
+ * @returns {Promise} - Promise with reset token data
+ */
+export const forgotPasswordApi = async (email) => {
+  const { data } = await axios.post('/password/forgot', { email });
+  return data;
+};
+
+/**
+ * Reset password with token
+ * @param {string} token - Reset token from email
+ * @param {string} password - New password
+ * @returns {Promise} - Promise with reset confirmation
+ */
+export const resetPasswordApi = async (token, password) => {
+  const { data } = await axios.put(`/password/reset/${token}`, { password });
+  return data;
+};

@@ -397,28 +397,227 @@ textarea.profile-input-field {
 
 /* Address card styling */
 .address-card {
-  transition: all 0.3s ease;
-  height: 100%;
+  background-color: #1e2732;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .address-card:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Make the add address card interactive */
-.address-card.add-new {
-  cursor: pointer;
+.address-card .card-body {
+  padding: 1.25rem;
+}
+
+.address-card h5 {
+  color: #fff;
+  font-weight: 600;
+}
+
+.address-card-actions {
+  display: flex;
+  align-items: center;
+}
+
+.address-card-actions .btn-link {
+  padding: 0.25rem;
+  font-size: 0.85rem;
+  transition: transform 0.2s;
+}
+
+.address-card-actions .btn-link:hover {
+  transform: scale(1.15);
+}
+
+.address-card .list-group {
+  margin-top: 1rem;
+  background-color: transparent;
+}
+
+.address-card .list-group-item {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #e2e2e2;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+}
+
+.address-card .list-group-item svg {
+  color: #4a9fff;
+  min-width: 16px;
+  margin-top: 4px;
+}
+
+/* Badge styling */
+.badge.bg-primary.bg-opacity-25 {
+  background-color: rgba(74, 159, 255, 0.25) !important;
+  color: #4a9fff;
+  font-weight: 500;
+}
+
+/* Empty state styling */
+.text-center.py-4 svg {
+  opacity: 0.6;
+  margin-bottom: 1.25rem;
+}
+
+/* Button styling */
+.btn-primary {
+  background: linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%);
+  border: none;
+  box-shadow: 0 4px 10px rgba(74, 107, 245, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #5a7af5 0%, #7588f2 100%);
+  box-shadow: 0 6px 12px rgba(74, 107, 245, 0.4);
+}
+
+/* Add animation for the cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mb-4[key] {
+  animation: fadeInUp 0.4s ease-out forwards;
+  animation-delay: calc(var(--index) * 0.1s);
+}
+
+/* Add these styles for the address form */
+
+.address-form-card {
+  background-color: #1e2732;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.address-form-card .card-body {
+  padding: 2rem;
+}
+
+.address-form-card h2 {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Address Cards Styling */
+.address-card {
+  background-color: #1e2732;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.address-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.address-card .card-body {
+  padding: 1.25rem;
+}
+
+.address-card h5 {
+  color: #fff;
+  font-weight: 600;
+}
+
+.address-card-actions {
+  display: flex;
+  align-items: center;
+}
+
+.address-card-actions .btn-link {
+  padding: 0.25rem;
+  font-size: 0.85rem;
+  transition: transform 0.2s;
+}
+
+.address-card-actions .btn-link:hover {
+  transform: scale(1.15);
+}
+
+.address-card .list-group {
+  margin-top: 1rem;
+  background-color: transparent;
+}
+
+.address-card .list-group-item {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #e2e2e2;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+}
+
+.address-card .list-group-item svg {
+  color: #4a9fff;
+  min-width: 16px;
+  margin-top: 4px;
+}
+
+/* Badge styling */
+.badge.bg-primary.bg-opacity-25 {
+  background-color: rgba(74, 159, 255, 0.25) !important;
+  color: #4a9fff;
+  font-weight: 500;
+}
+
+/* Security section styling */
+.security-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(74, 107, 245, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a9fff;
+}
+
+.security-section .card {
+  transition: all 0.3s ease;
+  background-color: #1e2732 !important;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.security-section .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.change-password-btn {
+  background: #4361ee;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
   transition: all 0.3s ease;
 }
 
-.address-card.add-new:hover {
-  background: rgba(255,255,255,0.05) !important;
-  border-color: rgba(67, 97, 238, 0.5) !important;
+.change-password-btn:hover {
+  background: #3a56d4;
+  box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
 }
 
-/* Security form */
-.security-form h4 {
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-  color: #f8f9fa;
+hr.border-secondary {
+  opacity: 0.1;
 }
