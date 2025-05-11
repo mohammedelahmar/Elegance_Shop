@@ -30,6 +30,15 @@ const ProductCard = ({ product }) => {
     return parseFloat(price).toFixed(2);
   };
 
+  // Add this function to get the main image URL
+  const getProductImage = (product) => {
+    if (product.images && product.images.length > 0) {
+      const mainImage = product.images.find(img => img.isMain);
+      return mainImage ? mainImage.url : product.images[0].url;
+    }
+    return product.image_url || 'https://via.placeholder.com/300x300?text=No+Image';
+  };
+
   const handleAddToCart = (e) => {
     if (e) {
       e.preventDefault();
@@ -109,7 +118,7 @@ const ProductCard = ({ product }) => {
           <Link to={`/products/${product._id}`} onClick={handleProductClick}>
             <Card.Img
               variant="top"
-              src={product.image_url || 'https://via.placeholder.com/300x300?text=No+Image'}
+              src={getProductImage(product)}
               alt={product.name}
               className="product-image"
               onError={handleImageError}

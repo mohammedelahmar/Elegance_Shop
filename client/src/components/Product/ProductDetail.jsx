@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import WishlistButton from '../wishlist/WishlistButton';
 import SizeGuide from './SizeGuide';
 import useRecentlyViewed from '../../hooks/useRecentlyViewed';
+import ProductImageGallery from './ProductImageGallery';
 import './ProductDetail.css';
 
 // Existing helper functions remain the same
@@ -282,13 +283,7 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
           {/* Only show the image column if not hiding main info */}
           {!hideMainInfo && (
             <Col md={5} className="mb-4">
-              <div className="product-image-container">
-                <img 
-                  src={product.image_url || 'https://via.placeholder.com/500x500?text=No+Image'} 
-                  alt={product.name}
-                  className="product-detail-image"
-                />
-              </div>
+              <ProductImageGallery product={product} />
             </Col>
           )}
           

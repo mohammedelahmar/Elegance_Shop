@@ -44,19 +44,27 @@ export const getProductById = async (id) => {
  * @returns {Promise} - Promise with created product
  */
 export const createProduct = async (productData) => {
-  const { data } = await axios.post('/products', productData);
-  return data;
+  try {
+    const { data } = await axios.post('/products', productData);
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**
  * Update a product (admin only)
- * @param {string} id - Product ID
+ * @param {string} productId - Product ID
  * @param {Object} productData - Product data to update
  * @returns {Promise} - Promise with updated product
  */
-export const updateProduct = async (id, productData) => {
-  const { data } = await axios.put(`/products/${id}`, productData);
-  return data;
+export const updateProduct = async (productId, productData) => {
+  try {
+    const { data } = await axios.put(`/products/${productId}`, productData);
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**

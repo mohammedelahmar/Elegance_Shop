@@ -5,7 +5,7 @@ import Input from '../../UI/Input';
 import Button from '../../UI/Button';
 import { updateProduct } from '../../../api/product';
 import { getAllCategories } from '../../../api/category';
-import { FaSave } from 'react-icons/fa';
+import { FaSave, FaPlus, FaTrash } from 'react-icons/fa';
 
 const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
   const [formData, setFormData] = useState({
@@ -14,7 +14,8 @@ const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
     price: '',
     stock_quantity: '',
     image_url: '',
-    category: ''
+    category: '',
+    images: []
   });
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -28,7 +29,8 @@ const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
         price: product.price || '',
         stock_quantity: product.stock_quantity || 0,
         image_url: product.image_url || '',
-        category: product.category?._id || product.category || ''
+        category: product.category?._id || product.category || '',
+        images: product.images || []
       });
     }
   }, [product]);
@@ -83,6 +85,29 @@ const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const addImageInput = () => {
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, { url: '', alt: '', isMain: prev.images.length === 0 }]
+    }));
+  };
+
+  const removeImageInput = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleImageChange = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.map((image, i) => 
+        i === index ? { ...image, [field]: value } : image
+      )
+    }));
   };
 
   return (
@@ -173,6 +198,40 @@ const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
               }))
             ]}
           />
+
+          <div className="mt-3">
+            <h5>Additional Images</h5>
+            {formData.images.map((image, index) => (
+              <Row key={index} className="align-items-center mb-2">
+                <Col md={5}>
+                  <Input
+                    label="Image URL"
+                    value={image.url}
+                    onChange={(e) => handleImageChange(index, 'url', e.target.value)}
+                  />
+                </Col>
+                <Col md={5}>
+                  <Input
+                    label="Alt Text"
+                    value={image.alt}
+                    onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
+                  />
+                </Col>
+                <Col md={2} className="text-center">
+                  <Button
+                    variant="danger"
+                    icon={FaTrash}
+                    onClick={() => removeImageInput(index)}
+                  >
+                    Remove
+                  </Button>
+                </Col>
+              </Row>
+            ))}
+            <Button variant="success" icon={FaPlus} onClick={addImageInput}>
+              Add Image
+            </Button>
+          </div>
         </Modal.Body>
         
         <Modal.Footer>

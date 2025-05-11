@@ -93,7 +93,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 // @route  POST /api/products
 // @access Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-  const { name, description, price, stock_quantity, image_url, category } = req.body;
+  const { name, description, price, stock_quantity, image_url, category, images } = req.body;
 
   // Basic validation
   if (!name || name.trim() === '') {
@@ -124,6 +124,7 @@ const createProduct = asyncHandler(async (req, res) => {
     price,
     stock_quantity: stock_quantity || 0,
     image_url: image_url || '',
+    images: images || [],  // Include the images array
     category
   });
 
@@ -142,7 +143,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route  PUT /api/products/:id
 // @access Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, description, price, stock_quantity, image_url, category } = req.body;
+  const { name, description, price, stock_quantity, image_url, category, images } = req.body;
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -177,6 +178,11 @@ const updateProduct = asyncHandler(async (req, res) => {
   product.stock_quantity = stock_quantity !== undefined ? stock_quantity : product.stock_quantity;
   product.image_url = image_url || product.image_url;
   product.category = category || product.category;
+  
+  // Update images array if provided
+  if (images) {
+    product.images = images;
+  }
 
   try {
     const updatedProduct = await product.save();

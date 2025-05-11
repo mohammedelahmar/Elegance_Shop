@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col, Button as BsButton } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Input from '../../UI/Input';
 import Button from '../../UI/Button';
 import { createProduct } from '../../../api/product';
 import { getAllCategories } from '../../../api/category';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 
 const ProductCreate = ({ show, onHide, onProductCreated }) => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
     price: '',
     stock_quantity: '',
     image_url: '',
+    images: [], // New array to store multiple images
     category: ''
   });
   const [categories, setCategories] = useState([]);
@@ -44,6 +45,52 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
     }));
   };
 
+  // Add new image input
+  const addImageInput = () => {
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, { url: '', alt: '', isMain: prev.images.length === 0 }]
+    }));
+  };
+
+  // Remove image input
+  const removeImageInput = (index) => {
+    setFormData(prev => {
+      const newImages = [...prev.images];
+      newImages.splice(index, 1);
+      
+      // If we removed the main image, make the first one main
+      if (newImages.length > 0 && newImages.every(img => !img.isMain)) {
+        newImages[0].isMain = true;
+      }
+      
+      return {
+        ...prev,
+        images: newImages
+      };
+    });
+  };
+
+  // Handle image input changes
+  const handleImageChange = (index, field, value) => {
+    setFormData(prev => {
+      const newImages = [...prev.images];
+      newImages[index] = { ...newImages[index], [field]: value };
+      
+      // If marking this as main, unmark others
+      if (field === 'isMain' && value === true) {
+        newImages.forEach((img, i) => {
+          if (i !== index) img.isMain = false;
+        });
+      }
+      
+      return {
+        ...prev,
+        images: newImages
+      };
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -62,8 +109,14 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
         setLoading(false);
         return;
       }
+      
+      // If no images specified, use the image_url as the main image
+      const dataToSubmit = { ...formData };
+      if (formData.image_url && formData.images.length === 0) {
+        dataToSubmit.images = [{ url: formData.image_url, alt: formData.name, isMain: true }];
+      }
 
-      await createProduct(formData);
+      await createProduct(dataToSubmit);
       resetForm();
       onProductCreated();
     } catch (err) {
@@ -79,6 +132,7 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
       price: '',
       stock_quantity: '',
       image_url: '',
+      images: [],
       category: ''
     });
     setLoading(false);
@@ -139,13 +193,76 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
             </Col>
           </Row>
           
+          {/* Legacy single image URL input */}
           <Input
-            label="Image URL"
+            label="Primary Image URL"
             name="image_url"
             value={formData.image_url}
             onChange={handleChange}
-            helperText="Enter the URL for the product image"
+            helperText="Enter the URL for the main product image"
           />
+          
+          {/* Multiple images section */}
+          <div className="mb-3">
+            <label className="form-label d-flex justify-content-between align-items-center">
+              Additional Product Images
+              <BsButton 
+                variant="outline-primary" 
+                size="sm" 
+                onClick={addImageInput} 
+                type="button"
+              >
+                <FaPlus /> Add Image
+              </BsButton>
+            </label>
+            
+            {formData.images.map((image, index) => (
+              <Row key={index} className="mb-3 align-items-end">
+                <Col md={5}>
+                  <Form.Group>
+                    <Form.Label>Image URL</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={image.url}
+                      onChange={(e) => handleImageChange(index, 'url', e.target.value)}
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={3}>
+                  <Form.Group>
+                    <Form.Label>Alt Text</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={image.alt}
+                      onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
+                      placeholder="Product description"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={2}>
+                  <Form.Group>
+                    <Form.Check
+                      type="checkbox"
+                      label="Main Image"
+                      checked={image.isMain}
+                      onChange={(e) => handleImageChange(index, 'isMain', e.target.checked)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={2} className="d-flex justify-content-end">
+                  <BsButton 
+                    variant="outline-danger" 
+                    size="sm" 
+                    onClick={() => removeImageInput(index)}
+                    type="button"
+                  >
+                    <FaTrash />
+                  </BsButton>
+                </Col>
+              </Row>
+            ))}
+          </div>
           
           <Input
             label="Category"
