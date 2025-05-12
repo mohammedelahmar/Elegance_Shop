@@ -197,8 +197,14 @@ const CheckoutPage = () => {
         setCreatedOrder(orderData);
         setShowPayPalModal(true);
         setLoading(false);
+      } else if (paymentMethod === 'cash_on_delivery') {
+        // For cash on delivery, just create order without payment processing
+        console.log("Cash on delivery order created");
+        await clearCart();
+        // Redirect to payment success page with method=cod
+        navigate(`/payment/success/${orderData._id}?method=cod`);
       } else {
-        // For other payment methods, proceed as before
+        // For other payment methods (credit card, bank transfer)
         await processPayment({
           paymentMethod,
           amount: orderTotal,
@@ -208,7 +214,7 @@ const CheckoutPage = () => {
         
         console.log("Payment processed successfully");
         await clearCart();
-        navigate(`/order/${orderData._id}`);
+        navigate(`/payment/success/${orderData._id}?method=${paymentMethod}`);
       }
       
     } catch (err) {

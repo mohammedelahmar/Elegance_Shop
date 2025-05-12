@@ -8,12 +8,13 @@ import asyncHandler from 'express-async-handler';
 const processPayment = asyncHandler(async (req, res) => {
     const { paymentMethod, amount, currency, orderId, paypalDetails } = req.body;
 
-    // Create payment record
+    // Create payment record with appropriate status based on payment method
     const payment = new Payment({
         commande_id: orderId,
         payment_method: paymentMethod,
         amount,
-        status: 'completed'
+        // Only mark as completed for immediate payment methods
+        status: paymentMethod === 'cash_on_delivery' ? 'pending' : 'completed'
     });
 
     // If this is PayPal, save additional details
@@ -29,19 +30,21 @@ const processPayment = asyncHandler(async (req, res) => {
 
     const createdPayment = await payment.save();
 
-    // Update order as paid
-    const order = await Commande.findById(orderId);
-    if (order) {
-        order.isPaid = true;
-        order.paidAt = Date.now();
-        order.paymentResult = {
-            id: paypalDetails?.id || createdPayment._id.toString(),
-            status: 'completed',
-            update_time: new Date().toISOString(),
-            email_address: paypalDetails?.payer?.email_address || req.user.email
-        };
-        
-        await order.save();
+    // Update order as paid only for non-COD methods
+    if (paymentMethod !== 'cash_on_delivery') {
+        const order = await Commande.findById(orderId);
+        if (order) {
+            order.isPaid = true;
+            order.paidAt = Date.now();
+            order.paymentResult = {
+                id: paypalDetails?.id || createdPayment._id.toString(),
+                status: 'completed',
+                update_time: new Date().toISOString(),
+                email_address: paypalDetails?.payer?.email_address || req.user.email
+            };
+            
+            await order.save();
+        }
     }
 
     res.status(201).json(createdPayment);

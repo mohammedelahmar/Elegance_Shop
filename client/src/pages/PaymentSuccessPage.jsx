@@ -40,9 +40,13 @@ const PaymentSuccessPage = () => {
                   <FaCheck className="text-success" style={{ fontSize: '3rem' }} />
                 </div>
                 
-                <h1 className="display-6 mb-3">Payment Successful!</h1>
+                <h1 className="display-6 mb-3">
+                  {paymentMethod === 'cod' ? 'Order Confirmed!' : 'Payment Successful!'}
+                </h1>
                 <p className="lead mb-4">
-                  Thank you for your purchase. Your order has been confirmed and will be processed shortly.
+                  {paymentMethod === 'cod' 
+                    ? 'Thank you for your order. Your items will be prepared for delivery and payment will be collected upon delivery.'
+                    : 'Thank you for your purchase. Your order has been confirmed and will be processed shortly.'}
                 </p>
                 
                 <div className="payment-details mb-4">
@@ -50,7 +54,12 @@ const PaymentSuccessPage = () => {
                     <strong>Order ID:</strong> {orderId && `#${orderId.slice(-6)}`}
                   </p>
                   <p className="mb-1">
-                    <strong>Payment Method:</strong> {paymentMethod === 'paypal' ? 'PayPal' : 'Credit Card'}
+                    <strong>Payment Method:</strong> {
+                      paymentMethod === 'paypal' ? 'PayPal' : 
+                      paymentMethod === 'cod' ? 'Cash on Delivery' : 
+                      paymentMethod === 'credit_card' ? 'Credit Card' : 
+                      'Bank Transfer'
+                    }
                   </p>
                 </div>
                 
