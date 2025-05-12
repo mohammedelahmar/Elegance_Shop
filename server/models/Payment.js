@@ -5,7 +5,15 @@ const PaymentSchema = new mongoose.Schema({
     payment_date: { type: Date, default: Date.now },
     payment_method: { type: String, enum: ['credit_card', 'paypal', 'bank_transfer', 'cash_on_delivery'], required: true },
     amount: { type: mongoose.Schema.Types.Decimal128, required: true },
-    status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' }
+    status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
+    // Add transaction details field for PayPal
+    transaction_details: {
+        transaction_id: String,
+        payer_id: String,
+        payer_email: String,
+        payment_status: String,
+        payment_time: String
+    }
 }, { timestamps: true });
 
 const Payment = mongoose.model('Payment', PaymentSchema);

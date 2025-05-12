@@ -1,7 +1,7 @@
 import commande from "../../models/Commande.js";
 import ligneCommande from "../../models/ligneCommande.js";
 import asyncHandler from 'express-async-handler';
-
+import Adresses from "../../models/Adresses.js";
 
 // @desc    Create new order
 // @route   POST /api/commandes
@@ -13,6 +13,17 @@ const addOrderItems = asyncHandler(async (req, res) => {
     if (!orderItems || orderItems.length === 0){
         res.status(400);
         throw new Error('No order items');
+    }
+    
+    // Verify the shipping address exists and belongs to the user
+    const addressExists = await Adresses.findOne({ 
+        _id: shippingAddress,
+        user: req.user._id 
+    });
+    
+    if (!addressExists) {
+        res.status(400);
+        throw new Error('Invalid shipping address');
     }
     
     const order = new commande({

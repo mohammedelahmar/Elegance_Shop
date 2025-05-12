@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button, Alert, Spinner, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -7,6 +7,8 @@ import { FaLock, FaShoppingBag, FaAddressCard, FaCreditCard } from 'react-icons/
 import { createOrder } from '../api/order';
 import { processPayment } from '../api/payment';
 import { addAddress } from '../api/address';
+import axios from '../api/axios';
+import PayPalButton from '../components/Payment/PayPalButton';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -15,6 +17,8 @@ const CheckoutPage = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showPayPalModal, setShowPayPalModal] = useState(false);
+  const [createdOrder, setCreatedOrder] = useState(null);
   
   // Form states
   const [shippingAddress, setShippingAddress] = useState({
@@ -25,6 +29,10 @@ const CheckoutPage = () => {
     phone: ''
   });
   const [paymentMethod, setPaymentMethod] = useState('credit_card');
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [useNewAddress, setUseNewAddress] = useState(false);
+  const [saveNewAddress, setSaveNewAddress] = useState(false);
   
   // Calculated values
   const shippingCost = subtotal > 50 ? 0 : 10;
@@ -42,6 +50,35 @@ const CheckoutPage = () => {
       navigate('/login?redirect=checkout');
     }
   }, [cartItems, isAuthenticated, navigate]);
+
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      if (isAuthenticated) {
+        try {
+          const { data } = await axios.get('/addresses/user');
+          setSavedAddresses(data);
+          // If addresses exist, select the first one by default
+          if (data.length > 0) {
+            setSelectedAddressId(data[0]._id);
+            // Pre-fill the shipping form with the selected address data
+            setShippingAddress({
+              address: data[0].address,
+              city: data[0].city,
+              postalCode: data[0].postal_code,
+              country: data[0].country,
+              phone: data[0].phone_number
+            });
+          } else {
+            setUseNewAddress(true);
+          }
+        } catch (error) {
+          console.error('Error fetching addresses:', error);
+        }
+      }
+    };
+    
+    fetchAddresses();
+  }, [isAuthenticated]);
   
   const handleShippingSubmit = (e) => {
     e.preventDefault();
@@ -65,26 +102,70 @@ const CheckoutPage = () => {
     setStep(3);
   };
   
+  const handleAddressSelect = (e) => {
+    const addressId = e.target.value;
+    
+    if (addressId === 'new') {
+      setUseNewAddress(true);
+      setSelectedAddressId('');
+      // Clear form fields for new address
+      setShippingAddress({
+        address: '',
+        city: '',
+        postalCode: '',
+        country: '',
+        phone: ''
+      });
+    } else {
+      setUseNewAddress(false);
+      setSelectedAddressId(addressId);
+      
+      // Find the selected address and fill form fields
+      const selectedAddress = savedAddresses.find(addr => addr._id === addressId);
+      if (selectedAddress) {
+        setShippingAddress({
+          address: selectedAddress.address,
+          city: selectedAddress.city,
+          postalCode: selectedAddress.postal_code,
+          country: selectedAddress.country,
+          phone: selectedAddress.phone_number
+        });
+      }
+    }
+  };
+
   const handlePlaceOrder = async () => {
     setLoading(true);
     setError(null);
     
     try {
-      // 1. Create the address
-      console.log("Creating address...");
-      const addressData = await addAddress({
-        address: shippingAddress.address,
-        city: shippingAddress.city,
-        postal_code: shippingAddress.postalCode,
-        country: shippingAddress.country,
-        phone_number: shippingAddress.phone || '' 
-      });
+      let addressData;
       
-      if (!addressData || !addressData._id) {
-        throw new Error('Failed to create shipping address');
+      if (useNewAddress) {
+        // Create new address if needed
+        if (saveNewAddress) {
+          // Save the new address to user's profile
+          addressData = await addAddress({
+            address: shippingAddress.address,
+            city: shippingAddress.city,
+            postal_code: shippingAddress.postalCode,
+            country: shippingAddress.country,
+            phone_number: shippingAddress.phone || '' 
+          });
+        } else {
+          // Just create a temporary address for this order
+          addressData = await addAddress({
+            address: shippingAddress.address,
+            city: shippingAddress.city,
+            postal_code: shippingAddress.postalCode,
+            country: shippingAddress.country,
+            phone_number: shippingAddress.phone || '' 
+          });
+        }
+      } else {
+        // Use existing address
+        addressData = { _id: selectedAddressId };
       }
-      
-      console.log("Address created:", addressData);
       
       // 2. Create order
       console.log("Creating order...");
@@ -110,31 +191,118 @@ const CheckoutPage = () => {
       
       console.log("Order created:", orderData);
       
-      // 3. Process payment - Bypass user ID check if authenticated
-      // This fixes the "User information is missing" error
-      console.log("Processing payment...");
-      await processPayment({
-        paymentMethod,
-        amount: orderTotal,
-        currency: 'USD',
-        orderId: orderData._id
-        // We're not sending userId if it's not available
-      });
-      
-      console.log("Payment processed successfully");
-      
-      // 4. Clear cart and redirect to success page
-      await clearCart();
-      navigate(`/order/${orderData._id}`);
+      // Handle different payment methods
+      if (paymentMethod === 'paypal') {
+        // For PayPal, we'll show the PayPal modal instead of processing payment directly
+        setCreatedOrder(orderData);
+        setShowPayPalModal(true);
+        setLoading(false);
+      } else {
+        // For other payment methods, proceed as before
+        await processPayment({
+          paymentMethod,
+          amount: orderTotal,
+          currency: 'USD',
+          orderId: orderData._id
+        });
+        
+        console.log("Payment processed successfully");
+        await clearCart();
+        navigate(`/order/${orderData._id}`);
+      }
       
     } catch (err) {
       console.error('Checkout error:', err);
       setError(err.message || 'Failed to complete your order. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
-  
+
+  const handlePayPalSuccess = async (details) => {
+    try {
+      console.log("PayPal payment successful, details:", details);
+      setLoading(true);
+      
+      // Process payment on your server with PayPal details
+      const paymentResult = await processPayment({
+        paymentMethod: 'paypal',
+        amount: orderTotal,
+        currency: 'USD',
+        orderId: createdOrder._id,
+        paypalDetails: {
+          id: details.id,
+          status: details.status,
+          update_time: details.update_time,
+          payer: details.payer,
+          purchase_units: details.purchase_units
+        }
+      });
+      
+      console.log("Payment processed on server:", paymentResult);
+      await clearCart();
+      setShowPayPalModal(false);
+      
+      // Navigate to the new payment success page
+      navigate(`/payment/success/${createdOrder._id}?method=paypal`);
+    } catch (err) {
+      console.error("Error processing payment:", err);
+      setError(`Failed to process PayPal payment: ${err.message || 'Unknown error'}`);
+      setLoading(false);
+    }
+  };
+
+  const handlePayPalError = (err) => {
+    console.error("PayPal error:", err);
+    setError(`There was a problem with the PayPal payment: ${err.message || 'Unknown error'}`);
+    setShowPayPalModal(false);
+    setLoading(false);
+  };
+
+  const renderPayPalModal = () => (
+    <Modal
+      show={showPayPalModal}
+      onHide={() => setShowPayPalModal(false)}
+      centered
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header>
+        <Modal.Title>Complete payment with PayPal</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>Your order has been created. Please complete the payment with PayPal.</p>
+        <p className="mb-4">Total: <strong>${orderTotal.toFixed(2)}</strong></p>
+        
+        {loading ? (
+          <div className="text-center my-4">
+            <Spinner animation="border" variant="primary" />
+            <p className="mt-2">Processing your payment...</p>
+          </div>
+        ) : (
+          <PayPalButton
+            amount={orderTotal}
+            onSuccess={handlePayPalSuccess}
+            onError={handlePayPalError}
+            orderId={createdOrder?._id || ''}
+          />
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button 
+          variant="secondary" 
+          onClick={() => {
+            if (window.confirm("Are you sure you want to cancel this payment? Your order will remain unpaid.")) {
+              setShowPayPalModal(false);
+            }
+          }}
+          disabled={loading}
+        >
+          Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+
   const renderShippingStep = () => (
     <Card>
       <Card.Header className="d-flex align-items-center">
@@ -143,69 +311,127 @@ const CheckoutPage = () => {
       </Card.Header>
       <Card.Body>
         <Form onSubmit={handleShippingSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Address</Form.Label>
-            <Form.Control 
-              type="text" 
-              placeholder="Street address"
-              value={shippingAddress.address}
-              onChange={(e) => setShippingAddress({...shippingAddress, address: e.target.value})}
-              required
-            />
-          </Form.Group>
+          {/* Address Selection Section */}
+          {savedAddresses.length > 0 && (
+            <div className="mb-4">
+              <Form.Group>
+                <Form.Label>Select a shipping address</Form.Label>
+                <Form.Select 
+                  value={useNewAddress ? 'new' : selectedAddressId}
+                  onChange={handleAddressSelect}
+                >
+                  {savedAddresses.map(address => (
+                    <option key={address._id} value={address._id}>
+                      {address.address}, {address.city}, {address.country}
+                    </option>
+                  ))}
+                  <option value="new">Use a new address</option>
+                </Form.Select>
+              </Form.Group>
+            </div>
+          )}
           
-          <Row>
-            <Col md={6}>
+          {/* New Address Form - show when useNewAddress is true or no saved addresses */}
+          {(useNewAddress || savedAddresses.length === 0) && (
+            <>
               <Form.Group className="mb-3">
-                <Form.Label>City</Form.Label>
+                <Form.Label>Address</Form.Label>
                 <Form.Control 
                   type="text" 
-                  placeholder="City"
-                  value={shippingAddress.city}
-                  onChange={(e) => setShippingAddress({...shippingAddress, city: e.target.value})}
+                  placeholder="Street address"
+                  value={shippingAddress.address}
+                  onChange={(e) => setShippingAddress({...shippingAddress, address: e.target.value})}
                   required
                 />
               </Form.Group>
-            </Col>
-            <Col md={6}>
+              
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>City</Form.Label>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="City"
+                      value={shippingAddress.city}
+                      onChange={(e) => setShippingAddress({...shippingAddress, city: e.target.value})}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Postal/ZIP Code</Form.Label>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="Postal code"
+                      value={shippingAddress.postalCode}
+                      onChange={(e) => setShippingAddress({...shippingAddress, postalCode: e.target.value})}
+                      required
+                    />
+                  </Form.Group>
+                </Col>  
+              </Row>
+              
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Country</Form.Label>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="Country"
+                      value={shippingAddress.country}
+                      onChange={(e) => setShippingAddress({...shippingAddress, country: e.target.value})}
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Phone Number</Form.Label>
+                    <Form.Control 
+                      type="tel" 
+                      placeholder="Phone number"
+                      value={shippingAddress.phone}
+                      onChange={(e) => setShippingAddress({...shippingAddress, phone: e.target.value})}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              
+              {/* Option to save the address for future use */}
               <Form.Group className="mb-3">
-                <Form.Label>Postal/ZIP Code</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  placeholder="Postal code"
-                  value={shippingAddress.postalCode}
-                  onChange={(e) => setShippingAddress({...shippingAddress, postalCode: e.target.value})}
-                  required
+                <Form.Check 
+                  type="checkbox"
+                  id="saveAddress"
+                  label="Save this address to your profile"
+                  checked={saveNewAddress}
+                  onChange={(e) => setSaveNewAddress(e.target.checked)}
                 />
               </Form.Group>
-            </Col>  
-          </Row>
-          
-          <Row>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Country</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  placeholder="Country"
-                  value={shippingAddress.country}
-                  onChange={(e) => setShippingAddress({...shippingAddress, country: e.target.value})}
-                  required
-                />
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Phone Number</Form.Label>
-                <Form.Control 
-                  type="tel" 
-                  placeholder="Phone number"
-                  value={shippingAddress.phone}
-                  onChange={(e) => setShippingAddress({...shippingAddress, phone: e.target.value})}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
+            </>
+          )}
+
+          {useNewAddress && savedAddresses.length > 0 && (
+            <div className="mb-3 text-center">
+              <Button 
+                variant="outline-primary" 
+                size="sm"
+                onClick={() => {
+                  setUseNewAddress(false);
+                  setSelectedAddressId(savedAddresses[0]._id);
+                  setShippingAddress({
+                    address: savedAddresses[0].address,
+                    city: savedAddresses[0].city,
+                    postalCode: savedAddresses[0].postal_code,
+                    country: savedAddresses[0].country,
+                    phone: savedAddresses[0].phone_number
+                  });
+                }}
+              >
+                <FaAddressCard className="me-1" /> Use my saved addresses instead
+              </Button>
+            </div>
+          )}
           
           <Button variant="primary" type="submit" className="w-100">
             Continue to Payment
@@ -446,6 +672,8 @@ const CheckoutPage = () => {
           </Card>
         </Col>
       </Row>
+
+      {renderPayPalModal()}
     </Container>
   );
 };

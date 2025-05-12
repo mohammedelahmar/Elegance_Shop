@@ -7,8 +7,15 @@ import asyncHandler from "express-async-handler";
 const getWishlist = asyncHandler(async (req, res) => {
      try {
           const userId = req.user._id;
-    const wishlist = await Wishlist.findOne({ user: userId }).populate('products');
-    return res.status(200).json(wishlist || { products: [] });
+          // Modified populate to include nested category
+          const wishlist = await Wishlist.findOne({ user: userId }).populate({
+               path: 'products',
+               populate: {
+                    path: 'category',
+                    select: 'name'
+               }
+          });
+          return res.status(200).json(wishlist || { products: [] });
           
      } catch (error) {
           return res.status(500).json({ message: error.message });

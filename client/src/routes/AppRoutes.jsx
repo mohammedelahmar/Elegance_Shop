@@ -26,6 +26,7 @@ const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
 const RecentlyViewedPage = lazy(() => import('../pages/RecentlyViewedPage'));
 const AddressFormPage = lazy(() => import('../pages/AddressFormPage'));
 const ResetPassword = lazy(() => import('../pages/ResetPasswordPage'));
+const PaymentSuccessPage= lazy(()=>import('../pages/PaymentSuccessPage'));
 
 // Admin pages
 const Dashboard = lazy(() => import('../pages/Admin/Dashboard'));
@@ -73,6 +74,7 @@ const AppRoutes = () => {
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/address/new" element={<AddressFormPage />} />
             <Route path="/address/edit" element={<AddressFormPage />} />
+            <Route path="/payment/success/:orderId" element={<PaymentSuccessPage />} />
           </Route>
 
           {/* Admin routes - require admin role */}

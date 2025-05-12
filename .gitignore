@@ -4,6 +4,13 @@ server/node_modules/
 
 # Ignore environment variables
 server/.env
+client/.env
+client/.env.local
+client/.env.development
+client/.env.production
+client/.env.test
+client/.env.development.local
+client/.env.production.local
 
 # Ignore build files
 client/build/
