@@ -4,6 +4,23 @@ import { Link } from 'react-router-dom';
 import Button from '../UI/Button';
 import { FaTruck } from 'react-icons/fa';
 
+// Add this helper function at the top
+const formatPrice = (price) => {
+  if (!price) return '0.00';
+  
+  // Handle MongoDB Decimal128 format
+  if (typeof price === 'object' && price.$numberDecimal) {
+    return parseFloat(price.$numberDecimal).toFixed(2);
+  }
+  
+  // Handle regular number or string
+  try {
+    return parseFloat(price).toFixed(2);
+  } catch (e) {
+    return '0.00';
+  }
+};
+
 const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
   if (!order) return null;
   
@@ -14,19 +31,29 @@ const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
           <Col md={6} className="mb-4 mb-md-0">
             <h2 className="h4 mb-3">Shipping</h2>
             <p className="mb-1">
-              <strong>Name:</strong> {order.user?.name}
+              <strong>Name:</strong> {order.user?.name || 'N/A'}
             </p>
             <p className="mb-1">
               <strong>Email:</strong>{' '}
-              <a href={`mailto:${order.user?.email}`} className="text-primary">
-                {order.user?.email}
-              </a>
+              {order.user?.email ? (
+                <a href={`mailto:${order.user.email}`} className="text-primary">
+                  {order.user.email}
+                </a>
+              ) : (
+                'N/A'
+              )}
             </p>
-            <p className="mb-3">
-              <strong>Address:</strong> {order.shippingAddress.address},{' '}
-              {order.shippingAddress.city}, {order.shippingAddress.postalCode},{' '}
-              {order.shippingAddress.country}
-            </p>
+            {order.shippingAddress ? (
+              <p className="mb-3">
+                <strong>Address:</strong> {order.shippingAddress.address},{' '}
+                {order.shippingAddress.city}, {order.shippingAddress.postalCode},{' '}
+                {order.shippingAddress.country}
+              </p>
+            ) : (
+              <p className="mb-3">
+                <strong>Address:</strong> Shipping information unavailable
+              </p>
+            )}
             <Card className="bg-light mb-4">
               <Card.Body className="py-2">
                 {order.isDelivered ? (
@@ -43,7 +70,7 @@ const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
           <Col md={6}>
             <h2 className="h4 mb-3">Payment Method</h2>
             <p className="mb-3">
-              <strong>Method:</strong> {order.paymentMethod}
+              <strong>Method:</strong> {order.paymentMethod || 'Not specified'}
             </p>
             <Card className="bg-light">
               <Card.Body className="py-2">
@@ -60,12 +87,12 @@ const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
         </Row>
 
         <h2 className="h4 mt-4 mb-3">Order Items</h2>
-        {order.orderItems.length === 0 ? (
+        {!order.orderItems || order.orderItems.length === 0 ? (
           <p>Order is empty</p>
         ) : (
           <ListGroup variant="flush">
-            {order.orderItems.map((item) => (
-              <ListGroup.Item key={item._id}>
+            {order.orderItems.map((item, index) => (
+              <ListGroup.Item key={index}>
                 <Row className="align-items-center">
                   <Col xs={2} md={1}>
                     <Image
@@ -77,11 +104,11 @@ const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
                   </Col>
                   <Col xs={10} md={8} className="d-flex align-items-center">
                     <Link to={`/product/${item.product}`} className="text-decoration-none">
-                      {item.name}
+                      {item.name || 'Product'}
                     </Link>
                   </Col>
                   <Col md={3} className="text-md-end mt-2 mt-md-0">
-                    {item.qty} x ${item.price} = ${(item.qty * item.price).toFixed(2)}
+                    {(item.quantity || 1)} x ${formatPrice(item.price)} = ${formatPrice((item.quantity || 1) * (item.price || 0))}
                   </Col>
                 </Row>
               </ListGroup.Item>
@@ -94,19 +121,19 @@ const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
             <h2 className="h4 mb-3">Order Summary</h2>
             <Row className="mb-2">
               <Col>Items:</Col>
-              <Col className="text-end">${order.itemsPrice?.toFixed(2)}</Col>
+              <Col className="text-end">${formatPrice(order.itemsPrice)}</Col>
             </Row>
             <Row className="mb-2">
               <Col>Shipping:</Col>
-              <Col className="text-end">${order.shippingPrice?.toFixed(2)}</Col>
+              <Col className="text-end">${formatPrice(order.shippingPrice)}</Col>
             </Row>
             <Row className="mb-2">
               <Col>Tax:</Col>
-              <Col className="text-end">${order.taxPrice?.toFixed(2)}</Col>
+              <Col className="text-end">${formatPrice(order.taxPrice)}</Col>
             </Row>
             <Row className="fw-bold mb-3">
               <Col>Total:</Col>
-              <Col className="text-end">${order.totalPrice?.toFixed(2)}</Col>
+              <Col className="text-end">${formatPrice(order.totalPrice || order.total_amount)}</Col>
             </Row>
             
             {isAdmin && order.isPaid && !order.isDelivered && (

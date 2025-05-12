@@ -9,6 +9,23 @@ const OrderList = ({ orders, isAdmin = false }) => {
     return <p className="text-center text-muted my-4">No orders found.</p>;
   }
 
+  // Helper function to safely format price values
+  const formatPrice = (price) => {
+    if (!price) return '0.00';
+    
+    // Handle MongoDB Decimal128 format
+    if (typeof price === 'object' && price.$numberDecimal) {
+      return parseFloat(price.$numberDecimal).toFixed(2);
+    }
+    
+    // Handle regular number or string
+    try {
+      return parseFloat(price).toFixed(2);
+    } catch (e) {
+      return '0.00';
+    }
+  };
+
   return (
     <div className="table-responsive">
       <Table hover bordered className="align-middle">
@@ -35,7 +52,7 @@ const OrderList = ({ orders, isAdmin = false }) => {
               <td>
                 {new Date(order.createdAt).toLocaleDateString()}
               </td>
-              <td>${order.totalPrice.toFixed(2)}</td>
+              <td>${formatPrice(order.total_amount || order.totalPrice)}</td>
               <td>
                 {order.isPaid ? (
                   <Badge bg="success">

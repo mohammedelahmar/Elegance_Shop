@@ -12,6 +12,8 @@ import WishlistList from '../components/wishlist/WishlistList';
 import './ProfilePage.css';
 import axios from '../api/axios';
 import Message from '../components/UI/Message';
+import { getMyOrders } from '../api/order';
+import OrderList from '../components/Order/OrderList';
 
 const ProfilePage = () => {
   const { isAuthenticated, loading, currentUser } = useAuth();
@@ -20,6 +22,9 @@ const ProfilePage = () => {
   const [addresses, setAddresses] = useState([]);
   const [addressesLoading, setAddressesLoading] = useState(false);
   const [addressesError, setAddressesError] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersError, setOrdersError] = useState(null);
 
   // Fetch wishlist when the wishlist tab is activated
   useEffect(() => {
@@ -35,6 +40,13 @@ const ProfilePage = () => {
     }
   }, [activeTab, isAuthenticated]);
 
+  // Fetch orders when the orders tab is activated
+  useEffect(() => {
+    if (activeTab === 'orders' && isAuthenticated) {
+      fetchUserOrders();
+    }
+  }, [activeTab, isAuthenticated]);
+
   const fetchUserAddresses = async () => {
     try {
       setAddressesLoading(true);
@@ -47,6 +59,20 @@ const ProfilePage = () => {
       setAddressesError(error.response?.data?.message || 'Failed to load addresses');
     } finally {
       setAddressesLoading(false);
+    }
+  };
+
+  const fetchUserOrders = async () => {
+    try {
+      setOrdersLoading(true);
+      setOrdersError(null);
+      const data = await getMyOrders();
+      setOrders(data);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      setOrdersError(error.response?.data?.message || 'Failed to load orders');
+    } finally {
+      setOrdersLoading(false);
     }
   };
 
@@ -225,13 +251,45 @@ const ProfilePage = () => {
                     )}
                     
                     {activeTab === 'orders' && (
-                      <div className="text-center py-4">
-                        <FaShoppingBag size={40} className="text-white-50 mb-3" />
-                        <h5 className="text-white">Your Orders</h5>
-                        <p className="text-white-50">
-                          Your order history will appear here
-                        </p>
-                      </div>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="d-flex justify-content-between align-items-center mb-4">
+                          <h3 className="mb-0">Order History</h3>
+                        </div>
+                        
+                        {ordersLoading ? (
+                          <div className="text-center py-5">
+                            <Spinner animation="border" role="status" variant="primary">
+                              <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                          </div>
+                        ) : ordersError ? (
+                          <Message variant="danger">{ordersError}</Message>
+                        ) : orders.length === 0 ? (
+                          <div className="text-center py-4">
+                            <FaShoppingBag size={40} className="text-white-50 mb-3" />
+                            <h5 className="text-white">No Orders Found</h5>
+                            <p className="text-white-50">
+                              You haven't placed any orders yet
+                            </p>
+                            <Button 
+                              as={Link} 
+                              to="/products" 
+                              variant="outline-primary" 
+                              className="mt-3"
+                            >
+                              Start Shopping
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="order-history-container">
+                            <OrderList orders={orders} />
+                          </div>
+                        )}
+                      </motion.div>
                     )}
                     
                     {activeTab === 'wishlist' && (

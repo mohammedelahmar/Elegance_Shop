@@ -621,3 +621,34 @@ textarea.profile-input-field {
 hr.border-secondary {
   opacity: 0.1;
 }
+
+/* Add this to your existing ProfilePage.css file */
+
+.order-history-container {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.order-history-container table {
+  margin-bottom: 0;
+}
+
+.order-history-container .table-responsive {
+  overflow-y: hidden;
+}
+
+.order-history-container th {
+  color: #bfc8e6;
+  border-color: rgba(255, 255, 255, 0.1);
+  font-weight: 500;
+}
+
+.order-history-container td {
+  color: #e6e6f0;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.order-history-container tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}

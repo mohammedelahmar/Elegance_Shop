@@ -46,22 +46,57 @@ const addOrderItems = asyncHandler(async (req, res) => {
 // @access  Private
 
 const getOrderById = asyncHandler(async (req, res) => {
+     // First find the order
      const order = await commande.findById(req.params.id)
-          .populate('user_id', 'Firstname Lastname email')
-          .populate({
-               path: 'orderItems',
-               populate: {
-                    path: 'product',
-                    select: 'name image_url price'
-               }
-          })
-          .populate('shippingAddress');
-          
-     if (order){
-          res.json(order);
-     }else{
+          .populate('user_id', 'Firstname Lastname email');
+     
+     if (!order) {
+          res.status(404);
           throw new Error('Order not found');
      }
+     
+     // Get the shipping address
+     let shippingAddressData = null;
+     if (order.shippingAddress) {
+          try {
+               shippingAddressData = await Adresses.findById(order.shippingAddress);
+          } catch (error) {
+               console.error('Error fetching shipping address:', error);
+          }
+     }
+     
+     // Get the order items (ligne commandes)
+     const orderItems = await ligneCommande.find({ commande_id: order._id })
+          .populate('product_id', 'name image_url price');
+     
+     // Create a properly formatted response that matches what the frontend expects
+     const orderData = {
+          ...order._doc,
+          user: {
+               name: `${order.user_id?.Firstname || ''} ${order.user_id?.Lastname || ''}`.trim(),
+               email: order.user_id?.email
+          },
+          shippingAddress: shippingAddressData ? {
+               address: shippingAddressData.address,
+               city: shippingAddressData.city,
+               postalCode: shippingAddressData.postal_code,
+               country: shippingAddressData.country
+          } : null,
+          orderItems: orderItems.map(item => ({
+               _id: item._id,
+               name: item.product_id.name,
+               image: item.product_id.image_url,
+               price: item.price_per_unit,
+               product: item.product_id._id,
+               quantity: item.quantity
+          })),
+          itemsPrice: orderItems.reduce((acc, item) => 
+               acc + (item.price_per_unit * item.quantity), 0),
+          totalPrice: order.total_amount,
+          paymentMethod: order.payment_method
+     };
+     
+     res.json(orderData);
 });
 
 // @desc    Update order to paid
@@ -114,7 +149,11 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 // @access  Private
 
 const getMyOrders = asyncHandler(async (req, res) => {
-     const orders = await commande.find({ user: req.user._id });
+     const orders = await commande.find({ user_id: req.user._id })
+          .populate('user_id', 'Firstname Lastname email');
+     
+     // Send the orders to the client without trying to populate orderItems
+     // We'll display the order summary data instead
      res.json(orders);
 });
 
