@@ -30,8 +30,8 @@ const processPayment = asyncHandler(async (req, res) => {
 
     const createdPayment = await payment.save();
 
-    // Update order as paid only for non-COD methods
-    if (paymentMethod !== 'cash_on_delivery') {
+    // Update order as paid only for instant payment methods (not COD or bank transfer)
+    if (paymentMethod !== 'cash_on_delivery' && paymentMethod !== 'bank_transfer') {
         const order = await Commande.findById(orderId);
         if (order) {
             order.isPaid = true;
@@ -41,6 +41,19 @@ const processPayment = asyncHandler(async (req, res) => {
                 status: 'completed',
                 update_time: new Date().toISOString(),
                 email_address: paypalDetails?.payer?.email_address || req.user.email
+            };
+            
+            await order.save();
+        }
+    } else if (paymentMethod === 'bank_transfer') {
+        // For bank transfers, mark as pending but with specific status
+        const order = await Commande.findById(orderId);
+        if (order) {
+            order.paymentResult = {
+                id: createdPayment._id.toString(),
+                status: 'awaiting_transfer',
+                update_time: new Date().toISOString(),
+                email_address: req.user.email
             };
             
             await order.save();

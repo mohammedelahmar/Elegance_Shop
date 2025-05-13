@@ -9,6 +9,7 @@ import { processPayment } from '../api/payment';
 import { addAddress } from '../api/address';
 import axios from '../api/axios';
 import PayPalButton from '../components/Payment/PayPalButton';
+import CreditCardModal from '../components/Payment/CreditCardModal';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showPayPalModal, setShowPayPalModal] = useState(false);
+  const [showCreditCardModal, setShowCreditCardModal] = useState(false);
   const [createdOrder, setCreatedOrder] = useState(null);
   
   // Form states
@@ -190,37 +192,53 @@ const CheckoutPage = () => {
       }
       
       console.log("Order created:", orderData);
+      setCreatedOrder(orderData);
       
-      // Handle different payment methods
-      if (paymentMethod === 'paypal') {
-        // For PayPal, we'll show the PayPal modal instead of processing payment directly
-        setCreatedOrder(orderData);
-        setShowPayPalModal(true);
-        setLoading(false);
-      } else if (paymentMethod === 'cash_on_delivery') {
-        // For cash on delivery, just create order without payment processing
-        console.log("Cash on delivery order created");
-        await clearCart();
-        // Redirect to payment success page with method=cod
-        navigate(`/payment/success/${orderData._id}?method=cod`);
-      } else {
-        // For other payment methods (credit card, bank transfer)
-        await processPayment({
-          paymentMethod,
-          amount: orderTotal,
-          currency: 'USD',
-          orderId: orderData._id
-        });
-        
-        console.log("Payment processed successfully");
-        await clearCart();
-        navigate(`/payment/success/${orderData._id}?method=${paymentMethod}`);
-      }
+      await handlePaymentRedirect(orderData);
       
     } catch (err) {
       console.error('Checkout error:', err);
       setError(err.message || 'Failed to complete your order. Please try again.');
       setLoading(false);
+    }
+  };
+
+  const handlePaymentRedirect = async (orderData) => {
+    console.log("Payment method before redirect:", paymentMethod);
+    
+    if (paymentMethod === 'bank_transfer') {
+      // Process payment
+      await processPayment({
+        paymentMethod,
+        amount: orderTotal,
+        currency: 'USD',
+        orderId: orderData._id
+      });
+      
+      console.log("Bank transfer order created, redirecting to instructions page");
+      await clearCart();
+      navigate(`/bank-transfer-instructions/${orderData._id}`);
+    } else if (paymentMethod === 'paypal') {
+      // PayPal specific handling
+      setCreatedOrder(orderData);
+      setShowPayPalModal(true);
+    } else if (paymentMethod === 'cash_on_delivery') {
+      // COD specific handling
+      console.log("Cash on delivery order created");
+      await clearCart();
+      navigate(`/payment/success/${orderData._id}?method=cod`);
+    } else {
+      // Credit card and other methods
+      await processPayment({
+        paymentMethod,
+        amount: orderTotal,
+        currency: 'USD',
+        orderId: orderData._id
+      });
+      
+      console.log("Payment processed successfully");
+      await clearCart();
+      navigate(`/payment/success/${orderData._id}?method=${paymentMethod}`);
     }
   };
 
@@ -262,6 +280,36 @@ const CheckoutPage = () => {
     setError(`There was a problem with the PayPal payment: ${err.message || 'Unknown error'}`);
     setShowPayPalModal(false);
     setLoading(false);
+  };
+
+  const handleCreditCardSubmit = async (cardData) => {
+    try {
+      setLoading(true);
+      console.log("Processing credit card payment");
+      
+      // Process payment with credit card details
+      const paymentResult = await processPayment({
+        paymentMethod: 'credit_card',
+        amount: orderTotal,
+        currency: 'USD',
+        orderId: createdOrder._id,
+        cardDetails: {
+          last4: cardData.cardNumber.slice(-4),
+          cardholderName: cardData.cardholderName
+        }
+      });
+      
+      console.log("Credit card payment processed:", paymentResult);
+      await clearCart();
+      setShowCreditCardModal(false);
+      
+      // Navigate to success page
+      navigate(`/payment/success/${createdOrder._id}?method=credit_card`);
+    } catch (err) {
+      console.error("Error processing credit card payment:", err);
+      setError(`Failed to process credit card payment: ${err.message || 'Unknown error'}`);
+      setLoading(false);
+    }
   };
 
   const renderPayPalModal = () => (
@@ -307,6 +355,16 @@ const CheckoutPage = () => {
         </Button>
       </Modal.Footer>
     </Modal>
+  );
+
+  const renderCreditCardModal = () => (
+    <CreditCardModal
+      show={showCreditCardModal}
+      onHide={() => setShowCreditCardModal(false)}
+      amount={orderTotal}
+      onSubmit={handleCreditCardSubmit}
+      loading={loading}
+    />
   );
 
   const renderShippingStep = () => (
@@ -680,6 +738,7 @@ const CheckoutPage = () => {
       </Row>
 
       {renderPayPalModal()}
+      {renderCreditCardModal()}
     </Container>
   );
 };

@@ -46,7 +46,9 @@ const PaymentSuccessPage = () => {
                 <p className="lead mb-4">
                   {paymentMethod === 'cod' 
                     ? 'Thank you for your order. Your items will be prepared for delivery and payment will be collected upon delivery.'
-                    : 'Thank you for your purchase. Your order has been confirmed and will be processed shortly.'}
+                    : paymentMethod === 'bank_transfer'
+                      ? 'Thank you for your order. Please complete the bank transfer using the provided account details.'
+                      : 'Thank you for your purchase. Your order has been confirmed and will be processed shortly.'}
                 </p>
                 
                 <div className="payment-details mb-4">
