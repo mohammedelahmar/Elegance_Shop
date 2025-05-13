@@ -9,6 +9,23 @@ const OrderHistoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Add this helper function to safely handle price formatting
+  const formatPrice = (price) => {
+    if (!price) return '0.00';
+    
+    // Handle MongoDB Decimal128 format
+    if (typeof price === 'object' && price.$numberDecimal) {
+      return parseFloat(price.$numberDecimal).toFixed(2);
+    }
+    
+    // Handle regular number or string
+    try {
+      return parseFloat(price).toFixed(2);
+    } catch (e) {
+      return '0.00';
+    }
+  };
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -54,7 +71,9 @@ const OrderHistoryPage = () => {
                   <td className="py-3 px-4 border-b">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="py-3 px-4 border-b">${order.totalPrice.toFixed(2)}</td>
+                  <td className="py-3 px-4 border-b">
+                    ${formatPrice(order.totalPrice || order.total_amount)}
+                  </td>
                   <td className="py-3 px-4 border-b">
                     {order.isPaid ? (
                       new Date(order.paidAt).toLocaleDateString()
