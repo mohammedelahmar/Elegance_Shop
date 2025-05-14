@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Badge, Button, ButtonGroup } from 'react-bootstrap';
-import { FaEye, FaCheck, FaTrash, FaStar, FaRegStar } from 'react-icons/fa';
+import { FaEye, FaCheck, FaTrash, FaStar, FaRegStar, FaImage } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import './ReviewList.css';
 
@@ -73,7 +73,12 @@ const ReviewList = ({ reviews, onViewReview, onDeleteReview, onApproveReview, is
               </td>
               <td>
                 <div className="text-truncate" style={{ maxWidth: '200px' }}>
-                  {review.commentaire}
+                  {review.commentaire || review.comment}
+                  {(review.imageUrl || review.image_url) && (
+                    <span className="ms-2 badge bg-info">
+                      <FaImage size={12} className="me-1" /> Image
+                    </span>
+                  )}
                 </div>
               </td>
               <td>{review.createdAt ? formatDate(review.createdAt) : 'N/A'}</td>

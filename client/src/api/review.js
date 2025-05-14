@@ -1,22 +1,31 @@
 import axios from './axios';
 
 /**
- * Create a product review
- * @param {Object} reviewData - Review details including product, rating, comment
- * @returns {Promise} - Promise with created review
+ * Get reviews for a product
+ * @param {string} productId - Product ID
+ * @returns {Promise} Promise with review data
  */
-export const createReview = async (reviewData) => {
-  const { data } = await axios.post('/reviews', reviewData);
+export const getProductReviews = async (productId) => {
+  const { data } = await axios.get(`/reviews/product/${productId}`);
   return data;
 };
 
 /**
- * Get all reviews for a product
- * @param {string} productId - Product ID
- * @returns {Promise} - Promise with list of reviews
+ * Create a new review with optional image
+ * @param {FormData} formData - Review data including optional image
+ * @returns {Promise} Promise with created review
  */
-export const getProductReviews = async (productId) => {
-  const { data } = await axios.get(`/reviews/product/${productId}`);
+export const createReview = async (formData) => {
+  // Log the form data content for debugging
+  for (let pair of formData.entries()) {
+    console.log(`${pair[0]}: ${pair[1]}`);
+  }
+
+  const { data } = await axios.post('/reviews', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
   return data;
 };
 

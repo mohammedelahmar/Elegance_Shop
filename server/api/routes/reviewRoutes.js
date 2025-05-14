@@ -5,17 +5,20 @@ import {
   updateReview, 
   deleteReview,
   getAllReviews,
-  updateReviewStatus
+  updateReviewStatus,
+  upload
 } from '../controllers/reviewController.js';
 import { protect, admin } from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
 router.get('/product/:id', getProductReviews);
-router.post('/', protect, addReview);
-router.put('/:id', protect, updateReview);
-router.delete('/:id', protect, deleteReview);
 router.get('/', protect, admin, getAllReviews);
 router.put('/admin/:id', protect, admin, updateReviewStatus);
+router.put('/:id', protect, updateReview);
+router.delete('/:id', protect, deleteReview);
+
+// Use a single route with multer middleware for handling file uploads
+router.post('/', protect, upload.single('reviewImage'), addReview);
 
 export default router;

@@ -1,5 +1,33 @@
 import Review from '../../models/Review.js';
 import Product from '../../models/Product.js';
+import cloudinary from '../../config/cloudinary.js';
+import multer from 'multer';
+import path from 'path';
+
+// Configure multer for temporary storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}_${path.extname(file.originalname)}`);
+  }
+});
+
+// Filter for images only
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Not an image! Please upload only images.'), false);
+  }
+};
+
+export const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 
 /**
  * @desc    Get reviews for a specific product
@@ -31,13 +59,13 @@ const getProductReviews = async (req, res, next) => {
 };
 
 /**
- * @desc    Add a review
+ * @desc    Add a review with optional image
  * @route   POST /api/reviews
  * @access  Private
  */
 const addReview = async (req, res, next) => {
   try {
-    const { product_id, rating, commentaire } = req.body;
+    const { product_id, rating, comment } = req.body;
     
     // Check if product exists
     const product = await Product.findById(product_id);
@@ -57,12 +85,27 @@ const addReview = async (req, res, next) => {
       throw new Error('You have already reviewed this product');
     }
     
-    const review = await Review.create({
+    // Create review data
+    const reviewData = {
       product_id,
       user_id: req.user._id,
       rating,
-      commentaire
-    });
+      comment
+    };
+    
+    // Handle image upload if present
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'product_reviews',
+        width: 1000,
+        crop: "scale"
+      });
+      
+      // Add image URL to review data
+      reviewData.imageUrl = result.secure_url;
+    }
+    
+    const review = await Review.create(reviewData);
     
     res.status(201).json({
       success: true,

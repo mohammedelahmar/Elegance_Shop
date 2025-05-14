@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListGroup, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { FaStar } from 'react-icons/fa';
+import { FaStar, FaImage } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 
 const RecentReviews = ({ reviews }) => {
@@ -47,7 +47,12 @@ const RecentReviews = ({ reviews }) => {
           </div>
           
           <p className="mb-1 text-truncate">
-            {review.commentaire}
+            {review.commentaire || review.comment}
+            {(review.imageUrl || review.image_url) && (
+              <span className="ms-2 badge bg-info">
+                <FaImage size={12} className="me-1" /> Image
+              </span>
+            )}
           </p>
           
           <div className="d-flex justify-content-between">

@@ -107,7 +107,23 @@ const ReviewDetail = ({ review, show, onHide, onDeleteReview, onApproveReview, i
                 }</p>
                 <hr />
                 <h5>Comment</h5>
-                <div className="p-3 bg-light rounded">{review.commentaire}</div>
+                <div className="p-3 bg-light rounded">{review.commentaire || review.comment}</div>
+                
+                {/* Display review image if available */}
+                {(review.imageUrl || review.image_url) && (
+                  <>
+                    <hr />
+                    <h5>Attached Image</h5>
+                    <div className="text-center my-3">
+                      <img 
+                        src={review.imageUrl || review.image_url} 
+                        alt="Review" 
+                        className="img-fluid rounded" 
+                        style={{ maxHeight: "300px" }} 
+                      />
+                    </div>
+                  </>
+                )}
               </Card.Body>
             </Card>
           </Col>
