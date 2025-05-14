@@ -50,11 +50,11 @@
 
 ```bash
 # 1. Clone the repo
-$ git clone https://github.com/your-username/elegance-shop.git
-$ cd elegance-shop
+$ git clone https://github.com/mohammedelahmar/Projet_PFE.git
+$ cd Projet_PFE
 
 # 2. Install backend dependencies
-$ cd backend
+$ cd server
 $ npm install
 
 # 3. Set up environment variables in backend/.env
@@ -63,10 +63,10 @@ JWT_SECRET=your_secret_key
 PAYPAL_CLIENT_ID=your_paypal_client_id
 
 # 4. Start the backend server
-$ npm run dev
+$ npm start
 
 # 5. Install frontend dependencies
-$ cd ../frontend
+$ cd ../client
 $ npm install
 
 # 6. Start the frontend app
@@ -81,13 +81,13 @@ Make sure MongoDB is running locally or use MongoDB Atlas.
 
 ```
 root
-├── backend
+├── server
 │   ├── controllers
 │   ├── models
 │   ├── routes
 │   ├── config
 │   └── ...
-├── frontend
+├── client
 │   ├── components
 │   ├── pages
 │   ├── redux
