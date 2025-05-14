@@ -5,7 +5,7 @@ import { getAllCategories } from '../../api/category';
 import CategoryList from '../../components/Admin/Categories/CategoryList';
 import CategoryEdit from '../../components/Admin/Categories/CategoryEdit';
 import CategoryAdd from '../../components/Admin/Categories/CategoryAdd';
-import Loader from '../../components/UI/Loader';
+import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
 import './CategoriesPage.css';
 
@@ -89,7 +89,7 @@ const CategoriesPage = () => {
       </div>
 
       {loading ? (
-        <Loader />
+        <LoadingAnimation size="large" text="Loading categories..." />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
@@ -100,7 +100,7 @@ const CategoriesPage = () => {
               onEditCategory={handleEditCategory} 
               onCategoryUpdated={handleRefresh}
             />
-          </Card.Body>
+          </Card.Body>  
         </div>
       )}
 

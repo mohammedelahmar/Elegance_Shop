@@ -5,7 +5,7 @@ import { getAllAddresses } from '../../api/address';
 import AddressList from '../../components/Admin/Addresses/AddressList';
 import AddressEdit from '../../components/Admin/Addresses/AddressEdit';
 import AddressDetail from '../../components/Admin/Addresses/AddressDetail';
-import Loader from '../../components/UI/Loader';
+import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
 import '../../components/Admin/Addresses/AddressList.css'; // Import the new CSS
 
@@ -106,7 +106,7 @@ const AddressesPage = () => {
       )}
 
       {loading ? (
-        <Loader />
+        <LoadingAnimation text="Loading addresses..." />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (

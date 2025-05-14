@@ -6,7 +6,7 @@ import { getAllProducts } from '../../api/product';
 import VariantList from '../../components/Admin/Variants/VariantList';
 import VariantEdit from '../../components/Admin/Variants/VariantEdit';
 import VariantCreate from '../../components/Admin/Variants/VariantCreate';
-import Loader from '../../components/UI/Loader';
+import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
 
 const VariantsPage = () => {
@@ -143,14 +143,18 @@ const VariantsPage = () => {
       </Row>
 
       {loading ? (
-        <Loader />
+        <div className="text-center my-5">
+          <LoadingAnimation size="large" text="Loading products..." />
+        </div>
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
         <Card>
           <Card.Body>
             {loadingVariants ? (
-              <Loader />
+              <div className="text-center my-3">
+                <LoadingAnimation size="medium" text="Loading variants..." />
+              </div>
             ) : (
               <VariantList 
                 variants={variants} 

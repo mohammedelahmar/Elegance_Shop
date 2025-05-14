@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { FaUsers, FaRocket, FaHeart, FaStar, FaRegStar, FaTrophy } from 'react-icons/fa';
+import LoadingAnimation from '../components/common/LoadingAnimation';
 import './HomePage.css';
 
 const TEAM = [
@@ -10,6 +11,31 @@ const TEAM = [
 ];
 
 const AboutPage = () => {
+  const [loading, setLoading] = useState(true);
+
+  // Simulate content loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="loading-page-container" style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: '#161c2d'
+      }}>
+        <LoadingAnimation size="large" text="Loading About Page..." />
+      </div>
+    );
+  }
+
   return (
     <div className="dark-theme">
       {/* Hero Section */}

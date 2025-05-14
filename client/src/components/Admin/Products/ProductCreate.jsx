@@ -6,6 +6,7 @@ import Button from '../../UI/Button';
 import { createProduct } from '../../../api/product';
 import { getAllCategories } from '../../../api/category';
 import { FaPlus, FaTrash } from 'react-icons/fa';
+import LoadingAnimation from '../../common/LoadingAnimation';
 
 const ProductCreate = ({ show, onHide, onProductCreated }) => {
   const [formData, setFormData] = useState({
@@ -294,10 +295,16 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
           <Button 
             type="submit" 
             variant="primary" 
-            icon={FaPlus}
-            loading={loading}
+            icon={loading ? null : FaPlus}
+            disabled={loading}
           >
-            Add Product
+            {loading ? (
+              <>
+                <LoadingAnimation size="small" /> Adding...
+              </>
+            ) : (
+              'Add Product'
+            )}
           </Button>
         </Modal.Footer>
       </Form>

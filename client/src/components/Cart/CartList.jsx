@@ -1,10 +1,11 @@
 import React from 'react';
-import { ListGroup, Alert, Spinner } from 'react-bootstrap';
+import { ListGroup, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import CartItem from './CartItem';
 import Button from '../UI/Button';
 import { FaShoppingCart, FaShoppingBag } from 'react-icons/fa';
+import LoadingAnimation from '../common/LoadingAnimation';
 
 const CartList = ({ 
   cartItems, 
@@ -17,20 +18,7 @@ const CartList = ({
   if (loading) {
     return (
       <div className="text-center my-5 py-4">
-        <div className="position-relative d-inline-block">
-          <Spinner 
-            animation="border" 
-            variant="primary" 
-            style={{ 
-              width: "3rem", 
-              height: "3rem",
-              borderWidth: "0.3rem",
-              color: "#4a9fff"
-            }}
-          />
-          <div className="spinner-glow"></div>
-        </div>
-        <p className="mt-3 text-white-50">Loading your cart...</p>
+        <LoadingAnimation size="medium" text="Loading your cart..." />
       </div>
     );
   }

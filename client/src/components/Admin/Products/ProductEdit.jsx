@@ -6,6 +6,7 @@ import Button from '../../UI/Button';
 import { updateProduct } from '../../../api/product';
 import { getAllCategories } from '../../../api/category';
 import { FaSave, FaPlus, FaTrash } from 'react-icons/fa';
+import LoadingAnimation from '../../common/LoadingAnimation';
 
 const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
   const [formData, setFormData] = useState({
@@ -241,10 +242,16 @@ const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
           <Button 
             type="submit" 
             variant="primary" 
-            icon={FaSave}
-            loading={loading}
+            icon={loading ? null : FaSave}
+            disabled={loading}
           >
-            Save Changes
+            {loading ? (
+              <>
+                <LoadingAnimation size="small" /> Saving...
+              </>
+            ) : (
+              'Save Changes'
+            )}
           </Button>
         </Modal.Footer>
       </Form>

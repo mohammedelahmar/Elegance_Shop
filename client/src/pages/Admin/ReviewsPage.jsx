@@ -4,7 +4,7 @@ import { FaSearch, FaSync, FaFilter } from 'react-icons/fa';
 import { getAllReviews, deleteReview, updateReviewStatus } from '../../api/review';
 import ReviewList from '../../components/Admin/Reviews/ReviewList';
 import ReviewDetail from '../../components/Admin/Reviews/ReviewDetail';
-import Loader from '../../components/UI/Loader';
+import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
 import '../../components/Admin/Reviews/ReviewList.css';  // Import the new CSS
 
@@ -289,7 +289,7 @@ const ReviewsPage = () => {
 
         {/* Reviews List */}
         {loading ? (
-          <Loader />
+          <LoadingAnimation text="Loading reviews..." />
         ) : error ? (
           <Message variant="danger">{error}</Message>
         ) : filteredReviews.length === 0 ? (

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+  import React, { useEffect, useState } from 'react';
 import { Button, Form, InputGroup, Tab, Tabs } from 'react-bootstrap';
 import { FaSearch, FaSync, FaFileExport } from 'react-icons/fa';
 import { getAllOrders, updateOrderToDelivered, updateOrderToPaid } from '../../api/order';
 import OrderList from '../../components/Admin/Orders/OrderList';
 import OrderDetail from '../../components/Admin/Orders/OrderDetail';
 import OrderStats from '../../components/Admin/Orders/OrderStats';
-import Loader from '../../components/UI/Loader';
+import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
 import '../../components/Admin/Categories/CategoryList.css'; // Keep existing CSS
 
@@ -306,7 +306,7 @@ const OrdersPage = () => {
       {/* Orders List - Using IIFE pattern for cleaner conditional rendering */}
       {(() => {
         if (loading) {
-          return <Loader />;
+          return <LoadingAnimation size="large" text="Loading orders..." />;
         }
         
         if (error) {

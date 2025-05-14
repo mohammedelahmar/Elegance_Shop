@@ -9,7 +9,7 @@ import { getAllOrders } from '../../api/order';
 import { getAllProducts } from '../../api/product';
 import { getAllUsers } from '../../api/user';
 import { getAllReviews } from '../../api/review';
-import Loader from '../../components/UI/Loader';
+import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
 import RecentOrders from '../../components/Admin/Dashboard/RecentOrders';
 import SalesChart from '../../components/Admin/Dashboard/SalesChart';
@@ -173,7 +173,7 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  if (loading) return <Loader />;
+  if (loading) return <LoadingAnimation text="Loading dashboard data..." size="large" />;
   if (error) return <Message variant="danger">{error}</Message>;
 
   return (

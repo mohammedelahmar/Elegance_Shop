@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Spinner, Alert, Button } from 'react-bootstrap';
+import { Row, Col, Alert, Button } from 'react-bootstrap';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from './ProductCard';
 import ProductFilter from './ProductFilter';
 import Pagination from './Pagination';
 import { getAllProducts } from '../../api/product';
 import { getAllCategories } from '../../api/category';
+import LoadingAnimation from '../common/LoadingAnimation';
 import './ProductList.css';
 import PropTypes from 'prop-types';
 
@@ -153,10 +154,7 @@ const ProductList = ({ isAdmin = false }) => {
       
       {loading ? (
         <div className="text-center my-5">
-          <Spinner animation="border" role="status" variant="primary">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-          <p className="mt-2">Loading products...</p>
+          <LoadingAnimation size="medium" text="Loading products..." />
         </div>
       ) : products.length === 0 ? (
         <div className="text-center my-5">

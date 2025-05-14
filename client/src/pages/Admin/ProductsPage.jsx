@@ -5,7 +5,7 @@ import { getAllProducts } from '../../api/product';
 import ProductList from '../../components/Admin/Products/ProductList';
 import ProductEdit from '../../components/Admin/Products/ProductEdit';
 import ProductCreate from '../../components/Admin/Products/ProductCreate';
-import Loader from '../../components/UI/Loader';
+import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
 
 const ProductsPage = () => {
@@ -103,7 +103,9 @@ const ProductsPage = () => {
       </Row>
 
       {loading ? (
-        <Loader />
+        <div className="text-center py-5">
+          <LoadingAnimation text="Loading products..." />
+        </div>
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (

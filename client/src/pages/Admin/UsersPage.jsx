@@ -4,7 +4,7 @@ import { FaUserPlus, FaSync } from 'react-icons/fa';
 import { getAllUsers } from '../../api/user';
 import UserList from '../../components/Admin/Users/UserList';
 import UserEdit from '../../components/Admin/Users/UserEdit';
-import Loader from '../../components/UI/Loader';
+import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
 
 const UsersPage = () => {
@@ -69,7 +69,7 @@ const UsersPage = () => {
       </Row>
 
       {loading ? (
-        <Loader />
+        <LoadingAnimation text="Loading users..." />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
