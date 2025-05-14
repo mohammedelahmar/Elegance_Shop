@@ -3,8 +3,17 @@ import { ListGroup, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { FaStar, FaImage } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import LoadingAnimation from '../../common/LoadingAnimation';
 
-const RecentReviews = ({ reviews }) => {
+const RecentReviews = ({ reviews, loading }) => {
+  if (loading) {
+    return (
+      <div className="py-4 text-center">
+        <LoadingAnimation size="small" text="Loading reviews..." />
+      </div>
+    );
+  }
+
   if (!reviews.length) {
     return <p className="text-muted text-center">No recent reviews</p>;
   }
@@ -70,7 +79,12 @@ const RecentReviews = ({ reviews }) => {
 };
 
 RecentReviews.propTypes = {
-  reviews: PropTypes.array.isRequired
+  reviews: PropTypes.array.isRequired,
+  loading: PropTypes.bool
+};
+
+RecentReviews.defaultProps = {
+  loading: false
 };
 
 export default RecentReviews;

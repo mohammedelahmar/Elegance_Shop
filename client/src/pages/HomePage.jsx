@@ -1,17 +1,24 @@
-import React, { useEffect } from 'react';
-import { Container, Row, Col, Button, Card, Badge } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Button, Card, Badge, Spinner } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaStar, FaRegStar, FaArrowRight, FaEnvelope } from 'react-icons/fa';
+import LoadingAnimation from '../components/common/LoadingAnimation';
 
 import './HomePage.css'; // Ensure CSS is imported
 
 const HomePage = () => {
   const { isAuthenticated, currentUser, isAdmin } = useAuth();
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     // Force dark background on mount
     document.body.classList.add('dark-theme');
+    
+    // Simulate loading time for data fetching
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1200);
     
     const animatedElements = document.querySelectorAll('.fade-in, .slide-up');
     
@@ -27,11 +34,20 @@ const HomePage = () => {
     animatedElements.forEach(el => observer.observe(el));
     
     return () => {
+      clearTimeout(timer);
       animatedElements.forEach(el => observer.unobserve(el));
       // Clean up when component unmounts
       document.body.classList.remove('dark-theme');
     };
   }, []);
+
+  if (loading) {
+    return (
+      <Container className="text-center py-5" style={{minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center"}}>
+        <LoadingAnimation size="large" text="Loading the latest fashion..." />
+      </Container>
+    );
+  }
 
   const featuredProducts = [
     {

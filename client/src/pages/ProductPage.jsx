@@ -12,6 +12,7 @@ import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import ProductDetail from '../components/Product/ProductDetail';
 import RecentlyViewed from '../components/Product/RecentlyViewed';
 import useRecentlyViewed from '../hooks/useRecentlyViewed';
+import LoadingAnimation from '../components/common/LoadingAnimation';
 
 import './ProductPage.css';
 
@@ -213,10 +214,7 @@ const ProductPage = () => {
   if (loading) {
     return (
       <Container className="text-center my-5">
-        <Spinner animation="border" role="status" variant="primary">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-        <p className="mt-2">Loading product details...</p>
+        <LoadingAnimation size="large" text="Loading product details..." />
       </Container>
     );
   }

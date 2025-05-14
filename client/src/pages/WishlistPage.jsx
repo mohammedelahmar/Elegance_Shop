@@ -7,6 +7,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import WishlistList from '../components/wishlist/WishlistList';
 import { FaHeart, FaArrowLeft, FaTrash, FaShoppingCart } from 'react-icons/fa';
+import LoadingAnimation from '../components/common/LoadingAnimation';
 import './WishlistPage.css';
 
 const WishlistPage = () => {
@@ -135,11 +136,17 @@ const WishlistPage = () => {
                   </div>
                 </Card.Header>
                 <Card.Body>
-                  <WishlistList 
-                    products={wishlistItems}
-                    loading={loading}
-                    error={error}
-                  />
+                  {loading ? (
+                    <div className="text-center py-4">
+                      <LoadingAnimation text="Loading your wishlist items..." />
+                    </div>
+                  ) : (
+                    <WishlistList 
+                      products={wishlistItems}
+                      loading={loading}
+                      error={error}
+                    />
+                  )}
                 </Card.Body>
               </Card>
 

@@ -4,9 +4,9 @@ import { FaUsers, FaRocket, FaHeart, FaStar, FaRegStar, FaTrophy } from 'react-i
 import './HomePage.css';
 
 const TEAM = [
-  { name: 'Mohammed Mehdi Boudir', role: 'Frontend Developer', img: '', icon: <FaRocket /> },
-  { name: 'Mohammed El Ahmar', role: 'Backend Developer', img: '', icon: <FaTrophy /> },
-  { name: 'Yasser Amiri', role: 'Rapport Maker', img: '', icon: <FaHeart /> },
+  { name: 'Mohammed Mehdi Boudir', role: 'UI/UX & Styling', img: '', icon: <FaRocket /> },
+  { name: 'Mohammed El Ahmar', role: 'Full Stack Developer (Backend & Frontend)', img: '', icon: <FaTrophy /> },
+  { name: 'Yasser Amiri', role: 'Documentation & Reports', img: '', icon: <FaHeart /> },
 ];
 
 const AboutPage = () => {

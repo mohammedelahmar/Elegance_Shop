@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane } from 'react-icons/fa';
+import LoadingAnimation from '../components/common/LoadingAnimation';
 import './HomePage.css';
 
 const initialForm = { name: '', email: '', message: '' };
@@ -9,20 +10,32 @@ const ContactPage = () => {
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
       setError('Please fill in all fields.');
       return;
     }
     setError('');
-    setSubmitted(true);
-    setForm(initialForm);
+    setIsSubmitting(true);
+    
+    // Simulate API request
+    try {
+      // Replace with actual API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setSubmitted(true);
+      setForm(initialForm);
+    } catch (err) {
+      setError('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -56,14 +69,14 @@ const ContactPage = () => {
               <Card className="product-card text-center p-4 h-100">
                 <FaEnvelope className="mb-3" style={{ fontSize: '2rem', color: '#4a6bf5' }} />
                 <h5>Email</h5>
-                <p className="text-muted mb-0">support@eleganceshop.com</p>
+                <p className="text-muted mb-0">eleganceshop.sender@gmail.com</p>
               </Card>
             </Col>
             <Col md={4} className="mb-4 fade-in">
               <Card className="product-card text-center p-4 h-100">
                 <FaPhone className="mb-3" style={{ fontSize: '2rem', color: '#4a6bf5' }} />
                 <h5>Phone</h5>
-                <p className="text-muted mb-0">+212 600-000-000</p>
+                <p className="text-muted mb-0">+212 682-480-268</p>
               </Card>
             </Col>
             <Col md={4} className="mb-4 fade-in">
@@ -89,50 +102,57 @@ const ContactPage = () => {
                     {error}
                   </Alert>
                 )}
-                <Form onSubmit={handleSubmit}>
-                  <Row>
-                    <Col md={6} className="mb-3">
-                      <Form.Group controlId="contactName">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
-                          type="text"
-                          name="name"
-                          value={form.name}
-                          onChange={handleChange}
-                          placeholder="Your Name"
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col md={6} className="mb-3">
-                      <Form.Group controlId="contactEmail">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
-                          type="email"
-                          name="email"
-                          value={form.email}
-                          onChange={handleChange}
-                          placeholder="Your Email"
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Form.Group controlId="contactMessage" className="mb-3">
-                    <Form.Label>Message</Form.Label>
-                    <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
-                      as="textarea"
-                      name="message"
-                      value={form.message}
-                      onChange={handleChange}
-                      rows={5}
-                      placeholder="Type your message here..."
-                    />
-                  </Form.Group>
-                  <div className="text-center">
-                    <Button type="submit" size="lg" className="hero-button">
-                      Send Message <FaPaperPlane className="ms-2" />
-                    </Button>
+                
+                {isSubmitting ? (
+                  <div className="py-4">
+                    <LoadingAnimation text="Sending your message..." />
                   </div>
-                </Form>
+                ) : (
+                  <Form onSubmit={handleSubmit}>
+                    <Row>
+                      <Col md={6} className="mb-3">
+                        <Form.Group controlId="contactName">
+                          <Form.Label>Name</Form.Label>
+                          <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
+                            type="text"
+                            name="name"
+                            value={form.name}
+                            onChange={handleChange}
+                            placeholder="Your Name"
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col md={6} className="mb-3">
+                        <Form.Group controlId="contactEmail">
+                          <Form.Label>Email</Form.Label>
+                          <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
+                            type="email"
+                            name="email"
+                            value={form.email}
+                            onChange={handleChange}
+                            placeholder="Your Email"
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+                    <Form.Group controlId="contactMessage" className="mb-3">
+                      <Form.Label>Message</Form.Label>
+                      <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
+                        as="textarea"
+                        name="message"
+                        value={form.message}
+                        onChange={handleChange}
+                        rows={5}
+                        placeholder="Type your message here..."
+                      />
+                    </Form.Group>
+                    <div className="text-center">
+                      <Button type="submit" size="lg" className="hero-button">
+                        Send Message <FaPaperPlane className="ms-2" />
+                      </Button>
+                    </div>
+                  </Form>
+                )}
               </Card>
             </Col>
           </Row>

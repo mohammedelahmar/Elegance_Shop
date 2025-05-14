@@ -10,6 +10,7 @@ import WishlistButton from '../wishlist/WishlistButton';
 import SizeGuide from './SizeGuide';
 import useRecentlyViewed from '../../hooks/useRecentlyViewed';
 import ProductImageGallery from './ProductImageGallery';
+import LoadingAnimation from '../common/LoadingAnimation';
 import './ProductDetail.css';
 
 // Existing helper functions remain the same
@@ -71,6 +72,7 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
   const [selectedColor, setSelectedColor] = useState('');
   const [availableColors, setAvailableColors] = useState([]);
   const [availableSizes, setAvailableSizes] = useState([]);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Rest of your hooks and handlers remain the same
   // ...
@@ -218,6 +220,7 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
     }
     
     setAdding(true);
+    setIsAddingToCart(true); // Start showing animation
     
     try {
       const itemToAdd = {
@@ -266,6 +269,7 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
       });
     } finally {
       setAdding(false);
+      setIsAddingToCart(false); // Stop showing animation
     }
   };
 
@@ -485,6 +489,13 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
           </Col>
         </Row>
       </div>
+      
+      {isAddingToCart && (
+        <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" 
+             style={{backgroundColor: 'rgba(255,255,255,0.8)', zIndex: 1050}}>
+          <LoadingAnimation size="large" text="Adding to cart..." />
+        </div>
+      )}
       
       <SizeGuide 
         show={showSizeGuide} 

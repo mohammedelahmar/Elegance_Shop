@@ -14,6 +14,7 @@ import axios from '../api/axios';
 import Message from '../components/UI/Message';
 import { getMyOrders } from '../api/order';
 import OrderList from '../components/Order/OrderList';
+import LoadingAnimation from '../components/common/LoadingAnimation';
 
 const ProfilePage = () => {
   const { isAuthenticated, loading, currentUser } = useAuth();
@@ -89,17 +90,9 @@ const ProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '50vh' }}>
-        <div className="text-center">
-          <Spinner animation="border" variant="primary" style={{ 
-            width: "3rem", 
-            height: "3rem",
-            borderWidth: "0.3rem",
-            color: "#4a9fff"
-          }} />
-          <p className="mt-3 text-white-50">Loading your profile...</p>
-        </div>
-      </div>
+      <Container className="d-flex justify-content-center align-items-center" style={{ height: '60vh' }}>
+        <LoadingAnimation size="large" text="Loading your profile..." />
+      </Container>
     );
   }
 
@@ -256,15 +249,9 @@ const ProfilePage = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <div className="d-flex justify-content-between align-items-center mb-4">
-                          <h3 className="mb-0">Order History</h3>
-                        </div>
-                        
                         {ordersLoading ? (
                           <div className="text-center py-5">
-                            <Spinner animation="border" role="status" variant="primary">
-                              <span className="visually-hidden">Loading...</span>
-                            </Spinner>
+                            <LoadingAnimation text="Loading your orders..." />
                           </div>
                         ) : ordersError ? (
                           <Message variant="danger">{ordersError}</Message>
@@ -314,12 +301,7 @@ const ProfilePage = () => {
                       >
                         {addressesLoading ? (
                           <div className="text-center py-4">
-                            <Spinner animation="border" variant="primary" style={{ 
-                              width: "2.5rem", 
-                              height: "2.5rem",
-                              color: "#4a9fff"
-                            }} />
-                            <p className="mt-3 text-white-50">Loading your addresses...</p>
+                            <LoadingAnimation text="Loading your addresses..." />
                           </div>
                         ) : addressesError ? (
                           <Message variant="danger">{addressesError}</Message>

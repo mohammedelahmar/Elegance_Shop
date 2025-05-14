@@ -44,9 +44,9 @@ const FOOTER_BOTTOM_LINKS = [
 ];
 
 const CONTACT_INFO = [
-  { icon: <FaMapMarkerAlt />, text: '123 Fashion Street, Design District, CA 90210' },
-  { icon: <FaPhone />, text: '+1 (555) 123-4567' },
-  { icon: <FaEnvelope />, text: 'support@eleganceshop.com' }
+  { icon: <FaMapMarkerAlt />, text: 'Kenitra, Morocco' },
+  { icon: <FaPhone />, text: '+212 682-480-268' },
+  { icon: <FaEnvelope />, text: 'eleganceshop.sender@gmail.com' }
 ];
 
 // Sub-components
