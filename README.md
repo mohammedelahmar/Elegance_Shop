@@ -111,6 +111,13 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
+## 📬 Contact
+
+For questions, feedback, or collaboration, feel free to reach us at:  
+📧 **eleganceshop.sender@gmail.com**
+
+---
+
 ## 🙌 Acknowledgments
 
 Thanks to everyone who contributed to open source projects that inspired this one.
