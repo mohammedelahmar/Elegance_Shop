@@ -1,5 +1,5 @@
 .product-list-container {
-  padding: 1rem 0;
+  padding: 2rem 0; /* Increased padding for better spacing */
 }
 
 .filter-panel {
@@ -7,8 +7,29 @@
   border-radius: 8px;
   border: 1px solid #e9ecef;
   margin-bottom: 2rem;
+  padding: 1.5rem; /* Added padding inside filter panel */
 }
 
 .pagination {
   justify-content: center;
+  margin-top: 2rem; /* Added margin above pagination */
+}
+
+/* Additions for better product card layout */
+.product-list-row {
+  margin-bottom: 1.5rem; /* Space between rows of products */
+}
+
+/* Ensure product cards in a row have consistent height if using Bootstrap's Row/Col */
+.product-list-row .col,
+.product-list-row [class*="col-"] {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-list-row .product-card {
+  flex-grow: 1; /* Allows card to grow and fill the column space */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes card body content and actions apart */
 }

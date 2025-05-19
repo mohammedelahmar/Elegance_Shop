@@ -792,6 +792,7 @@
   transition: left 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 .filter-sidebar.active {
@@ -833,6 +834,7 @@
   overflow-y: auto;
   padding: 0;
   background-color: #fff;
+  padding: 1rem; /* Ensure padding doesn't cause overflow if not already set */
 }
 
 /* Filter Sections */
@@ -1134,6 +1136,7 @@
   /* Custom scrollbar styling */
   scrollbar-width: thin;
   scrollbar-color: #4a6bf5 #232b42;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 .filter-sidebar.active {
@@ -1180,6 +1183,7 @@
   background-color: #161c2d;
   scrollbar-width: thin;
   scrollbar-color: #4a6bf5 #232b42;
+  padding: 1rem; /* Ensure padding doesn't cause overflow if not already set */
 }
 
 /* Filter Sections */
@@ -2060,4 +2064,672 @@ input[type="checkbox"] {
 .filter-sidebar::-webkit-scrollbar-thumb:hover,
 .filter-sidebar-content::-webkit-scrollbar-thumb:hover {
   background: #6f88ff;
+}
+
+/* === Enhanced Filter Section Styling === */
+.filter-section {
+  border-bottom: 1px solid var(--dark-border, #e0e0e0); /* Use variable or fallback */
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.filter-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.filter-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0.25rem; /* Adjusted padding */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 4px; /* Subtle rounding */
+}
+
+.filter-section-header:hover {
+  background-color: rgba(255, 255, 255, 0.05); /* Subtle hover for dark themes, adjust if light */
+}
+
+.filter-title {
+  font-weight: 600;
+  color: var(--dark-text, #ffffff); /* Use variable or fallback */
+  font-size: 1rem;
+}
+
+.filter-icon {
+  color: var(--dark-text-muted, #a3aed0); /* Use variable or fallback */
+  transition: transform 0.2s ease;
+}
+
+.filter-section-header[aria-expanded="true"] .filter-icon { /* If using aria-expanded for state */
+  transform: rotate(180deg);
+}
+
+.filter-section-content {
+  padding: 0.75rem 0.25rem 0; /* Padding for content area */
+}
+
+/* === Enhanced Input Field Styling === */
+
+/* General input styling for search and price */
+.simple-search-input,
+.simple-price-input {
+  background-color: var(--dark-secondary-bg, #141b2d) !important; /* Use variable or fallback */
+  border: 1px solid var(--dark-border, #36405c) !important;
+  color: var(--dark-text, #ffffff) !important;
+  border-radius: 6px;
+  padding: 0.6rem 1rem; /* Adjusted padding */
+  width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.simple-search-input:focus,
+.simple-price-input:focus {
+  background-color: var(--dark-card-bg, #1e2634) !important; /* Darker focus background */
+  border-color: var(--accent-primary, #4a6bf5) !important; /* Use variable or fallback */
+  box-shadow: 0 0 0 0.2rem rgba(74, 107, 245, 0.25); /* Accent focus shadow */
+  outline: none;
+}
+
+.simple-search-input::placeholder,
+.simple-price-input::placeholder {
+  color: var(--dark-text-muted, #a3aed0);
+  opacity: 0.7;
+}
+
+/* Specific for price range container */
+.price-range-container.simple-price-range {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.price-separator {
+  color: var(--dark-text-muted, #a3aed0);
+  margin: 0 0.25rem;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Keep if specifically needed for Firefox */
+  appearance: textfield; /* Standard property */
+}
+
+/* filepath: c:\Users\HP\Documents\code\Projet_PFE\client\src\components\Product\ProductFilter.css */
+/* General theme variables (consider moving to a global CSS file or CSS variables) */
+:root {
+  --filter-bg: #1a223b; /* Main background for filter sidebar */
+  --filter-element-bg: #2d3757; /* Background for inputs, buttons */
+  --filter-border-color: #36405c;
+  --filter-text-color: #e0e0e0; /* Primary text color */
+  --filter-text-secondary-color: #8a94ad; /* Placeholder, secondary icons */
+  --filter-accent-color: #0d6efd; /* Primary accent (e.g., selected items) */
+  --filter-hover-bg: #36405c;
+  --filter-active-badge-bg: #36405c;
+  --filter-active-badge-text: #e0e0e0;
+  --filter-danger-color: #ff7b7b;
+}
+
+/* Reset/Base for filter context if needed, otherwise relies on Bootstrap and component styles */
+
+.product-filter-container {
+  /* This container wraps the toggle button and the sidebar itself */
+  /* No specific styles needed here unless for positioning the toggle button container */
+}
+
+/* Filter Toggle Button (Mobile) */
+.filter-btn-container {
+  padding: 1rem; /* Example padding if button is part of main page flow */
+  /* Position this container appropriately if needed, e.g., for mobile view */
+}
+
+.filter-toggle-btn {
+  background-color: var(--filter-accent-color) !important; /* Use Bootstrap primary or theme color */
+  border-color: var(--filter-accent-color) !important;
+  color: white !important;
+  font-weight: 500;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  display: inline-flex; 
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-toggle-btn:hover {
+  background-color: #0b5ed7 !important; /* Darker shade of accent */
+  border-color: #0a58ca !important;
+}
+
+/* Hide toggle button on larger screens if filter becomes part of layout */
+/* @media (min-width: 992px) { 
+  .filter-toggle-btn {
+    display: none;
+  }
+} */
+
+/* Filter Overlay */
+.filter-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1039; /* Below sidebar, above content */
+}
+
+/* Filter Sidebar */
+.filter-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px; /* Defined width for the sidebar */
+  height: 100vh;
+  background-color: var(--filter-bg);
+  color: var(--filter-text-color);
+  transform: translateX(-100%); /* Hidden by default */
+  transition: transform 0.3s ease-in-out;
+  z-index: 1040; /* Above overlay */
+  overflow-y: auto;
+  overflow-x: hidden; /* Keep this to prevent internal horizontal scroll */
+  display: flex;
+  flex-direction: column; /* Ensure header and content stack vertically */
+}
+
+.filter-sidebar.active {
+  transform: translateX(0); /* Slide in */
+}
+
+.filter-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--filter-border-color);
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.filter-sidebar-header h5 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--filter-text-color);
+  display: flex;
+  align-items: center;
+}
+
+.filter-sidebar-header h5 svg {
+  margin-right: 0.75rem;
+  color: var(--filter-accent-color);
+}
+
+.filter-close-btn {
+  color: var(--filter-text-secondary-color);
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.filter-close-btn:hover {
+  color: var(--filter-text-color);
+}
+
+.filter-sidebar-content {
+  padding: 1rem 1.5rem; /* Consistent padding for content area */
+  flex-grow: 1; /* Allow content to take available space and scroll */
+  overflow-y: auto; /* Ensure content area scrolls if needed, not the whole sidebar */
+}
+
+/* Active Filters Section */
+.active-filters-container {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(45, 55, 87, 0.5); /* Slightly different bg */
+  border-radius: 8px;
+}
+
+.active-filters-label {
+  font-weight: 600;
+  color: var(--filter-text-color);
+  font-size: 0.9rem;
+}
+
+.clear-all-btn {
+  color: var(--filter-danger-color);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  background: transparent; /* Ensure it's a link-like button */
+  border: none;
+}
+
+.clear-all-btn:hover {
+  color: #ff5252; /* Brighter red on hover */
+  background-color: rgba(255, 82, 82, 0.1);
+  text-decoration: none;
+}
+
+.active-filters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 0.75rem;
+}
+
+.active-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--filter-active-badge-bg) !important;
+  color: var(--filter-active-badge-text) !important;
+  border-radius: 15px;
+  padding: 0.4rem 0.8rem;
+  font-weight: 400;
+  font-size: 0.8rem;
+  border: 1px solid var(--filter-border-color);
+}
+
+.remove-filter-icon {
+  margin-left: 8px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.remove-filter-icon:hover {
+  opacity: 1;
+  color: var(--filter-danger-color);
+}
+
+/* Filter Sections (Collapsible) */
+.filter-section {
+  border-bottom: 1px solid var(--filter-border-color);
+  margin-bottom: 1rem;
+  padding-bottom: 1rem; /* Add padding to the bottom of the section before the border */
+}
+
+.filter-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.filter-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 0; /* Vertical padding, horizontal handled by parent or content */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* .filter-section-header:hover {
+  background-color: rgba(255, 255, 255, 0.03); 
+} */
+
+.filter-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--filter-text-color);
+}
+
+.filter-icon {
+  color: var(--filter-text-secondary-color);
+  font-size: 0.9rem;
+}
+
+.filter-section-content {
+  padding: 0.8rem 0 0 0.5rem; /* Top, Right, Bottom, Left (slight indent for content) */
+}
+
+/* Search Input */
+.search-box.simple-search {
+  margin-bottom: 0.5rem;
+}
+
+.simple-search-input {
+  background-color: var(--filter-element-bg) !important;
+  border: 1px solid var(--filter-border-color) !important;
+  color: var(--filter-text-color) !important;
+  border-radius: 6px;
+  padding: 0.6rem 1rem; /* Increased padding slightly */
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+}
+
+.simple-search-input:focus {
+  background-color: var(--filter-hover-bg) !important;
+  border-color: var(--filter-accent-color) !important; /* Accent color on focus */
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25); /* Focus shadow like Bootstrap */
+  outline: none;
+}
+
+.simple-search-input::placeholder {
+  color: var(--filter-text-secondary-color);
+  opacity: 1;
+}
+
+/* Categories List */
+.categories-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.category-item {
+  padding: 0.6rem 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin-bottom: 4px;
+  color: var(--filter-text-secondary-color); /* Slightly dimmer for non-selected */
+  font-size: 0.9rem;
+}
+
+.category-item:hover {
+  background-color: var(--filter-element-bg);
+  color: var(--filter-text-color);
+}
+
+.category-item.selected {
+  background-color: var(--filter-accent-color);
+  color: white;
+  font-weight: 500;
+}
+
+/* Price Range Inputs */
+.price-range-container.simple-price-range {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.simple-price-input {
+  background-color: var(--filter-element-bg) !important;
+  border: 1px solid var(--filter-border-color) !important;
+  color: var(--filter-text-color) !important;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  width: 100%; /* Takes available space due to flex-grow */
+  box-sizing: border-box;
+  font-size: 0.9rem;
+  -moz-appearance: textfield; /* Remove spinners */
+  appearance: textfield;
+}
+
+.simple-price-input::-webkit-inner-spin-button,
+.simple-price-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.simple-price-input:focus {
+  background-color: var(--filter-hover-bg) !important;
+  border-color: var(--filter-accent-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  outline: none;
+}
+
+.simple-price-input::placeholder {
+  color: var(--filter-text-secondary-color);
+  opacity: 1;
+}
+
+.price-separator {
+  color: var(--filter-text-secondary-color);
+  font-size: 0.9rem;
+}
+
+/* Availability (In Stock Checkbox) */
+.availability-option {
+  margin-top: 0.5rem;
+}
+
+.custom-stock-checkbox {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--filter-text-color);
+  user-select: none;
+  padding: 0.3rem 0; /* Add some padding for better click area */
+}
+
+.custom-stock-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.custom-stock-checkbox .checkmark {
+  position: relative;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  background-color: var(--filter-element-bg);
+  border: 1px solid var(--filter-border-color);
+  border-radius: 4px;
+  margin-right: 10px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.custom-stock-checkbox:hover input ~ .checkmark {
+  background-color: var(--filter-hover-bg);
+}
+
+.custom-stock-checkbox input:checked ~ .checkmark {
+  background-color: var(--filter-accent-color);
+  border-color: var(--filter-accent-color);
+}
+
+.custom-stock-checkbox .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.custom-stock-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Sort Controls */
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.select-container {
+  flex-grow: 1;
+}
+
+.sort-controls .form-select, /* Target select directly if Input component renders it plainly */
+.sort-controls select /* Fallback for plain select */ {
+  background-color: var(--filter-element-bg) !important;
+  border: 1px solid var(--filter-border-color) !important;
+  color: var(--filter-text-color) !important;
+  border-radius: 6px;
+  padding: 0.6rem 2rem 0.6rem 1rem; /* Padding adjusted for select arrow */
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+  appearance: none; /* Custom arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%238a94ad%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.65em auto;
+}
+
+.sort-controls .form-select:focus,
+.sort-controls select:focus {
+  background-color: var(--filter-hover-bg) !important;
+  border-color: var(--filter-accent-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  outline: none;
+}
+
+.sort-direction-btn {
+  background-color: var(--filter-element-bg);
+  border: 1px solid var(--filter-border-color);
+  color: var(--filter-text-secondary-color);
+  padding: 0.5rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; 
+  height: 40px; /* Approx match input height */
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.sort-direction-btn:hover {
+  background-color: var(--filter-hover-bg);
+  border-color: var(--filter-accent-color);
+  color: var(--filter-text-color);
+}
+
+.sort-direction-btn svg {
+  font-size: 1.1rem;
+}
+
+
+/* Remove or integrate conflicting old styles */
+/* .filter-panel, .form-label, .form-control, .form-select (old globalish styles) */
+/* might conflict with new scoped and variable-based styles. */
+/* The new styles for .simple-search-input, .simple-price-input, and .sort-controls select */
+/* should take precedence for elements within the filter. */
+
+/* Commenting out the .product-filter, .filter-header, etc. from the */
+/* "Modern Product Filter Styling" section as it seemed to be a separate light-theme attempt */
+/* and these new styles are more comprehensive for the dark theme sidebar. */
+
+/*
+.product-filter {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  max-width: 320px;
+}
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(to right, #f9f9f9, #ffffff);
+}
+.filter-header h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+.clear-btn { 
+    color: #ff5252; 
+    padding: 0.3rem 0.6rem; 
+    border-radius: 15px; 
+    font-size: 0.8rem; 
+    font-weight: 500; 
+    background: rgba(255, 82, 82, 0.1); 
+    border: none; 
+    transition: all 0.2s; 
+    display: flex; 
+    align-items: center; 
+    gap: 4px; 
+}
+.clear-btn:hover {
+    background: rgba(255, 82, 82, 0.15);
+    color: #ff3838;
+}
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.filter-badge { 
+  display: inline-flex; 
+  align-items: center; 
+  background: #f0f4f8 !important; 
+  color: #456 !important; 
+  border-radius: 20px; 
+  padding: 0.35rem 0.8rem; 
+  font-weight: 400; 
+  font-size: 0.8rem; 
+  border: 1px solid rgba(0,0,0,0.05); 
+  transition: all 0.2s; 
+}
+.filter-remove {
+  margin-left: 6px;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-badge:hover {
+  background: #e8edf2 !important;
+}
+.filter-remove:hover {
+  opacity: 1;
+  color: #ff5252;
+}
+.filter-body {
+  padding: 0.5rem 0;
+}
+*/
+
+/* Ensure old .form-control, .form-select styles don't override too much if they are very global */
+/* The specific input/select styles above should handle elements within the filter. */
+
+/* The original .filter-panel styles might be for a different context or an older version. */
+/* If .filter-panel is still used elsewhere and needs dark theme: */
+/* .filter-panel {
+    background-color: var(--filter-bg) !important;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem; 
+}
+.filter-panel h5 {
+    color: var(--filter-text-color);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--filter-element-bg);
+} */
+
+/* Ensure number inputs hide spinners (already partially addressed) */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

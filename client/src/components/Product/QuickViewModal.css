@@ -1,113 +1,440 @@
+:root {
+  --qv-bg: #2a3045; /* Slightly lighter than card for depth */
+  --qv-border-color: rgba(255, 255, 255, 0.1);
+  --qv-text-primary: #e5e7eb;
+  --qv-text-secondary: #9ca3af;
+  --qv-accent: #5c7cfa;
+  --qv-accent-darker: #4a6bf5;
+  --qv-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  --qv-img-bg: rgba(255, 255, 255, 0.03);
+}
+
+.quick-view-modal .modal-dialog {
+  max-width: 800px; /* Control overall width */
+}
+
 .quick-view-modal .modal-content {
-     background: linear-gradient(145deg, #232946 0%, #1a1f36 100%);
-     border-radius: 16px;
-     color: #e0e0e0;
-     border: 1px solid rgba(255, 255, 255, 0.05);
-     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-   }
-   
-   .quick-view-modal .modal-header {
-     border-bottom-color: rgba(255, 255, 255, 0.1);
-     padding: 1.5rem;
-   }
-   
-   .quick-view-modal .modal-body {
-     padding: 1.5rem;
-   }
-   
-   .quick-view-title {
-     color: #90cdf4;
-     font-weight: 600;
-   }
-   
-   .quick-view-img-container {
-     background: rgba(255, 255, 255, 0.05);
-     border-radius: 12px;
-     padding: 1.5rem;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     margin-bottom: 1rem;
-   }
-   
-   .quick-view-img {
-     max-height: 300px;
-     object-fit: contain;
-   }
-   
-   .product-name {
-     font-size: 1.6rem;
-     font-weight: 600;
-     margin-bottom: 0.5rem;
-     color: #fff;
-   }
-   
-   .price-section .product-price {
-     font-size: 1.5rem;
-     font-weight: 700;
-     color: #4a6bf5;
-   }
-   
-   .product-description {
-     font-size: 0.95rem;
-     line-height: 1.5;
-     margin-top: 1rem;
-   }
-   
-   .stock-badge {
-     font-size: 0.9rem;
-     padding: 0.4rem 0.8rem;
-   }
-   
-   .action-buttons {
-     display: flex;
-     flex-wrap: wrap;
-     gap: 0.8rem;
-     margin-top: 1.5rem;
-   }
-   
-   .add-cart-btn {
-     background: linear-gradient(135deg, #4a6bf5 0%, #3755d8 100%);
-     border: none;
-     padding: 0.6rem 1.2rem;
-     font-weight: 600;
-     border-radius: 8px;
-     transition: all 0.3s ease;
-   }
-   
-   .add-cart-btn:hover:not(:disabled) {
-     background: linear-gradient(135deg, #5a7bf5 0%, #4765e8 100%);
-     transform: translateY(-2px);
-     box-shadow: 0 8px 15px rgba(74, 107, 245, 0.4);
-   }
-   
-   .wishlist-button-container {
-     display: flex;
-     align-items: center;
-     justify-content: center;
-   }
-   
-   .view-details-btn {
-     border-color: #4a6bf5;
-     color: #4a6bf5;
-     font-weight: 500;
-     transition: all 0.3s ease;
-   }
-   
-   .view-details-btn:hover {
-     background: rgba(74, 107, 245, 0.1);
-     border-color: #4a6bf5;
-     color: #6f88ff;
-   }
-   
-   .close-btn {
-     color: #fff;
-     font-size: 1.2rem;
-     opacity: 0.7;
-     padding: 0.5rem;
-   }
-   
-   .close-btn:hover {
-     opacity: 1;
-     color: #fff;
-   }
+  background: var(--qv-bg);
+  border-radius: 20px; /* Softer radius */
+  color: var(--qv-text-primary);
+  border: 1px solid var(--qv-border-color);
+  box-shadow: var(--qv-shadow);
+  overflow: hidden; /* Ensure content respects border radius */
+}
+
+.quick-view-modal .modal-header {
+  border-bottom: 1px solid var(--qv-border-color);
+  padding: 1.25rem 1.75rem; /* Adjusted padding */
+  position: relative;
+}
+
+.quick-view-modal .modal-body {
+  padding: 1.75rem; /* Consistent padding */
+}
+
+.quick-view-title {
+  color: var(--qv-accent);
+  font-weight: 700; /* Bolder title */
+  font-size: 1.4rem;
+}
+
+.quick-view-img-container {
+  background: var(--qv-img-bg);
+  border-radius: 16px; /* Match other elements */
+  padding: 1rem; /* Reduced padding if image is large */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem; /* Spacing for mobile */
+  height: 350px; /* Fixed height for consistency */
+  overflow: hidden;
+}
+
+.quick-view-img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 8px; /* Slight radius for image itself */
+}
+
+.quick-view-details {
+  padding-left: 1rem; /* Add some padding if not full width on mobile */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allows this container to fill the height of quick-view-details-col */
+}
+
+.quick-view-details .product-name {
+  font-size: 1.8rem; /* Larger product name */
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--qv-text-primary);
+  line-height: 1.3;
+}
+
+.price-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem !important; /* Ensure spacing */
+}
+
+.price-section .product-price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--qv-accent);
+  margin-right: 0.75rem;
+}
+
+.price-section .badge {
+  font-size: 0.9rem;
+  padding: 0.4em 0.7em;
+  font-weight: 600;
+}
+
+.product-description {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-top: 1rem;
+  color: var(--qv-text-secondary); /* Ensure this uses the :root variable */
+  max-height: 5.7rem; /* Adjusted: 4 lines * 1.5 line-height * 0.95rem font-size = 5.7rem */
+  overflow: hidden; /* Clip content, no scrollbar in collapsed state */
+  position: relative; 
+  transition: max-height 0.35s ease-in-out;
+  /* Ensure bottom margin is handled correctly with the view more button */
+  margin-bottom: 0.5rem; 
+}
+
+.product-description.expanded {
+  max-height: 250px; /* Expanded height, can be adjusted. Allows for scroll if content is even longer */
+  overflow-y: auto; /* Show scrollbar if content exceeds 250px */
+}
+
+/* Custom Scrollbar Styles (applied when .product-description.expanded is scrollable) */
+.product-description.expanded::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.product-description.expanded::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1); /* Darker track for contrast */
+  border-radius: 10px;
+}
+.product-description.expanded::-webkit-scrollbar-thumb {
+  background-color: var(--qv-text-secondary); /* Subtler scrollbar thumb */
+  border-radius: 10px;
+  border: 2px solid var(--qv-bg); /* Creates a "padding" effect using the modal background color */
+  background-clip: padding-box; /* Ensures border doesn't make thumb thicker */
+}
+.product-description.expanded::-webkit-scrollbar-thumb:hover {
+  background-color: var(--qv-accent); /* Highlight on hover */
+}
+
+/* Firefox scrollbar styling */
+.product-description.expanded {
+  scrollbar-width: thin;
+  scrollbar-color: var(--qv-text-secondary) rgba(0,0,0,0.1); /* thumb track */
+}
+
+.stock-badge {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.9rem;
+  font-weight: 600;
+  border-radius: 20px; /* Pill shape */
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* Increased gap */
+  margin-top: 1.5rem;
+}
+
+.action-buttons .btn {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem; /* Larger buttons */
+  transition: all 0.25s ease-out;
+  flex-grow: 1; /* Allow buttons to grow */
+  min-width: 150px; /* Minimum width for buttons */
+}
+
+.add-cart-btn {
+  background: linear-gradient(135deg, var(--qv-accent) 0%, var(--qv-accent-darker) 100%);
+  border: none;
+  color: white;
+}
+
+.add-cart-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--qv-accent-darker) 0%, var(--qv-accent) 100%);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(92, 124, 250, 0.3);
+}
+
+.add-cart-btn:disabled {
+  background: var(--qv-text-secondary);
+  opacity: 0.7;
+}
+
+.wishlist-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 0; /* Don't let wishlist wrapper grow as much as buttons */
+  min-width: auto; /* Reset min-width for wrapper */
+}
+
+/* Assuming WishlistButton renders a <button> that can take these styles */
+.wishlist-button-container .btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--qv-text-primary);
+  padding: 0.75rem !important; /* Ensure padding is consistent if it's just an icon */
+  width: 50px; /* Fixed width for icon button */
+  height: 50px;
+  flex-grow: 0;
+  min-width: 50px;
+}
+
+.wishlist-button-container .btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.view-details-btn {
+  border: 2px solid var(--qv-accent-darker);
+  color: var(--qv-accent-darker);
+  background-color: transparent;
+}
+
+.view-details-btn:hover {
+  background: var(--qv-accent-darker);
+  color: white;
+  border-color: var(--qv-accent-darker);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 15px rgba(92, 124, 250, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .quick-view-modal .modal-dialog {
+    margin: 0.5rem;
+  }
+  .quick-view-modal .modal-body {
+    padding: 1rem;
+  }
+  .quick-view-img-container {
+    height: 250px; /* Smaller image on mobile */
+    margin-bottom: 1.5rem;
+  }
+  .quick-view-details {
+    padding-left: 0; /* Remove padding on mobile */
+  }
+  .quick-view-details .product-name {
+    font-size: 1.5rem;
+  }
+  .price-section .product-price {
+    font-size: 1.4rem;
+  }
+  .action-buttons .btn {
+    width: 100%; /* Make buttons full width on small screens */
+    flex-grow: 0; /* Disable flex-grow for stacked buttons */
+  }
+  .wishlist-button-container {
+    width: 100%;
+  }
+  .wishlist-button-container .btn {
+    width: 100%;
+  }
+}
+
+.quick-view-modal .modal-content {
+  background: linear-gradient(145deg, #232946 0%, #1a1f36 100%);
+  border-radius: 16px;
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.quick-view-modal .modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+}
+
+.quick-view-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.quick-view-title {
+  color: #90cdf4;
+  font-weight: 600;
+}
+
+.quick-view-img-container {
+  background: transparent; /* Changed from rgba(255, 255, 255, 0.05) */
+  border-radius: 12px;
+  padding: 1rem; /* Adjusted padding slightly, can be 0 if no spacing is desired */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  /* Ensure a consistent height for the container to align details column */
+  min-height: 300px; /* Or match .quick-view-img max-height if that's preferred */
+}
+
+.quick-view-img {
+  max-height: 300px;
+  object-fit: contain;
+}
+
+/* Ensure the details column and its content use flexbox for proper alignment */
+.quick-view-details-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.quick-view-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allows this container to fill the height of quick-view-details-col */
+  padding-left: 1rem; /* Add some padding if not full width on mobile */
+}
+
+/* New section for description to allow it to grow */
+.description-section {
+  flex-grow: 1; /* This will make the description area expand */
+  /* min-height to prevent collapse if description is very short, can be adjusted or removed */
+  min-height: 50px; 
+}
+
+.product-name {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.price-section .product-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4a6bf5;
+}
+
+.product-description {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-top: 1rem;
+  color: var(--qv-text-secondary); /* Ensure this uses the :root variable */
+  max-height: 5.7rem; /* Adjusted: 4 lines * 1.5 line-height * 0.95rem font-size = 5.7rem */
+  overflow: hidden; /* Clip content, no scrollbar in collapsed state */
+  position: relative; 
+  transition: max-height 0.35s ease-in-out;
+  /* Ensure bottom margin is handled correctly with the view more button */
+  margin-bottom: 0.5rem; 
+}
+
+.product-description.expanded {
+  max-height: 250px; /* Expanded height, can be adjusted. Allows for scroll if content is even longer */
+  overflow-y: auto; /* Show scrollbar if content exceeds 250px */
+}
+
+/* Custom Scrollbar Styles (applied when .product-description.expanded is scrollable) */
+.product-description.expanded::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.product-description.expanded::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1); /* Darker track for contrast */
+  border-radius: 10px;
+}
+.product-description.expanded::-webkit-scrollbar-thumb {
+  background-color: var(--qv-text-secondary); /* Subtler scrollbar thumb */
+  border-radius: 10px;
+  border: 2px solid var(--qv-bg); /* Creates a "padding" effect using the modal background color */
+  background-clip: padding-box; /* Ensures border doesn't make thumb thicker */
+}
+.product-description.expanded::-webkit-scrollbar-thumb:hover {
+  background-color: var(--qv-accent); /* Highlight on hover */
+}
+
+/* Firefox scrollbar styling */
+.product-description.expanded {
+  scrollbar-width: thin;
+  scrollbar-color: var(--qv-text-secondary) rgba(0,0,0,0.1); /* thumb track */
+}
+
+.view-more-btn {
+  color: var(--qv-accent);
+  padding: 0.25rem 0; 
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-block; 
+  margin-top: 0; /* Adjusted as description now has margin-bottom */
+  margin-bottom: 1rem; /* Space after the button */
+  transition: color 0.2s ease;
+}
+.view-more-btn:hover {
+  color: var(--qv-accent-darker);
+  text-decoration: underline;
+}
+
+.stock-badge {
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.add-cart-btn {
+  background: linear-gradient(135deg, #4a6bf5 0%, #3755d8 100%);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.add-cart-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5a7bf5 0%, #4765e8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(74, 107, 245, 0.4);
+}
+
+.wishlist-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-details-btn {
+  border-color: #4a6bf5;
+  color: #4a6bf5;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background: rgba(74, 107, 245, 0.1);
+  border-color: #4a6bf5;
+  color: #6f88ff;
+}
+
+.close-btn {
+  color: #fff;
+  font-size: 1.2rem;
+  opacity: 0.7;
+  padding: 0.5rem;
+}
+
+.close-btn:hover {
+  opacity: 1;
+  color: #fff;
+}

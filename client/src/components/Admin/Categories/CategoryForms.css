@@ -1,0 +1,166 @@
+/* Shared styles for Category forms (Add & Edit) */
+:root {
+  --dark-bg: #161c2d;
+  --dark-card-bg: #1e2634;
+  --dark-secondary-bg: #141b2d;
+  --accent-primary: #4a6bf5;
+  --accent-secondary: #6f88ff;
+  --accent-gradient: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  --accent-glow: 0 0 15px rgba(74, 107, 245, 0.6);
+  --dark-text: #ffffff;
+  --dark-text-muted: #a3aed0;
+  --dark-border: rgba(255, 255, 255, 0.08);
+}
+
+/* Modal styling */
+.category-modal .modal-content {
+  background-color: var(--dark-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  color: var(--dark-text);
+}
+
+.category-modal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(to right, rgba(74, 107, 245, 0.05), transparent);
+}
+
+.category-modal .modal-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--dark-text);
+  position: relative;
+  padding-left: 15px;
+}
+
+.category-modal .modal-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 70%;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--accent-gradient);
+}
+
+.category-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.category-modal .modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 1.25rem 1.5rem;
+}
+
+.category-modal .btn-close {
+  color: var(--dark-text);
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.category-modal .btn-close:hover {
+  opacity: 1;
+}
+
+/* Form styling */
+.category-form .form-label {
+  color: var(--dark-text);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.category-form .form-control {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: var(--dark-text);
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.category-form .form-control:focus {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(74, 107, 245, 0.2);
+}
+
+.category-form .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.category-form .form-text {
+  color: var(--dark-text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Alert styling */
+.category-form .alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.2);
+  color: #f5c2c7;
+  border-radius: 10px;
+}
+
+/* Button styling */
+.category-form-btn {
+  border-radius: 10px;
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.category-form-btn.btn-primary {
+  background: var(--accent-gradient);
+  border: none;
+  box-shadow: 0 4px 15px rgba(74, 107, 245, 0.25);
+}
+
+.category-form-btn.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--accent-glow);
+}
+
+.category-form-btn.btn-secondary {
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--dark-text-muted);
+}
+
+.category-form-btn.btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--dark-text);
+}
+
+/* Loading spinner */
+.category-form-btn .spinner-border {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+/* Helper text */
+.helper-text {
+  color: var(--dark-text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+}
+
+/* Animation */
+.category-modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out, opacity 0.3s ease;
+  transform: scale(0.95);
+  opacity: 0;
+}
+
+.category-modal.show .modal-dialog {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Add any additional style tweaks here */

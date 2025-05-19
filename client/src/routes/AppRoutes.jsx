@@ -1,10 +1,10 @@
 //# react-router setup
 
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import PrivateRoute from './PrivateRoute';
 import AdminRoute from './AdminRoute';
-import Layout from '../components/Layout/Layout';
+import Layout from '../components/layout/layout.jsx';
 
 // Lazy loading components for better performance
 const Home = lazy(() => import('../pages/HomePage'));

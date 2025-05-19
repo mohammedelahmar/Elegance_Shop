@@ -1,0 +1,27 @@
+.variants-admin-actions .btn-primary {
+  background: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(74,107,245,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.variants-admin-actions .btn-primary:hover {
+  background: linear-gradient(45deg, #6f88ff, #4a6bf5);
+  transform: translateY(-2px) scale(1.04);
+}
+
+.variants-admin-actions .btn-outline-secondary {
+  border-radius: 12px;
+  color: #a3aed0;
+  border: 1.5px solid #232b42;
+  background: #181f2e;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.variants-admin-actions .btn-outline-secondary:hover {
+  background: #232b42;
+  color: #fff;
+}

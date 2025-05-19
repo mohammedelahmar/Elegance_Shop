@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Form, Badge, Collapse } from 'react-bootstrap';
-import { FaSearch, FaFilter, FaSortAmountDown, FaSortAmountUp, FaTimes, FaChevronDown, FaChevronUp, FaBars } from 'react-icons/fa';
+import { Badge, Collapse } from 'react-bootstrap';
+import { FaFilter, FaSortAmountDown, FaSortAmountUp, FaTimes, FaChevronDown, FaChevronUp, FaBars } from 'react-icons/fa';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 import PropTypes from 'prop-types';
 import './ProductFilter.css';
 
 // Filter Section Component for collapsible sections
-const FilterSection = ({ title, children, defaultOpen = true }) => {
+const FilterSection = ({ title, children, defaultOpen = false }) => { // Changed defaultOpen to false
   const [isOpen, setIsOpen] = useState(defaultOpen);
   
   return (

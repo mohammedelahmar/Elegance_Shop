@@ -170,9 +170,9 @@ const ProductList = ({ isAdmin = false }) => {
             </Col>
           </Row>
           
-          <Row xs={1} sm={2} md={3} lg={4} className="g-4" >
+          <Row className="g-5" > {/* Changed g-4 to g-5 for more spacing */}
             {products.map(product => (
-              <Col key={product._id} >
+              <Col key={product._id} xs={12} sm={6} md={4} lg={4} className="mb-5"> {/* Added mb-5 class */}
                 <ProductCard product={product} />
               </Col>
             ))}
