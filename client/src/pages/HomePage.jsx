@@ -1,24 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Card, Badge, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Button, Spinner, Alert } from 'react-bootstrap'; // Removed Card, Badge
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { FaShoppingCart, FaStar, FaRegStar, FaArrowRight, FaEnvelope } from 'react-icons/fa';
+import { FaStar, FaRegStar, FaArrowRight, FaEnvelope } from 'react-icons/fa'; // Removed FaShoppingCart
 import LoadingAnimation from '../components/common/LoadingAnimation';
+import ProductCard from '../components/Product/ProductCard'; // Import ProductCard
+import { getAllProducts } from '../api/product'; // Import API function
 
 import './HomePage.css'; // Ensure CSS is imported
 
 const HomePage = () => {
   const { isAuthenticated, currentUser, isAdmin } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(true); // Renamed from loading to avoid conflict
+  const [trendingProducts, setTrendingProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [productsError, setProductsError] = useState(null);
   
   useEffect(() => {
     // Force dark background on mount
     document.body.classList.add('dark-theme');
     
-    // Simulate loading time for data fetching
+    // Simulate loading time for page structure
     const timer = setTimeout(() => {
-      setLoading(false);
+      setPageLoading(false);
     }, 1200);
+
+    // Fetch trending products
+    const fetchTrendingProducts = async () => {
+      try {
+        setProductsLoading(true);
+        const data = await getAllProducts({ limit: 4, sortBy: 'createdAt', order: 'desc' }); // Fetch 4 newest products
+        setTrendingProducts(data.products || []);
+        setProductsError(null);
+      } catch (error) {
+        console.error("Error fetching trending products:", error);
+        setProductsError("Could not load trending products. Please try again later.");
+        setTrendingProducts([]);
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+
+    fetchTrendingProducts();
     
     const animatedElements = document.querySelectorAll('.fade-in, .slide-up');
     
@@ -41,7 +64,7 @@ const HomePage = () => {
     };
   }, []);
 
-  if (loading) {
+  if (pageLoading) {
     return (
       <Container className="text-center py-5" style={{minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center"}}>
         <LoadingAnimation size="large" text="Loading the latest fashion..." />
@@ -49,45 +72,7 @@ const HomePage = () => {
     );
   }
 
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "Designer Denim Jacket",
-      description: "Premium quality distressed denim jacket",
-      price: 149.99,
-      image: "https://images.unsplash.com/photo-1604644401898-ebc523fd92d3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      rating: 4.9,
-      sizes: ['S', 'M', 'L', 'XL'],
-      discount: "20%"
-    },
-    {
-      id: 2,
-      name: "Silk Evening Dress",
-      description: "Elegant floor-length evening gown",
-      price: 299.99,
-      image: "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      rating: 4.8,
-      sizes: ['XS', 'S', 'M']
-    },
-    {
-      id: 3,
-      name: "Premium Cotton Tees",
-      description: "Pack of 3 organic cotton t-shirts",
-      price: 79.99,
-      image: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      rating: 4.7,
-      discount: "15%"
-    },
-    {
-      id: 4,
-      name: "Leather Ankle Boots",
-      description: "Italian genuine leather boots",
-      price: 199.99,
-      image: "https://images.unsplash.com/photo-1549298916-f52d724204b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-      rating: 4.9,
-      sizes: ['EU 38', 'EU 40', 'EU 42']
-    }
-  ];
+  // Removed static featuredProducts array
 
   const categories = [
     { name: "Women's", icon: "👚", color: "#FF6B6B", image: "womens-category.jpg" },
@@ -182,49 +167,27 @@ const HomePage = () => {
             <p className="text-muted">Explore our most coveted pieces this season</p>
           </div>
           
-          <Row>
-            {featuredProducts.map((product, index) => (
-              <Col lg={3} md={6} key={product.id} className="mb-4">
-                <div className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <Card className="product-card h-100">
-                    <div className="product-img-wrapper">
-                      <Card.Img variant="top" src={product.image} className="product-img" />
-                      {product.discount && (
-                        <Badge bg="dark" className="product-discount">{product.discount} OFF</Badge>
-                      )}
-                      <div className="product-overlay">
-                        <Button variant="light" className="rounded-circle product-btn">
-                          <FaShoppingCart />
-                        </Button>
-                      </div>
-                    </div>
-                    <Card.Body>
-                      <Card.Title className="product-title">{product.name}</Card.Title>
-                      <div className="product-rating mb-2">
-                        {[...Array(5)].map((_, i) => (
-                          i < Math.floor(product.rating) ? 
-                          <FaStar key={i} className="text-warning" /> : 
-                          <FaRegStar key={i} className="text-warning" />
-                        ))}
-                        <span className="ms-2 text-muted small">{product.rating}</span>
-                      </div>
-                      <div className="product-sizes mb-3">
-                        {product.sizes?.map(size => (
-                          <span key={size} className="size-pill">{size}</span>
-                        ))}
-                      </div>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <span className="product-price">${product.price}</span>
-                        <Button variant="dark" size="sm" as={Link} to={`/products/${product.id}`}>
-                          View Details
-                        </Button>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </div>
-              </Col>
-            ))}
-          </Row>
+          {productsLoading ? (
+            <div className="text-center">
+              <Spinner animation="border" role="status" variant="light">
+                <span className="visually-hidden">Loading products...</span>
+              </Spinner>
+            </div>
+          ) : productsError ? (
+            <Alert variant="danger" className="text-center">{productsError}</Alert>
+          ) : trendingProducts.length > 0 ? (
+            <Row className="g-4">
+              {trendingProducts.map((product, index) => (
+                <Col lg={3} md={6} key={product._id || index} className="mb-4">
+                  <div className="fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <ProductCard product={product} />
+                  </div>
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <Alert variant="info" className="text-center">No trending products to display right now.</Alert>
+          )}
           
           <div className="text-center mt-4">
             <Button as={Link} to="/collection" variant="outline-dark" size="lg" className="view-all-btn">
