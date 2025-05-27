@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form } from 'react-bootstrap';
+import { Modal, Form, Alert, Spinner } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
 import { updateCategory } from '../../../api/category';
-import { FaSave } from 'react-icons/fa';
+import { FaSave, FaEdit } from 'react-icons/fa';
+import './CategoryForms.css';
 
 const CategoryEdit = ({ category, show, onHide, onCategoryUpdated }) => {
   const [formData, setFormData] = useState({
@@ -38,51 +37,76 @@ const CategoryEdit = ({ category, show, onHide, onCategoryUpdated }) => {
       onCategoryUpdated();
     } catch (err) {
       setError(err.response?.data?.message || err.message);
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false}>
+    <Modal 
+      show={show} 
+      onHide={onHide} 
+      backdrop="static" 
+      keyboard={false}
+      centered
+      className="category-modal"
+    >
       <Modal.Header closeButton>
         <Modal.Title>Edit Category</Modal.Title>
       </Modal.Header>
       
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="category-form">
         <Modal.Body>
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <Alert variant="danger">{error}</Alert>}
           
-          <Input
-            label="Category Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Category Name</Form.Label>
+            <Form.Control
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter category name"
+              required
+            />
+          </Form.Group>
           
-          <Input
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            as="textarea"
-            rows={3}
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Enter category description (optional)"
+              rows={3}
+            />
+          </Form.Group>
         </Modal.Body>
         
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>
-            Cancel
-          </Button>
-          <Button 
-            type="submit" 
-            variant="primary" 
-            icon={FaSave}
-            loading={loading}
+          <button 
+            type="button"
+            className="btn category-form-btn btn-secondary"
+            onClick={onHide}
           >
-            Save Changes
-          </Button>
+            Cancel
+          </button>
+          <button 
+            type="submit"
+            className="btn category-form-btn btn-primary"
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <FaSave className="me-2" /> Save Changes
+              </>
+            )}
+          </button>
         </Modal.Footer>
       </Form>
     </Modal>

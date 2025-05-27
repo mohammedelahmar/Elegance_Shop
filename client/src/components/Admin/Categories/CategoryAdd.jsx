@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Modal, Form } from 'react-bootstrap';
+import { Modal, Form, Alert, Spinner } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
 import { createCategory } from '../../../api/category';
 import { FaPlus } from 'react-icons/fa';
+import './CategoryForms.css';
 
 const CategoryAdd = ({ show, onHide, onCategoryAdded }) => {
   const [formData, setFormData] = useState({
@@ -43,52 +42,77 @@ const CategoryAdd = ({ show, onHide, onCategoryAdded }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false}>
+    <Modal 
+      show={show} 
+      onHide={onHide} 
+      backdrop="static" 
+      keyboard={false}
+      centered
+      className="category-modal"
+    >
       <Modal.Header closeButton>
         <Modal.Title>Add New Category</Modal.Title>
       </Modal.Header>
       
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="category-form">
         <Modal.Body>
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <Alert variant="danger">{error}</Alert>}
           
-          <Input
-            label="Category Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Category Name</Form.Label>
+            <Form.Control
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter category name"
+              required
+            />
+          </Form.Group>
           
-          <Input
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            as="textarea"
-            rows={3}
-            helperText="Optional: Provide a brief description of the category"
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Enter category description (optional)"
+              rows={3}
+            />
+            <div className="helper-text">
+              Optional: Provide a brief description of the category
+            </div>
+          </Form.Group>
         </Modal.Body>
         
         <Modal.Footer>
-          <Button 
-            variant="secondary" 
+          <button 
+            type="button"
+            className="btn category-form-btn btn-secondary"
             onClick={() => {
               resetForm();
               onHide();
             }}
           >
             Cancel
-          </Button>
-          <Button 
-            type="submit" 
-            variant="primary" 
-            icon={FaPlus}
-            loading={loading}
+          </button>
+          <button 
+            type="submit"
+            className="btn category-form-btn btn-primary"
+            disabled={loading}
           >
-            Add Category
-          </Button>
+            {loading ? (
+              <>
+                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                Creating...
+              </>
+            ) : (
+              <>
+                <FaPlus className="me-2" /> Add Category
+              </>
+            )}
+          </button>
         </Modal.Footer>
       </Form>
     </Modal>
