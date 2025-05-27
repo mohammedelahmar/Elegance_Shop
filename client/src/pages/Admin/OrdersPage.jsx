@@ -1,4 +1,4 @@
-  import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, InputGroup, Tab, Tabs } from 'react-bootstrap';
 import { FaSearch, FaSync, FaFileExport } from 'react-icons/fa';
 import { getAllOrders, updateOrderToDelivered, updateOrderToPaid } from '../../api/order';
@@ -7,7 +7,7 @@ import OrderDetail from '../../components/Admin/Orders/OrderDetail';
 import OrderStats from '../../components/Admin/Orders/OrderStats';
 import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
-import '../../components/Admin/Categories/CategoryList.css'; // Keep existing CSS
+import './OrdersPage.css'; // Import the new CSS for OrdersPage
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -230,11 +230,11 @@ const OrdersPage = () => {
   };
 
   return (
-    <div className="category-list-card"> {/* Keep existing class for consistent styling */}
+    <div className="orders-admin-container"> {/* Apply new container class */}
       {/* Header Row */}
-      <div className="categories-admin-header mb-4 d-flex justify-content-between align-items-center">
-        <h1 className="categories-admin-title">Order Management</h1>
-        <div className="categories-admin-actions">
+      <div className="orders-admin-header mb-4 d-flex justify-content-between align-items-center">
+        <h1 className="orders-admin-title">Order Management</h1>
+        <div className="orders-admin-actions">
           <Button 
             variant="outline-success" 
             className="me-2" 
@@ -257,39 +257,41 @@ const OrdersPage = () => {
         <OrderStats orders={orders} className="mb-4" />
       )}
 
-      {/* Search and Filters */}
-      <div className="category-search-bar mb-4">
-        <InputGroup>
-          <InputGroup.Text id="search-addon" className="category-search-icon">
-            <FaSearch />
-          </InputGroup.Text>
-          <Form.Control
-            type="text"
-            placeholder="Search by order ID or customer..."
-            value={searchTerm}
-            onChange={handleSearch}
-            aria-label="Search"
-            aria-describedby="search-addon"
-            className="category-search-input"
-          />
-        </InputGroup>
-        <div className="mt-2 text-muted small text-end">
-          <strong>Total:</strong> {filteredOrders.length} orders
+      {/* Search and Filters wrapped in a card-like div */}
+      <div className="orders-list-card mb-4">
+        <div className="order-search-bar mb-4">
+          <InputGroup>
+            <InputGroup.Text id="search-addon" className="order-search-icon">
+              <FaSearch />
+            </InputGroup.Text>
+            <Form.Control
+              type="text"
+              placeholder="Search by order ID or customer..."
+              value={searchTerm}
+              onChange={handleSearch}
+              aria-label="Search"
+              aria-describedby="search-addon"
+              className="order-search-input"
+            />
+          </InputGroup>
+          <div className="mt-2 text-muted small text-end">
+            <strong>Total:</strong> {filteredOrders.length} orders
+          </div>
         </div>
-      </div>
 
-      {/* Status Tabs */}
-      <Tabs 
-        activeKey={activeTab}
-        onSelect={(k) => setActiveTab(k)}
-        className="mb-4"
-      >
-        <Tab eventKey="all" title="All Orders" />
-        <Tab eventKey="unpaid" title="Unpaid" />
-        <Tab eventKey="paid" title="Paid" />
-        <Tab eventKey="processing" title="Processing" />
-        <Tab eventKey="delivered" title="Delivered" />
-      </Tabs>
+        {/* Status Tabs */}
+        <Tabs 
+          activeKey={activeTab}
+          onSelect={(k) => setActiveTab(k)}
+          className="mb-4 order-tabs" // Apply new tabs class
+        >
+          <Tab eventKey="all" title="All Orders" />
+          <Tab eventKey="unpaid" title="Unpaid" />
+          <Tab eventKey="paid" title="Paid" />
+          <Tab eventKey="processing" title="Processing" />
+          <Tab eventKey="delivered" title="Delivered" />
+        </Tabs>
+      </div>
 
       {/* Action Error Message */}
       {actionError && (
@@ -323,7 +325,8 @@ const OrdersPage = () => {
         }
         
         return (
-          <div className="table-responsive">
+          // Wrap OrderList in a card-like div if it isn't already styled internally
+          <div className="orders-list-card">
             <OrderList
               orders={filteredOrders}
               onViewOrder={handleViewOrder}

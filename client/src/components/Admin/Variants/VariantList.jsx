@@ -4,7 +4,7 @@ import { FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 import { deleteVariant } from '../../../api/variant';
 import Message from '../../UI/Message';
 import PropTypes from 'prop-types';
-import './VariantList.css';
+import './VariantList.css'; // Ensure CSS is imported
 
 const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,9 +50,10 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
         </Message>
       )}
       
-      <div className="mb-3">
-        <InputGroup>
-          <InputGroup.Text id="search-addon">
+      {/* Apply new search bar structure and classes */}
+      <div className="variant-search-bar mb-4">
+        <InputGroup style={{ position: 'relative' }}> {/* Added relative positioning for icon */}
+          <InputGroup.Text id="search-addon" className="variant-search-icon">
             <FaSearch />
           </InputGroup.Text>
           <Form.Control
@@ -62,6 +63,7 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search"
             aria-describedby="search-addon"
+            className="variant-search-input"
           />
         </InputGroup>
       </div>
@@ -73,7 +75,7 @@ const VariantList = ({ variants, product, onEditVariant, onVariantUpdated }) => 
       )}
 
       <div className="table-responsive">
-        <Table hover>
+        <Table hover className="variant-table"> {/* Added variant-table class */}
           <thead>
             <tr>
               <th>ID</th>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col, Alert, Spinner } from 'react-bootstrap'; // Added Alert, Spinner
 import PropTypes from 'prop-types';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
+// import Input from '../../UI/Input'; // To be replaced
+// import Button from '../../UI/Button'; // To be replaced
 import { createVariant } from '../../../api/variant';
 import { FaPlus, FaCheck } from 'react-icons/fa';
 import { CLOTHING_SIZES, NUMERIC_SIZES, SHOE_SIZES, COMMON_COLORS } from '../../../constants/sizes';
+import './VariantForms.css'; // Import the shared CSS file
 
 const VariantCreate = ({ show, onHide, onVariantCreated, products, defaultProductId }) => {
   const [formData, setFormData] = useState({
@@ -69,7 +70,6 @@ const VariantCreate = ({ show, onHide, onVariantCreated, products, defaultProduc
       setLoading(true);
       setError('');
       
-      // Validation
       if (!formData.product_id) {
         setError('Please select a product');
         setLoading(false);
@@ -83,11 +83,15 @@ const VariantCreate = ({ show, onHide, onVariantCreated, products, defaultProduc
       }
 
       await createVariant(formData);
-      resetForm();
-      onVariantCreated();
+      // resetForm(); // Reset form is called before onHide in the cancel button, and after success before onVariantCreated
+      onVariantCreated(); // Call this first
+      resetForm(); // Then reset the form for the next time it opens
+      // onHide(); // onHide is usually called by the parent after creation if modal needs to close
     } catch (err) {
       setError(err.response?.data?.message || err.message);
-      setLoading(false);
+      // setLoading(false); // setLoading is in the finally block
+    } finally {
+      setLoading(false); // Ensure loading is set to false in finally
     }
   };
 
@@ -103,32 +107,39 @@ const VariantCreate = ({ show, onHide, onVariantCreated, products, defaultProduc
   };
 
   return (
-    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false}>
+    <Modal 
+      show={show} 
+      onHide={() => { resetForm(); onHide(); }} // Ensure form resets on hide
+      backdrop="static" 
+      keyboard={false}
+      centered
+      className="variant-modal" // Apply shared modal class
+    >
       <Modal.Header closeButton>
         <Modal.Title>Add New Variant</Modal.Title>
       </Modal.Header>
       
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="variant-form"> {/* Apply shared form class */}
         <Modal.Body>
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <Alert variant="danger">{error}</Alert>} {/* Use React Bootstrap Alert */}
           
-          <Input
-            label="Product"
-            as="select"
-            name="product_id"
-            value={formData.product_id}
-            onChange={handleChange}
-            required
-            options={[
-              { value: '', label: 'Select Product' },
-              ...products.map(product => ({
-                value: product._id,
-                label: product.name
-              }))
-            ]}
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Product</Form.Label>
+            <Form.Select
+              name="product_id"
+              value={formData.product_id}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Product</option>
+              {products.map(product => (
+                <option key={product._id} value={product._id}>
+                  {product.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
           
-          {/* Size Type Selection */}
           <Form.Group className="mb-3">
             <Form.Label>Size Type</Form.Label>
             <Form.Select
@@ -142,103 +153,111 @@ const VariantCreate = ({ show, onHide, onVariantCreated, products, defaultProduc
             </Form.Select>
           </Form.Group>
           
-          {/* Size Selection */}
-          <Input
-            label="Size"
-            as="select"
-            name="taille"
-            value={formData.taille}
-            onChange={handleChange}
-            required
-            options={[
-              { value: '', label: 'Select Size' },
-              ...getSizeOptions()
-            ]}
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Size</Form.Label>
+            <Form.Select
+              name="taille"
+              value={formData.taille}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Size</option>
+              {getSizeOptions().map(sizeOpt => (
+                <option key={sizeOpt.value} value={sizeOpt.value}>{sizeOpt.label}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
           
-          <Form.Label>Common Colors</Form.Label>
-          <div className="d-flex flex-wrap gap-2 mb-3">
-            {COMMON_COLORS.map(color => (
-              <div 
-                key={color.value}
-                onClick={() => setFormData(prev => ({ ...prev, couleur: color.value }))}
-                className={`color-preset ${formData.couleur === color.value ? 'selected' : ''}`}
-                style={{ 
-                  backgroundColor: color.hex,
-                  width: '30px',
-                  height: '30px',
-                  borderRadius: '50%',
-                  border: '1px solid #ddd',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  position: 'relative'
-                }}
-                title={color.label}
-              >
-                {formData.couleur === color.value && (
-                  <FaCheck 
-                    style={{ 
-                      color: ['White', 'Yellow', 'Beige'].includes(color.label) ? '#000' : '#fff',
-                      fontSize: '14px'
-                    }} 
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+          <Form.Group className="mb-3">
+            <Form.Label>Common Colors</Form.Label>
+            <div className="d-flex flex-wrap gap-2 mb-2"> {/* Reduced bottom margin for this div */}
+              {COMMON_COLORS.map(color => (
+                <div 
+                  key={color.value}
+                  onClick={() => setFormData(prev => ({ ...prev, couleur: color.value }))}
+                  className={`color-preset ${formData.couleur === color.value ? 'selected' : ''}`}
+                  style={{ backgroundColor: color.hex }}
+                  title={color.label}
+                >
+                  {formData.couleur === color.value && (
+                    <FaCheck 
+                      style={{ 
+                        color: ['White', 'Yellow', 'Beige'].includes(color.label) ? '#000' : '#fff',
+                        fontSize: '14px'
+                      }} 
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </Form.Group>
           
-          <Row>
+          <Row className="mb-3">
             <Col>
-              <Input
-                label="Color"
-                name="couleur"
-                value={formData.couleur}
-                onChange={handleChange}
-                placeholder="e.g. Red, Blue, etc."
-              />
-            </Col>
-            <Col xs={2} className="d-flex align-items-end mb-3">
-              {formData.couleur && (
-                <div
-                  className="color-preview"
-                  style={getColorStyle(formData.couleur)}
-                  title={formData.couleur}
-                ></div>
-              )}
+              <Form.Group>
+                <Form.Label>Color</Form.Label>
+                <div className="color-preview-container">
+                  <Form.Control
+                    type="text"
+                    name="couleur"
+                    value={formData.couleur}
+                    onChange={handleChange}
+                    placeholder="e.g. Red, Blue, #FF0000"
+                    className="color-input-group"
+                  />
+                  {formData.couleur && (
+                    <div
+                      className="color-preview-modal"
+                      style={getColorStyle(formData.couleur)} // Use existing getColorStyle
+                      title={formData.couleur}
+                    ></div>
+                  )}
+                </div>
+              </Form.Group>
             </Col>
           </Row>
           
-          <Input
-            label="Stock"
-            type="number"
-            name="stock"
-            value={formData.stock}
-            onChange={handleChange}
-            min="0"
-            required
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Stock</Form.Label>
+            <Form.Control
+              type="number"
+              name="stock"
+              value={formData.stock}
+              onChange={handleChange}
+              min="0"
+              required
+            />
+          </Form.Group>
         </Modal.Body>
         
         <Modal.Footer>
-          <Button 
-            variant="secondary" 
+          <button 
+            type="button"
+            className="btn variant-form-btn btn-secondary"
             onClick={() => {
               resetForm();
               onHide();
             }}
+            disabled={loading} // Disable if loading
           >
             Cancel
-          </Button>
-          <Button 
+          </button>
+          <button 
             type="submit" 
-            variant="primary" 
-            icon={FaPlus}
-            loading={loading}
+            className="btn variant-form-btn btn-primary"
+            disabled={loading}
           >
-            Add Variant
-          </Button>
+            {loading ? (
+              <>
+                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                Adding...
+              </>
+            ) : (
+              <>
+                <FaPlus className="me-2" /> Add Variant
+              </>
+            )}
+          </button>
         </Modal.Footer>
       </Form>
     </Modal>

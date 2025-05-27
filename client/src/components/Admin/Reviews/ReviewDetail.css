@@ -1,0 +1,143 @@
+/* Styles for Review Detail Modal - Adapted from VariantForms.css */
+
+.review-detail-modal .modal-content {
+  background-color: #1e2634;
+  color: #e0e0e0;
+  border-radius: 1rem;
+  border: 1px solid #2b354f;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.review-detail-modal .modal-header {
+  border-bottom: 1px solid #2b354f;
+  padding: 1.5rem;
+}
+
+.review-detail-modal .modal-title {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.review-detail-modal .modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.review-detail-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.review-detail-modal .modal-footer {
+  border-top: 1px solid #2b354f;
+  padding: 1rem 1.5rem;
+  background-color: #181f2e;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+/* Card styling within the modal */
+.review-detail-modal .card {
+  background-color: #232b42; /* Darker card background */
+  color: #e0e0e0;
+  border: 1px solid #2b354f;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem; /* Add some space between cards */
+}
+
+.review-detail-modal .card-header {
+  background-color: #2c3657;
+  color: #ffffff;
+  font-weight: 500;
+  border-bottom: 1px solid #2b354f;
+  padding: 0.75rem 1.25rem;
+}
+
+.review-detail-modal .card-body {
+  padding: 1.25rem;
+}
+
+.review-detail-modal .card-body p {
+  margin-bottom: 0.75rem;
+  color: #c0c8e7; /* Lighter paragraph text */
+}
+
+.review-detail-modal .card-body p strong {
+  color: #ffffff; /* White strong text */
+}
+
+.review-detail-modal .badge {
+  font-size: 0.9rem;
+  padding: 0.5em 0.75em;
+}
+
+/* Specific for rating stars */
+.review-detail-modal .text-warning {
+  color: #ffc107 !important; /* Ensure star color is bright */
+}
+
+.review-detail-modal .text-muted {
+  color: #6c757d !important; /* Standard muted color for empty stars */
+}
+
+/* Comment section styling */
+.review-comment-section {
+  background-color: #2c3657; /* Slightly different background for emphasis */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: #e0e0e0;
+  border: 1px solid #3a4562;
+}
+
+/* Button styling in footer */
+.review-detail-modal .modal-footer .btn {
+  padding: 0.65rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.review-detail-modal .modal-footer .btn-secondary {
+  background-color: #3a4562;
+  border: 1px solid #3a4562;
+  color: #e0e0e0;
+}
+
+.review-detail-modal .modal-footer .btn-secondary:hover {
+  background-color: #4a5572;
+  transform: translateY(-1px);
+}
+
+.review-detail-modal .modal-footer .btn-danger {
+  background-color: #d9534f; /* Standard danger color */
+  border-color: #d9534f;
+  color: #fff;
+}
+
+.review-detail-modal .modal-footer .btn-danger:hover {
+  background-color: #c9302c;
+  border-color: #ac2925;
+  transform: translateY(-1px);
+}
+
+.review-detail-modal .modal-footer .btn-success {
+  background-color: #5cb85c; /* Standard success color */
+  border-color: #5cb85c;
+  color: #fff;
+}
+
+.review-detail-modal .modal-footer .btn-success:hover {
+  background-color: #4cae4c;
+  border-color: #4cae4c;
+  transform: translateY(-1px);
+}
+
+.review-detail-modal .img-thumbnail {
+  background-color: #2c3657;
+  border: 1px solid #3a4562;
+  padding: 0.25rem;
+}
+
+.review-detail-modal .img-fluid {
+  border: 2px solid #3a4562;
+}

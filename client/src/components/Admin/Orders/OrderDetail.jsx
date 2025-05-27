@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Card, Row, Col, Badge, Table, Button, ListGroup } from 'react-bootstrap';
 import { FaCreditCard, FaTruck } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import './OrderDetail.css'; // Import the new CSS file
 
 // Add this helper function at the top of your component
 const formatPrice = (value) => {
@@ -24,6 +25,7 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
       onHide={onHide} 
       size="lg" 
       centered
+      dialogClassName="order-detail-modal" // Add this class to target the modal
     >
       <Modal.Header closeButton>
         <Modal.Title>Order #{order._id.substring(order._id.length - 8)}</Modal.Title>
@@ -68,26 +70,26 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
           <Col md={6}>
             <Card>
               <Card.Header>Payment Status</Card.Header>
-              <Card.Body>
-                <p>
-                  <strong>Method:</strong> {order.paymentMethod || 'Not specified'}
-                </p>
+              <Card.Body className="d-flex flex-column align-items-start"> {/* Ensure content flows well */}
+                <div className="d-flex align-items-center mb-2">
+                  <strong className="me-2">Method:</strong> {order.paymentMethod || 'Not specified'}
+                </div>
                 <div className="d-flex align-items-center">
                   <strong className="me-2">Status:</strong>
                   {order.isPaid ? (
-                    <Badge bg="success">
+                    <Badge bg="success" className="status-badge">
                       Paid on {formatDate(order.paidAt)}
                     </Badge>
                   ) : (
-                    <Badge bg="warning" text="dark">
+                    <Badge bg="warning" text="dark" className="status-badge">
                       Not Paid
                     </Badge>
                   )}
                 </div>
                 {!order.isPaid && (
                   <Button
-                    variant="success"
-                    className="mt-3"
+                    variant="success" // Will be styled by OrderDetail.css
+                    className="mt-3 align-self-start" // Align button to start
                     onClick={() => onMarkPaid(order._id)}
                     disabled={isLoading}
                     size="sm"
@@ -101,23 +103,23 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
           <Col md={6}>
             <Card>
               <Card.Header>Delivery Status</Card.Header>
-              <Card.Body>
+              <Card.Body className="d-flex flex-column align-items-start"> {/* Ensure content flows well */}
                 <div className="d-flex align-items-center">
                   <strong className="me-2">Status:</strong>
                   {order.isDelivered ? (
-                    <Badge bg="success">
+                    <Badge bg="success" className="status-badge">
                       Delivered on {formatDate(order.deliveredAt)}
                     </Badge>
                   ) : (
-                    <Badge bg="warning" text="dark">
+                    <Badge bg="warning" text="dark" className="status-badge">
                       Not Delivered
                     </Badge>
                   )}
                 </div>
                 {order.isPaid && !order.isDelivered && (
                   <Button
-                    variant="info"
-                    className="mt-3"
+                    variant="info" // Will be styled by OrderDetail.css
+                    className="mt-3 align-self-start" // Align button to start
                     onClick={() => onMarkDelivered(order._id)}
                     disabled={isLoading}
                     size="sm"
@@ -132,7 +134,8 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
 
         <Card className="mb-4">
           <Card.Header>Order Items</Card.Header>
-          <Table responsive>
+          {/* Removed table-responsive from here, modal itself is scrollable if needed */}
+          <Table hover className="align-middle"> {/* Added hover and align-middle for consistency */}
             <thead>
               <tr>
                 <th>Item</th>
@@ -143,7 +146,7 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
             </thead>
             <tbody>
               {order.orderItems && order.orderItems.map((item, index) => (
-                <tr key={index}>
+                <tr key={item._id || index}> {/* Use item._id if available for a more stable key */}
                   <td>{item.product?.name || item.name || 'Unknown Product'}</td>
                   <td>${formatPrice(item.price)}</td>
                   <td>{item.quantity}</td>
@@ -158,26 +161,26 @@ const OrderDetail = ({ order, show, onHide, onMarkDelivered, onMarkPaid, isLoadi
           <Card.Header>Order Summary</Card.Header>
           <ListGroup variant="flush">
             <ListGroup.Item className="d-flex justify-content-between">
-              <span>Items:</span>
+              <span>Items Price:</span>
               <span>${formatPrice(order.itemsPrice)}</span>
             </ListGroup.Item>
             <ListGroup.Item className="d-flex justify-content-between">
-              <span>Shipping:</span>
+              <span>Shipping Price:</span>
               <span>${formatPrice(order.shippingPrice)}</span>
             </ListGroup.Item>
             <ListGroup.Item className="d-flex justify-content-between">
-              <span>Tax:</span>
+              <span>Tax Price:</span>
               <span>${formatPrice(order.taxPrice)}</span>
             </ListGroup.Item>
             <ListGroup.Item className="d-flex justify-content-between fw-bold">
-              <span>Total:</span>
+              <span>Total Price:</span>
               <span>${formatPrice(order.totalPrice || order.total_amount)}</span>
             </ListGroup.Item>
           </ListGroup>
         </Card>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+        <Button variant="secondary" onClick={onHide}> {/* Will be styled by OrderDetail.css */}
           Close
         </Button>
       </Modal.Footer>

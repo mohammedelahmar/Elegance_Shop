@@ -4,7 +4,7 @@ import { FaEdit, FaTrash, FaSearch, FaUserShield } from 'react-icons/fa';
 import { deleteUser, promoteUser } from '../../../api/user';
 import Message from '../../UI/Message';
 import PropTypes from 'prop-types';
-import '../Categories/CategoryList.css'; // Use the same CSS as CategoryList for consistent style
+import './UserList.css'; // Import the new UserList.css
 
 const UserList = ({ users, onEditUser, onUserUpdated }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -74,10 +74,10 @@ const UserList = ({ users, onEditUser, onUserUpdated }) => {
         </Message>
       )}
       
-      <div className="category-list-card"> {/* Use same card class as CategoryList */}
-        <div className="category-search-bar mb-4"> {/* Use same search bar class */}
+      <div className="user-list-card"> {/* Use new card class for UserList */}
+        <div className="user-search-bar mb-4"> {/* Use new search bar class */}
           <InputGroup>
-            <InputGroup.Text id="search-addon" className="category-search-icon">
+            <InputGroup.Text id="search-addon" className="user-search-icon">
               <FaSearch />
             </InputGroup.Text>
             <Form.Control
@@ -87,13 +87,13 @@ const UserList = ({ users, onEditUser, onUserUpdated }) => {
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label="Search"
               aria-describedby="search-addon"
-              className="category-search-input"
+              className="user-search-input"
             />
           </InputGroup>
         </div>
 
         <div className="table-responsive">
-          <Table hover className="category-table"> {/* Use same table class */}
+          <Table hover className="user-table"> {/* Use new table class */}
             <thead>
               <tr>
                 <th>ID</th>

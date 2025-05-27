@@ -1,0 +1,69 @@
+/* filepath: c:\Users\HP\Documents\code\Projet_PFE\client\src\pages\Admin\AddressesPage.css */
+/* Modern dark admin styles for AddressesPage - Adapted from CategoriesPage.css */
+
+.addresses-admin-container {
+  background: #111827; /* Matching the inline style for now, can be centralized later */
+  min-height: 100vh;
+  padding-top: 1rem; /* Adjusted from py-3 */
+  padding-bottom: 1rem; /* Adjusted from py-3 */
+}
+
+.addresses-admin-header-row {
+  margin-bottom: 2rem; /* Adjusted from mb-4 */
+  align-items: center;
+}
+
+.addresses-admin-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.75rem; /* Adjusted from h3 and categories-admin-title */
+  margin-bottom: 0; /* From h3 mb-0 */
+  letter-spacing: -0.5px;
+}
+
+.addresses-admin-actions .btn-primary {
+  background: #4a6bf5;
+  border-color: #4a6bf5;
+  border-radius: 8px; /* Slightly less rounded than categories */
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(74,107,245,0.15);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.addresses-admin-actions .btn-primary:hover {
+  background: #3b58d8; /* Darker shade for hover */
+  border-color: #3b58d8;
+  transform: translateY(-1px);
+}
+
+.addresses-admin-card-wrapper {
+  /* This class will wrap the AddressList component if specific card styling is needed */
+  /* For now, AddressList.css handles its own card styling (.address-list-card) */
+  /* If we want a container like .categories-admin-card, styles would go here */
+  /* Example:
+  background: #1e2634;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 1.5rem; 
+  */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .addresses-admin-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .addresses-admin-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .addresses-admin-title {
+    font-size: 1.5rem;
+  }
+  .addresses-admin-actions .btn-primary {
+    width: 100%;
+  }
+}

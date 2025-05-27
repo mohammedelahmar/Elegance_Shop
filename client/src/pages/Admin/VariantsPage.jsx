@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
+import { Row, Col, Button, Form } from 'react-bootstrap';
 import { FaPlus, FaSync } from 'react-icons/fa';
 import { getVariantsByProduct } from '../../api/variant';
 import { getAllProducts } from '../../api/product';
 import VariantList from '../../components/Admin/Variants/VariantList';
 import VariantEdit from '../../components/Admin/Variants/VariantEdit';
 import VariantCreate from '../../components/Admin/Variants/VariantCreate';
-import LoadingAnimation from '../../components/common/LoadingAnimation';
+import Loader from '../../components/UI/Loader';
 import Message from '../../components/UI/Message';
+import './VariantsPage.css'; // Import the new CSS file
 
 const VariantsPage = () => {
   const [variants, setVariants] = useState([]);
@@ -37,7 +38,7 @@ const VariantsPage = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [selectedProduct]); // Added selectedProduct to dependency array
 
   // Fetch variants when product selection changes
   useEffect(() => {
@@ -98,12 +99,13 @@ const VariantsPage = () => {
   };
 
   return (
-    <Container fluid className="py-3">
-      <Row className="mb-4 align-items-center">
-        <Col>
-          <h1 className="h3 mb-0">Variant Management</h1>
-        </Col>
-        <Col xs="auto">
+    <div className="variants-admin-container"> {/* Changed from Container fluid */} 
+      <div className="variants-admin-header"> {/* Changed from Row */} 
+        {/* <Col> - Removed */}
+          <h1 className="variants-admin-title">Variant Management</h1> {/* Changed from h3 and added class */}
+        {/* </Col> - Removed */}
+        {/* <Col xs="auto"> - Removed */}
+        <div className="variants-admin-actions"> {/* Added wrapper div for buttons */} 
           <Button 
             variant="primary" 
             className="me-2" 
@@ -117,13 +119,14 @@ const VariantsPage = () => {
           >
             <FaSync /> Refresh
           </Button>
-        </Col>
-      </Row>
+        </div>
+        {/* </Col> - Removed */} 
+      </div>
 
-      <Row className="mb-4">
+      <Row className="mb-4"> {/* This Row can remain for layout of the select product dropdown */} 
         <Col md={6}>
           <Form.Group>
-            <Form.Label>Select Product</Form.Label>
+            <Form.Label /* style={{color:'white' , marginRight:'10px'}} - Style handled by CSS */ >Select Product</Form.Label>
             <Form.Select 
               value={selectedProduct} 
               onChange={handleProductChange}
@@ -143,18 +146,14 @@ const VariantsPage = () => {
       </Row>
 
       {loading ? (
-        <div className="text-center my-5">
-          <LoadingAnimation size="large" text="Loading products..." />
-        </div>
+        <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Card>
-          <Card.Body>
+        <div className="variants-admin-card"> {/* Changed from Card */} 
+          {/* <Card.Body> - Removed, padding handled by variants-admin-card */}
             {loadingVariants ? (
-              <div className="text-center my-3">
-                <LoadingAnimation size="medium" text="Loading variants..." />
-              </div>
+              <Loader />
             ) : (
               <VariantList 
                 variants={variants} 
@@ -163,8 +162,8 @@ const VariantsPage = () => {
                 onVariantUpdated={handleRefresh}
               />
             )}
-          </Card.Body>
-        </Card>
+          {/* </Card.Body> - Removed */} 
+        </div>
       )}
 
       {showEditModal && (
@@ -184,7 +183,7 @@ const VariantsPage = () => {
         products={products}
         defaultProductId={selectedProduct}
       />
-    </Container>
+    </div>
   );
 };
 

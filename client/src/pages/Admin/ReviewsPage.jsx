@@ -7,6 +7,7 @@ import ReviewDetail from '../../components/Admin/Reviews/ReviewDetail';
 import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
 import '../../components/Admin/Reviews/ReviewList.css';  // Import the new CSS
+import './ReviewsPage.css'; // Import the new CSS for ReviewsPage
 
 const ReviewsPage = () => {
   const [reviews, setReviews] = useState([]);
@@ -173,15 +174,14 @@ const ReviewsPage = () => {
   ).values()];
 
   return (
-    <Container fluid className="py-3" style={{ background: '#111827', minHeight: '100vh', color: '#fff' }}>
+    <Container fluid className="py-3 reviews-admin-container">
       {/* Header Row */}
-      <Row className="mb-4 align-items-center">
+      <Row className="mb-4 align-items-center reviews-admin-header">
         <Col>
-          <h1 className="h3 mb-0 review-page-header">Review Management</h1>
+          <h1 className="mb-0 reviews-admin-title">Review Management</h1>
         </Col>
-        <Col xs="auto">
+        <Col xs="auto" className="reviews-admin-actions">
           <Button 
-            className="review-btn-primary"
             variant="primary" 
             onClick={handleRefresh}
             disabled={loading}
@@ -214,7 +214,7 @@ const ReviewsPage = () => {
         </Message>
       )}
 
-      <div className="review-list-card">
+      <div className="reviews-admin-card">
         {/* Search and Filters */}
         <div className="review-search-bar">
           <Row className="align-items-center">
@@ -262,7 +262,7 @@ const ReviewsPage = () => {
                     ))}
                   </Form.Select>
                 </Col>
-                <Col md={4} className="text-md-end">
+                <Col md={4} className="text-md-end reviews-admin-actions">
                   <Button 
                     variant="outline-primary" 
                     onClick={clearFilters}

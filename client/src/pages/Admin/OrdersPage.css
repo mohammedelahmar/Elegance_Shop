@@ -1,0 +1,142 @@
+/* Modern dark admin styles for OrdersPage - Adapted from CategoriesPage.css */
+
+.orders-admin-container {
+  background: #161c2d; /* Deep blue background */
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  padding: 2rem 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #e0e0e0; /* Light text color for contrast */
+}
+
+.orders-admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.orders-admin-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -0.5px;
+}
+
+.orders-admin-actions .btn {
+  border-radius: 0.75rem; /* Softer button corners */
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.orders-admin-actions .btn-outline-success {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.orders-admin-actions .btn-outline-success:hover {
+  background-color: #28a745;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.orders-admin-actions .btn-outline-primary {
+  border-color: #4a6bf5;
+  color: #4a6bf5;
+}
+
+.orders-admin-actions .btn-outline-primary:hover {
+  background-color: #4a6bf5;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 107, 245, 0.2);
+}
+
+.orders-list-card {
+  background: #1e2634; /* Dark card background */
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 1.5rem;
+}
+
+/* Styles for search bar and tabs, similar to CategoryList.css or VariantList.css */
+.order-search-bar {
+  margin-bottom: 1.5rem;
+}
+
+.order-search-input {
+  background: rgba(44, 54, 87, 0.95) !important;
+  color: #fff !important;
+  border: 2px solid #4a6bf5 !important;
+  border-radius: 2rem !important;
+  padding: 0.75rem 1.25rem 0.75rem 2.5rem !important; /* Adjusted padding for icon */
+  font-size: 1rem !important;
+  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.10) !important;
+}
+
+.order-search-input:focus {
+  border: 2px solid #90cdf4 !important;
+  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+}
+
+.order-search-icon {
+  background: transparent !important;
+  border: none !important;
+  color: #90cdf4 !important;
+  font-size: 1.1rem !important;
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+}
+
+.order-tabs .nav-link {
+  color: #a3aed0;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  transition: color 0.2s, border-color 0.2s;
+  margin-right: 0.5rem; /* Spacing between tabs */
+  border-radius: 0.5rem 0.5rem 0 0; /* Slightly rounded top corners */
+}
+
+.order-tabs .nav-link.active {
+  color: #4a6bf5;
+  border-bottom-color: #4a6bf5;
+  background-color: rgba(74, 107, 245, 0.1);
+}
+
+.order-tabs .nav-link:hover {
+  color: #6f88ff;
+  border-bottom-color: rgba(111, 136, 255, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .orders-admin-container {
+    padding: 1rem 0.75rem;
+    border-radius: 12px;
+  }
+  .orders-admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .orders-admin-title {
+    font-size: 1.5rem;
+  }
+  .order-search-input {
+    font-size: 0.9rem !important;
+    padding: 0.6rem 1rem 0.6rem 2.2rem !important;
+  }
+  .order-tabs .nav-link {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+  }
+}

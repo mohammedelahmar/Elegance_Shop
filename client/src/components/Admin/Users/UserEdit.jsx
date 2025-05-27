@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col, Alert } from 'react-bootstrap'; // Import Alert
+import RBButton from 'react-bootstrap/Button'; // Alias for Bootstrap Button
 import PropTypes from 'prop-types';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
 import { updateUser } from '../../../api/user';
-import { FaSave } from 'react-icons/fa';
+import { FaSave, FaTimes } from 'react-icons/fa'; // Import icons
+import './UserForms.css'; // Import the new CSS file
 
 const UserEdit = ({ user, show, onHide, onUserUpdated }) => {
   const [formData, setFormData] = useState({
@@ -61,97 +61,127 @@ const UserEdit = ({ user, show, onHide, onUserUpdated }) => {
 
   const roleOptions = [
     { value: 'client', label: 'Client' },
-    { value: 'admin', label: 'Admin' }
+    { value: 'admin', label: 'Admin' },
+    { value: 'superadmin', label: 'Super Admin' } // Added Super Admin example
   ];
 
   return (
-    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false} size="lg">
+    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false} size="lg" dialogClassName="user-modal">
       <Modal.Header closeButton>
-        <Modal.Title>Edit User</Modal.Title>
+        <Modal.Title>Edit User {user?.Firstname && user?.Lastname ? ` - ${user.Firstname} ${user.Lastname}` : ''}</Modal.Title>
       </Modal.Header>
       
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="user-form">
         <Modal.Body>
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <Alert variant="danger">{error}</Alert>}
           
-          <Row>
-            <Col md={6}>
-              <Input
-                label="First Name"
+          <Row className="mb-3">
+            <Form.Group as={Col} md="6" controlId="formUserFirstName">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                type="text"
                 name="Firstname"
                 value={formData.Firstname}
                 onChange={handleChange}
                 required
+                placeholder="Enter first name"
               />
-            </Col>
-            <Col md={6}>
-              <Input
-                label="Last Name"
+            </Form.Group>
+            <Form.Group as={Col} md="6" controlId="formUserLastName">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
                 name="Lastname"
                 value={formData.Lastname}
                 onChange={handleChange}
                 required
+                placeholder="Enter last name"
               />
-            </Col>
+            </Form.Group>
           </Row>
           
-          <Input
-            label="Email Address"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+          <Form.Group className="mb-3" controlId="formUserEmail">
+            <Form.Label>Email Address</Form.Label>
+            <Form.Control
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="Enter email address"
+            />
+          </Form.Group>
           
-          <Input
-            label="Phone Number"
-            type="tel"
-            name="phone_number"
-            value={formData.phone_number}
-            onChange={handleChange}
-            required
-          />
+          <Form.Group className="mb-3" controlId="formUserPhone">
+            <Form.Label>Phone Number</Form.Label>
+            <Form.Control
+              type="tel"
+              name="phone_number"
+              value={formData.phone_number}
+              onChange={handleChange}
+              placeholder="Enter phone number (optional)"
+            />
+          </Form.Group>
           
-          <Input
-            label="Address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-          />
+          <Form.Group className="mb-3" controlId="formUserAddress">
+            <Form.Label>Address</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={2}
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              placeholder="Enter full address (optional)"
+            />
+          </Form.Group>
           
-          <Input
-            label="Role"
-            as="select"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            options={roleOptions}
-          />
+          <Form.Group className="mb-3" controlId="formUserRole">
+            <Form.Label>Role</Form.Label>
+            <Form.Select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+            >
+              {roleOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
           
-          <Input
-            label="New Password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            helperText="Leave empty to keep the current password"
-          />
+          <Form.Group className="mb-3" controlId="formUserPassword">
+            <Form.Label>New Password</Form.Label>
+            <Form.Control
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Leave empty to keep current password"
+            />
+            <Form.Text muted>
+              Leave empty to keep the current password.
+            </Form.Text>
+          </Form.Group>
         </Modal.Body>
         
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>
-            Cancel
-          </Button>
-          <Button 
+          <RBButton variant="secondary" onClick={onHide} className="user-form-btn">
+            <FaTimes className="me-2" /> Cancel
+          </RBButton>
+          <RBButton 
             type="submit" 
             variant="primary" 
-            icon={FaSave}
-            loading={loading}
+            disabled={loading}
+            className="user-form-btn"
           >
-            Save Changes
-          </Button>
+            {loading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Saving...
+              </>
+            ) : (
+              <><FaSave className="me-2" /> Save Changes</>
+            )}
+          </RBButton>
         </Modal.Footer>
       </Form>
     </Modal>

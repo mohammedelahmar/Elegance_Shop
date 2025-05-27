@@ -7,7 +7,7 @@ import AddressEdit from '../../components/Admin/Addresses/AddressEdit';
 import AddressDetail from '../../components/Admin/Addresses/AddressDetail';
 import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
-import '../../components/Admin/Addresses/AddressList.css'; // Import the new CSS
+import './AddressesPage.css'; // Import the new page-specific CSS
 
 const AddressesPage = () => {
   const [addresses, setAddresses] = useState([]);
@@ -74,20 +74,16 @@ const AddressesPage = () => {
   };
 
   return (
-    <Container fluid className="py-3" style={{ background: '#111827', minHeight: '100vh', color: '#fff' }}>
+    <Container fluid className="py-3 addresses-admin-container">
       {/* Header Row */}
-      <Row className="mb-4 align-items-center">
+      <Row className="addresses-admin-header-row">
         <Col>
-          <h1 className="h3 mb-0 address-page-header">Address Management</h1>
+          <h1 className="addresses-admin-title">Address Management</h1>
         </Col>
-        <Col xs="auto">
+        <Col xs="auto" className="addresses-admin-actions">
           <Button 
             variant="primary" 
             onClick={handleRefresh}
-            style={{
-              background: '#4a6bf5', 
-              borderColor: '#4a6bf5'
-            }}
           >
             <FaSync /> Refresh
           </Button>

@@ -1,3 +1,26 @@
+.variants-admin-container {
+  background: #161c2d;
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  padding: 32px 24px 24px 24px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.variants-admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.variants-admin-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -1px;
+}
+
 .variants-admin-actions .btn-primary {
   background: linear-gradient(45deg, #4a6bf5, #6f88ff);
   border: none;
@@ -24,4 +47,69 @@
 .variants-admin-actions .btn-outline-secondary:hover {
   background: #232b42;
   color: #fff;
+}
+
+.variants-admin-card {
+  background: #1e2634; /* Adjusted to match category list card background */
+  border-radius: 1.5rem; /* Adjusted to match category list card border-radius */
+  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.13), 0 1.5px 8px rgba(0,0,0,0.18); /* Copied from category list */
+  padding: 2.5rem 2rem 2rem 2rem; /* Copied from category list */
+  margin-top: 2.5rem; /* Copied from category list */
+  margin-bottom: 2.5rem; /* Copied from category list */
+  border: 1.5px solid #232b42; /* Copied from category list */
+  max-width: 1100px; /* Copied from category list */
+  margin-left: auto; /* Copied from category list */
+  margin-right: auto; /* Copied from category list */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .variants-admin-container {
+    padding: 12px 4px;
+    border-radius: 12px;
+  }
+  .variants-admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .variants-admin-title {
+    font-size: 1.3rem;
+  }
+  .variants-admin-card {
+    padding: 1.2rem 0.5rem; /* Copied from category list */
+    border-radius: 1rem; /* Copied from category list */
+  }
+}
+
+/* Styles for the Select Product dropdown */
+.variants-admin-container .form-label {
+  color: #fff !important; /* Ensure label text is white */
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.variants-admin-container .form-select {
+  background-color: #2c3657 !important; /* Darker background for select */
+  color: #fff !important; /* White text */
+  border: 1px solid #4a6bf5 !important; /* Blue border */
+  border-radius: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  box-shadow: none !important; /* Remove default shadow */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 16px 12px !important;
+  appearance: none !important; /* Remove default arrow */
+}
+
+.variants-admin-container .form-select:focus {
+  border-color: #90cdf4 !important; /* Lighter blue on focus */
+  box-shadow: 0 0 0 0.2rem rgba(74, 107, 245, 0.25) !important; /* Blue glow on focus */
+}
+
+.variants-admin-container .form-select option {
+  background-color: #1e2634; /* Dark background for options */
+  color: #fff; /* White text for options */
 }

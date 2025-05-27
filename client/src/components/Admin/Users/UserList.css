@@ -1,10 +1,10 @@
-/* Modern Variant List Styles (similar to CategoryList.css) */
+/* Modern User List Styles - Adapted from VariantList.css */
 
-.variant-search-bar {
+.user-search-bar {
   margin-bottom: 2.2rem;
 }
 
-.variant-search-input {
+.user-search-input {
   background: rgba(44, 54, 87, 0.95) !important;
   color: #fff !important;
   border: 2px solid #4a6bf5 !important;
@@ -16,12 +16,12 @@
   transition: border 0.2s, box-shadow 0.2s !important;
 }
 
-.variant-search-input:focus {
+.user-search-input:focus {
   border: 2px solid #90cdf4 !important;
   box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
 }
 
-.variant-search-icon {
+.user-search-icon {
   background: transparent !important;
   border: none !important;
   color: #90cdf4 !important;
@@ -35,61 +35,88 @@
   padding: 0.8rem 0 0.8rem 1rem !important; /* Match input padding */
 }
 
-.variant-table {
+.user-table {
   background: transparent;
   color: #fff;
   border-radius: 1rem;
   overflow: hidden;
 }
 
-.variant-table thead tr {
+.user-table thead tr {
   background: linear-gradient(90deg, #232946 60%, #4a6bf5 100%);
   color: #fff;
   border-radius: 1rem 1rem 0 0;
 }
 
-.variant-table th, .variant-table td {
+.user-table th, .user-table td {
   border: none;
   vertical-align: middle;
   font-size: 1.05rem;
+  padding: 1rem 0.75rem; /* Adjusted padding */
 }
 
-.variant-table tbody tr {
+.user-table tbody tr {
   background: rgba(22, 28, 45, 0.95);
   transition: background 0.2s;
 }
 
-.variant-table tbody tr:hover {
+.user-table tbody tr:hover {
   background: rgba(74, 107, 245, 0.10);
 }
 
-.variant-table .btn-outline-primary {
+.user-table .btn-outline-primary {
   border-color: #4a6bf5;
   color: #4a6bf5;
   background: transparent;
   transition: background 0.2s, color 0.2s;
 }
 
-.variant-table .btn-outline-primary:hover {
+.user-table .btn-outline-primary:hover {
   background: #4a6bf5;
   color: #fff;
 }
 
-.variant-table .btn-outline-danger {
+.user-table .btn-outline-danger {
   border-color: #ff6b6b;
   color: #ff6b6b;
   background: transparent;
   transition: background 0.2s, color 0.2s;
 }
 
-.variant-table .btn-outline-danger:hover {
+.user-table .btn-outline-danger:hover {
   background: #ff6b6b;
   color: #fff;
 }
 
+.user-table .btn-outline-success {
+  border-color: #28a745; /* Green for promote */
+  color: #28a745;
+  background: transparent;
+  transition: background 0.2s, color 0.2s;
+}
+
+.user-table .btn-outline-success:hover {
+  background: #28a745;
+  color: #fff;
+}
+
+
+.user-list-card {
+    background-color: #1e2634; /* Dark background for the card */
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    color: #e0e0e0; /* Light text color for contrast */
+}
+
+
 @media (max-width: 767.98px) {
-  .variant-search-input {
+  .user-search-input {
     font-size: 1rem !important;
     padding: 0.7rem 1.2rem 0.7rem 2.2rem !important;
+  }
+  .user-table th, .user-table td {
+    font-size: 0.95rem; /* Smaller font for smaller screens */
+    padding: 0.75rem 0.5rem;
   }
 }

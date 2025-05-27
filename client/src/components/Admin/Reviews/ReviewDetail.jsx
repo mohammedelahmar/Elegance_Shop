@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Card, Row, Col, Badge, Button } from 'react-bootstrap';
 import { FaTrash, FaCheck, FaStar, FaRegStar, FaUser, FaBox, FaCalendar } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import './ReviewDetail.css'; // Import the new CSS file
 
 const ReviewDetail = ({ review, show, onHide, onDeleteReview, onApproveReview, isLoading }) => {
   if (!review) return null;
@@ -36,6 +37,7 @@ const ReviewDetail = ({ review, show, onHide, onDeleteReview, onApproveReview, i
       size="lg"
       centered
       backdrop="static"
+      dialogClassName="review-detail-modal" // Add the custom class for styling
     >
       <Modal.Header closeButton>
         <Modal.Title>Review Details</Modal.Title>
@@ -43,7 +45,7 @@ const ReviewDetail = ({ review, show, onHide, onDeleteReview, onApproveReview, i
       <Modal.Body>
         <Row className="mb-4">
           <Col xs={12} className="mb-3">
-            <Card className="bg-light">
+            <Card /* className="bg-light" - remove this or adjust in CSS */ >
               <Card.Body>
                 <div className="d-flex justify-content-between align-items-center mb-2">
                   <h5 className="mb-0">Rating</h5>
@@ -105,14 +107,14 @@ const ReviewDetail = ({ review, show, onHide, onDeleteReview, onApproveReview, i
                   <Badge bg="success">Approved</Badge> : 
                   <Badge bg="warning" text="dark">Pending Approval</Badge>
                 }</p>
-                <hr />
+                <hr style={{ borderColor: '#2b354f' }} /> {/* Styled HR */}
                 <h5>Comment</h5>
-                <div className="p-3 bg-light rounded">{review.commentaire || review.comment}</div>
+                <div className="review-comment-section">{review.commentaire || review.comment}</div>
                 
                 {/* Display review image if available */}
                 {(review.imageUrl || review.image_url) && (
                   <>
-                    <hr />
+                    <hr style={{ borderColor: '#2b354f' }} /> {/* Styled HR */}
                     <h5>Attached Image</h5>
                     <div className="text-center my-3">
                       <img 
@@ -135,6 +137,7 @@ const ReviewDetail = ({ review, show, onHide, onDeleteReview, onApproveReview, i
             variant="danger" 
             onClick={() => onDeleteReview(review._id)}
             disabled={isLoading}
+            className="review-detail-btn"
           >
             <FaTrash className="me-2" /> Delete Review
           </Button>
@@ -142,7 +145,7 @@ const ReviewDetail = ({ review, show, onHide, onDeleteReview, onApproveReview, i
             <Button 
               variant="secondary" 
               onClick={onHide}
-              className="me-2"
+              className="me-2 review-detail-btn"
               disabled={isLoading}
             >
               Close
@@ -152,6 +155,7 @@ const ReviewDetail = ({ review, show, onHide, onDeleteReview, onApproveReview, i
                 variant="success" 
                 onClick={() => onApproveReview(review._id)}
                 disabled={isLoading}
+                className="review-detail-btn"
               >
                 <FaCheck className="me-2" /> Approve Review
               </Button>

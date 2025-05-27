@@ -1,0 +1,182 @@
+/* OrderList.css */
+/* Styles adapted from CategoryList.css for consistency with "Category Management" screenshot */
+
+.order-list-container { /* This will be styled like .category-list-card */
+  background: #181f2e;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.13), 0 1.5px 8px rgba(0,0,0,0.18);
+  padding: 2.5rem 2rem 2rem 2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  border: 1.5px solid #232b42;
+  max-width: 1100px; /* Or adjust as needed for orders page */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.order-table {
+  background: transparent; /* Table itself is transparent, rows will have background */
+  color: #fff; /* Default text color for the table */
+  border-radius: 1rem; /* Rounded corners for the table */
+  overflow: hidden; /* Ensures content respects border radius */
+  width: 100%;
+  border-collapse: separate; /* Important for border-radius on rows/table */
+  border-spacing: 0;
+  /* border: 1px solid #30363d; */ /* Optional: border for the table itself if needed, CategoryList doesn't have one */
+}
+
+.order-table thead tr {
+  background: linear-gradient(90deg, #232946 60%, #4a6bf5 100%);
+  color: #fff;
+  /* border-radius: 1rem 1rem 0 0; */ /* Handled by table's overflow:hidden and border-radius */
+}
+
+.order-table th {
+  border: none;
+  vertical-align: middle;
+  font-size: 1.05rem; /* Match CategoryList */
+  padding: 0.85rem 1rem; /* Keep current padding or adjust */
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff; /* Ensure header text color */
+}
+
+.order-table td {
+  border: none; /* No cell borders */
+  border-bottom: 1px solid rgba(74, 107, 245, 0.2); /* Subtle separator line, adjust color/opacity as needed */
+  vertical-align: middle;
+  font-size: 1.0rem; /* Slightly smaller than header, or match CategoryList's 1.05rem */
+  padding: 0.75rem 1rem;
+  color: #c9d1d9; /* Light grey text for table content */
+}
+
+.order-table tbody tr {
+  background: rgba(22, 28, 45, 0.95); /* Dark row background from CategoryList */
+  transition: background 0.2s;
+}
+
+.order-table tbody tr:last-child td {
+  border-bottom: none; /* No border for the last row's cells */
+}
+
+.order-table tbody tr:hover {
+  background: rgba(74, 107, 245, 0.10); /* Hover effect from CategoryList */
+}
+
+/* Badges - Keep existing badge styling or adapt if necessary */
+.order-table .status-badge {
+  padding: 0.4em 0.6em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+}
+
+.order-table .badge.bg-success {
+  background-color: rgba(34, 139, 34, 0.25) !important;
+  color: #22c55e !important;
+  border: 1px solid rgba(34, 139, 34, 0.4);
+}
+
+.order-table .badge.bg-warning {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  color: #f59e0b !important;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Action Buttons - Styled like CategoryList buttons */
+.order-table .action-buttons .btn {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.85rem;
+  border-radius: 0.375rem; /* Or match CategoryList's button radius if different */
+  margin-right: 0.35rem;
+  transition: background 0.2s, color 0.2s;
+  background: transparent; /* Common for outline-style buttons */
+}
+.order-table .action-buttons .btn:last-child {
+  margin-right: 0;
+}
+
+/* Adapting .btn-outline-primary from CategoryList */
+.order-table .action-button.view-button, 
+.order-table .btn-outline-primary { /* Target Bootstrap class directly if needed */
+  border-color: #4a6bf5;
+  color: #4a6bf5;
+}
+.order-table .action-button.view-button:hover,
+.order-table .btn-outline-primary:hover {
+  background: #4a6bf5;
+  color: #fff;
+}
+
+/* Adapting for .btn-outline-success (paid-button) */
+.order-table .action-button.paid-button,
+.order-table .btn-outline-success {
+  border-color: #28a745; /* Standard success green, or choose one from theme */
+  color: #28a745;
+}
+.order-table .action-button.paid-button:hover,
+.order-table .btn-outline-success:hover {
+  background: #28a745;
+  color: #fff;
+}
+
+/* Adapting for .btn-outline-info (delivered-button) */
+.order-table .action-button.delivered-button,
+.order-table .btn-outline-info {
+  border-color: #17a2b8; /* Standard info cyan, or choose one from theme */
+  color: #17a2b8;
+}
+.order-table .action-button.delivered-button:hover,
+.order-table .btn-outline-info:hover {
+  background: #17a2b8;
+  color: #fff;
+}
+
+
+/* Customer info specific styling */
+.order-table .customer-name {
+  font-weight: 500;
+  color: #e0e0e0; /* Brighter for names */
+}
+.order-table .text-muted {
+  color: #a0a0a0 !important; /* Softer muted color */
+}
+
+/* Responsive adjustments from CategoryList.css (and existing) */
+@media (max-width: 992px) {
+  .order-table th,
+  .order-table td {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem; /* Adjusted */
+  }
+  .order-table .status-badge {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .order-list-container { /* Match .category-list-card responsive */
+    padding: 1.2rem 0.5rem;
+    border-radius: 1rem;
+  }
+  .order-table th,
+  .order-table td {
+    font-size: 0.9rem; /* Adjusted */
+    white-space: normal; /* Allow text to wrap */
+    padding: 0.6rem 0.5rem; /* Adjust padding for smaller screens */
+  }
+  .order-table .action-buttons {
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 0.3rem;
+  }
+  .order-table .action-buttons .btn {
+    width: auto; 
+    min-width: 70px; /* Smaller min-width */
+    margin-right: 0;
+    padding: 0.3rem 0.5rem; /* Smaller padding for buttons */
+    font-size: 0.8rem; /* Smaller font for buttons */
+  }
+}

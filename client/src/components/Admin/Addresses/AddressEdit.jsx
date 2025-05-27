@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col, Alert } from 'react-bootstrap'; // Import Alert
+import RBButton from 'react-bootstrap/Button'; // Renamed to avoid conflict
 import PropTypes from 'prop-types';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
 import { updateAddress } from '../../../api/address';
 import { getAllUsers } from '../../../api/user';
-import { FaSave } from 'react-icons/fa';
+import { FaSave, FaTimes } from 'react-icons/fa'; // Added FaTimes for cancel
+import './AddressForms.css'; // Import the new CSS file
 
 const AddressEdit = ({ address, show, onHide, onAddressUpdated }) => {
   const [formData, setFormData] = useState({
@@ -19,6 +19,7 @@ const AddressEdit = ({ address, show, onHide, onAddressUpdated }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // Added for success message
 
   useEffect(() => {
     if (address) {
@@ -58,9 +59,13 @@ const AddressEdit = ({ address, show, onHide, onAddressUpdated }) => {
     try {
       setLoading(true);
       setError('');
+      setSuccessMessage(''); // Clear previous success message
       
       await updateAddress(address._id, formData);
+      setSuccessMessage('Address updated successfully!'); // Set success message
       onAddressUpdated();
+      // Optionally close modal after a short delay
+      // setTimeout(() => onHide(), 1500);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -69,91 +74,115 @@ const AddressEdit = ({ address, show, onHide, onAddressUpdated }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false} size="lg">
+    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false} size="lg" dialogClassName="address-modal">
       <Modal.Header closeButton>
         <Modal.Title>Edit Address</Modal.Title>
       </Modal.Header>
       
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="address-form">
         <Modal.Body>
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <Alert variant="danger">{error}</Alert>}
+          {successMessage && <Alert variant="success">{successMessage}</Alert>} {/* Display success message */}
           
-          <Input
-            label="User"
-            as="select"
-            name="user"
-            value={formData.user}
-            onChange={handleChange}
-            required
-            options={[
-              { value: '', label: 'Select User' },
-              ...users.map(user => ({
-                value: user._id,
-                label: `${user.Firstname} ${user.Lastname} (${user.email})`
-              }))
-            ]}
-          />
+          <Form.Group className="mb-3" controlId="formAddressUser">
+            <Form.Label>User</Form.Label>
+            <Form.Select
+              name="user"
+              value={formData.user}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select User</option>
+              {users.map(user => (
+                <option key={user._id} value={user._id}>
+                  {`${user.Firstname || ''} ${user.Lastname || ''} (${user.email})`.trim()}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
           
-          <Input
-            label="Street Address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-            as="textarea"
-            rows={2}
-          />
+          <Form.Group className="mb-3" controlId="formAddressStreet">
+            <Form.Label>Street Address</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={2}
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+              placeholder="e.g., 123 Main St, Apt 4B"
+            />
+          </Form.Group>
           
-          <Row>
-            <Col md={6}>
-              <Input
-                label="City"
+          <Row className="mb-3">
+            <Form.Group as={Col} md="6" controlId="formAddressCity">
+              <Form.Label>City</Form.Label>
+              <Form.Control
+                type="text"
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
                 required
+                placeholder="e.g., Springfield"
               />
-            </Col>
-            <Col md={6}>
-              <Input
-                label="Postal Code"
+            </Form.Group>
+            <Form.Group as={Col} md="6" controlId="formAddressPostalCode">
+              <Form.Label>Postal Code</Form.Label>
+              <Form.Control
+                type="text"
                 name="postal_code"
                 value={formData.postal_code}
                 onChange={handleChange}
                 required
+                placeholder="e.g., 90210"
               />
-            </Col>
+            </Form.Group>
           </Row>
           
-          <Input
-            label="Country"
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
-            required
-          />
+          <Form.Group className="mb-3" controlId="formAddressCountry">
+            <Form.Label>Country</Form.Label>
+            <Form.Control
+              type="text"
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              required
+              placeholder="e.g., USA"
+            />
+          </Form.Group>
           
-          <Input
-            label="Phone Number"
-            name="phone_number"
-            value={formData.phone_number}
-            onChange={handleChange}
-            required
-          />
+          <Form.Group className="mb-3" controlId="formAddressPhone">
+            <Form.Label>Phone Number</Form.Label>
+            <Form.Control
+              type="tel"
+              name="phone_number"
+              value={formData.phone_number}
+              onChange={handleChange}
+              required
+              placeholder="e.g., (555) 123-4567"
+            />
+          </Form.Group>
         </Modal.Body>
         
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>
-            Cancel
-          </Button>
-          <Button 
+          <RBButton variant="secondary" onClick={onHide} className="address-form-btn">
+            <FaTimes className="me-2" /> Cancel
+          </RBButton>
+          <RBButton 
             type="submit" 
             variant="primary" 
-            icon={FaSave}
-            loading={loading}
+            disabled={loading}
+            className="address-form-btn"
           >
-            Save Changes
-          </Button>
+            {loading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Saving...
+              </>
+            ) : (
+              <><FaSave className="me-2" /> Save Changes</>
+            )}
+          </RBButton>
         </Modal.Footer>
       </Form>
     </Modal>

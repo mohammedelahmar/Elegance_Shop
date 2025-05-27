@@ -1,0 +1,167 @@
+/* Styles for Variant Edit and Add Modals (similar to CategoryForms.css) */
+
+.variant-modal .modal-content {
+  background-color: #1e2634; /* Dark background for the modal */
+  color: #e0e0e0; /* Light text color */
+  border-radius: 1rem; /* Rounded corners for the modal */
+  border: 1px solid #2b354f; /* Subtle border */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.variant-modal .modal-header {
+  border-bottom: 1px solid #2b354f; /* Separator line for header */
+  padding: 1.5rem;
+}
+
+.variant-modal .modal-title {
+  color: #ffffff; /* White title text */
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.variant-modal .modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%); /* White close button */
+}
+
+.variant-form {
+  padding: 0; /* Remove default form padding if modal body handles it */
+}
+
+.variant-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.variant-form .form-label {
+  color: #a3aed0; /* Lighter label color */
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.variant-form .form-control,
+.variant-form .form-select {
+  background-color: #2c3657 !important; /* Darker input background */
+  color: #ffffff !important; /* White input text */
+  border: 1px solid #4a6bf5 !important; /* Blue border */
+  border-radius: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  box-shadow: none !important; /* Remove default shadow */
+}
+
+.variant-form .form-control:focus,
+.variant-form .form-select:focus {
+  border-color: #90cdf4 !important; /* Lighter blue on focus */
+  box-shadow: 0 0 0 0.2rem rgba(74, 107, 245, 0.25) !important; /* Blue glow on focus */
+}
+
+.variant-form .form-control::placeholder {
+  color: #7a829b; /* Placeholder text color */
+}
+
+.variant-form .form-select option {
+  background-color: #1e2634; /* Dark background for options */
+  color: #fff; /* White text for options */
+}
+
+/* Custom styling for select arrow if needed, assuming react-bootstrap handles it well */
+.variant-form .form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 16px 12px !important;
+  appearance: none !important;
+}
+
+.variant-modal .modal-footer {
+  border-top: 1px solid #2b354f; /* Separator line for footer */
+  padding: 1rem 1.5rem;
+  background-color: #181f2e; /* Slightly darker footer background */
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.variant-form-btn {
+  padding: 0.65rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.variant-form-btn.btn-secondary {
+  background-color: #3a4562;
+  border: 1px solid #3a4562;
+  color: #e0e0e0;
+}
+
+.variant-form-btn.btn-secondary:hover {
+  background-color: #4a5572;
+  transform: translateY(-1px);
+}
+
+.variant-form-btn.btn-primary {
+  background: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(74, 107, 245, 0.2);
+}
+
+.variant-form-btn.btn-primary:hover {
+  background: linear-gradient(45deg, #6f88ff, #4a6bf5);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(74, 107, 245, 0.3);
+}
+
+.variant-form-btn.btn-primary:disabled {
+  background: #3a4562;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.variant-form .alert {
+  border-radius: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Styles for Color Preset Picker */
+.color-preset {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid transparent; /* Default transparent border */
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.color-preset:hover {
+  transform: scale(1.1);
+  border-color: #7a829b; /* Subtle border on hover */
+}
+
+.color-preset.selected {
+  border-color: #4a6bf5; /* Blue border for selected */
+  box-shadow: 0 0 8px rgba(74, 107, 245, 0.5); /* Glow for selected */
+}
+
+.color-preview-container {
+  display: flex;
+  align-items: center; /* Vertically align items in the center */
+  gap: 0.5rem; /* Space between the input and the preview */
+}
+
+.color-input-group {
+  flex-grow: 1; /* Allow the input group to take available space */
+}
+
+.color-preview-modal {
+  width: 36px; /* Size of the color swatch */
+  height: 36px;
+  border-radius: 50%; /* Circular swatch */
+  border: 2px solid #4a6bf5; /* Border to make it stand out */
+  align-self: center; /* Align self to center if in a flex container with align-items: end */
+  margin-bottom: 0; /* Reset margin if needed */
+  margin-left: 10px; /* Space from the input field */
+}

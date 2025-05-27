@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col, Alert, Spinner } from 'react-bootstrap'; // Added Alert and Spinner
 import PropTypes from 'prop-types';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
 import { updateVariant } from '../../../api/variant';
 import { FaSave } from 'react-icons/fa';
 import { CLOTHING_SIZES, NUMERIC_SIZES, SHOE_SIZES } from '../../../constants/sizes';
+import './VariantForms.css'; // Import the new CSS file
 
 const VariantEdit = ({ variant, productId, show, onHide, onVariantUpdated }) => {
   const [formData, setFormData] = useState({
@@ -63,36 +62,42 @@ const VariantEdit = ({ variant, productId, show, onHide, onVariantUpdated }) => 
       setLoading(true);
       setError('');
       
-      // Validation
       if (formData.stock < 0) {
         setError('Stock quantity cannot be negative');
         setLoading(false);
         return;
       }
-
+      // Ensure product_id is included, it might be missing if not explicitly set
       await updateVariant(variant._id, {
         ...formData,
-        product_id: productId
+        product_id: productId // Ensure productId is passed
       });
       onVariantUpdated();
     } catch (err) {
       setError(err.response?.data?.message || err.message);
+      // setLoading(false); // setLoading(false) is in finally block
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false}>
+    <Modal 
+      show={show} 
+      onHide={onHide} 
+      backdrop="static" 
+      keyboard={false}
+      centered
+      className="variant-modal" // Apply the new modal class
+    >
       <Modal.Header closeButton>
         <Modal.Title>Edit Variant</Modal.Title>
       </Modal.Header>
       
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="variant-form"> {/* Apply the new form class */}
         <Modal.Body>
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <Alert variant="danger">{error}</Alert>} {/* Use React Bootstrap Alert */}
           
-          {/* Size Type Selection */}
           <Form.Group className="mb-3">
             <Form.Label>Size Type</Form.Label>
             <Form.Select
@@ -106,69 +111,83 @@ const VariantEdit = ({ variant, productId, show, onHide, onVariantUpdated }) => 
             </Form.Select>
           </Form.Group>
           
-          {/* Size Selection */}
-          <Input
-            label="Size"
-            as="select"
-            name="taille"
-            value={formData.taille}
-            onChange={handleChange}
-            required
-            options={[
-              { value: '', label: 'Select Size' },
-              ...getSizeOptions()
-            ]}
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Size</Form.Label>
+            <Form.Select
+              name="taille"
+              value={formData.taille}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Size</option>
+              {getSizeOptions().map(sizeOpt => (
+                <option key={sizeOpt.value} value={sizeOpt.value}>{sizeOpt.label}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
           
-          <Row>
+          <Row className="mb-3">
             <Col>
-              <Input
-                label="Color"
-                name="couleur"
-                value={formData.couleur}
-                onChange={handleChange}
-                placeholder="e.g. Red, Blue, etc."
-              />
-            </Col>
-            <Col xs={2} className="d-flex align-items-end mb-3">
-              {formData.couleur && (
-                <div
-                  className="color-preview"
-                  style={{
-                    backgroundColor: formData.couleur,
-                    width: '30px',
-                    height: '30px',
-                    borderRadius: '50%',
-                    border: '1px solid #ddd'
-                  }}
-                ></div>
-              )}
+              <Form.Group>
+                <Form.Label>Color</Form.Label>
+                <div className="color-preview-container"> {/* Wrapper for input and preview */}
+                  <Form.Control
+                    type="text"
+                    name="couleur"
+                    value={formData.couleur}
+                    onChange={handleChange}
+                    placeholder="e.g. Red, Blue, #FF0000"
+                    className="color-input-group" /* Class for the input part */
+                  />
+                  {formData.couleur && (
+                    <div
+                      className="color-preview-modal" /* New class for modal color preview */
+                      style={{ backgroundColor: formData.couleur }}
+                    ></div>
+                  )}
+                </div>
+              </Form.Group>
             </Col>
           </Row>
           
-          <Input
-            label="Stock"
-            type="number"
-            name="stock"
-            value={formData.stock}
-            onChange={handleChange}
-            min="0"
-            required
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Stock</Form.Label>
+            <Form.Control
+              type="number"
+              name="stock"
+              value={formData.stock}
+              onChange={handleChange}
+              min="0"
+              required
+            />
+          </Form.Group>
         </Modal.Body>
         
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>
-            Cancel
-          </Button>
-          <Button 
-            type="submit" 
-            variant="primary" 
-            icon={FaSave}
-            loading={loading}
+          <button 
+            type="button"
+            className="btn variant-form-btn btn-secondary" // Apply new button classes
+            onClick={onHide}
+            disabled={loading} // Disable cancel if loading to prevent unintended state changes
           >
-            Save Changes
-          </Button>
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            className="btn variant-form-btn btn-primary" // Apply new button classes
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <FaSave className="me-2" /> Save Changes
+              </>
+            )}
+          </button>
         </Modal.Footer>
       </Form>
     </Modal>

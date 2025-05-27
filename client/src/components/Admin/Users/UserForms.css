@@ -1,0 +1,139 @@
+/* filepath: c:\Users\HP\Documents\code\Projet_PFE\client\src\components\Admin\Users\UserForms.css */
+/* Styles for User Edit Modal - Adapted from VariantForms.css */
+
+.user-modal .modal-content {
+  background-color: #1e2634;
+  color: #e0e0e0;
+  border-radius: 1rem;
+  border: 1px solid #2b354f;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.user-modal .modal-header {
+  border-bottom: 1px solid #2b354f;
+  padding: 1.5rem;
+}
+
+.user-modal .modal-title {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.user-modal .modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.user-form {
+  padding: 0;
+}
+
+.user-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.user-form .form-label {
+  color: #a3aed0;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.user-form .form-control,
+.user-form .form-select {
+  background-color: #2c3657 !important;
+  color: #ffffff !important;
+  border: 1px solid #4a6bf5 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  box-shadow: none !important;
+}
+
+.user-form .form-control:focus,
+.user-form .form-select:focus {
+  border-color: #90cdf4 !important;
+  box-shadow: 0 0 0 0.2rem rgba(74, 107, 245, 0.25) !important;
+}
+
+.user-form .form-control::placeholder {
+  color: #7a829b;
+}
+
+.user-form textarea.form-control {
+  min-height: 80px;
+}
+
+.user-form .form-select option {
+  background-color: #1e2634;
+  color: #fff;
+}
+
+.user-form .form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 16px 12px !important;
+  appearance: none !important;
+}
+
+.user-modal .modal-footer {
+  border-top: 1px solid #2b354f;
+  padding: 1rem 1.5rem;
+  background-color: #181f2e;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.user-form-btn {
+  padding: 0.65rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.user-form-btn.btn-secondary {
+  background-color: #3a4562;
+  border: 1px solid #3a4562;
+  color: #e0e0e0;
+}
+
+.user-form-btn.btn-secondary:hover {
+  background-color: #4a5572;
+  transform: translateY(-1px);
+}
+
+.user-form-btn.btn-primary {
+  background: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(74, 107, 245, 0.2);
+}
+
+.user-form-btn.btn-primary:hover {
+  background: linear-gradient(45deg, #6f88ff, #4a6bf5);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(74, 107, 245, 0.3);
+}
+
+.user-form-btn.btn-primary:disabled {
+  background: #3a4562;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.user-form .alert {
+  border-radius: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.user-form .alert-danger {
+    background-color: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.user-form .form-text {
+  color: #a3aed0; /* Helper text color */
+  font-size: 0.875em;
+}

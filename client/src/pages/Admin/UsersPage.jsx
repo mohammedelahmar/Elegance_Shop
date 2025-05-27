@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { FaUserPlus, FaSync } from 'react-icons/fa';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { FaSync } from 'react-icons/fa';
 import { getAllUsers } from '../../api/user';
 import UserList from '../../components/Admin/Users/UserList';
 import UserEdit from '../../components/Admin/Users/UserEdit';
 import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
+import './UsersPage.css';
 
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -52,15 +53,14 @@ const UsersPage = () => {
   };
 
   return (
-    <Container fluid className="py-3">
-      <Row className="mb-4 align-items-center">
+    <Container fluid className="py-3 users-admin-container">
+      <Row className="users-admin-header-row">
         <Col>
-          <h1 className="h3 mb-0">User Management</h1>
+          <h1 className="users-admin-title">User Management</h1>
         </Col>
-        <Col xs="auto">
+        <Col xs="auto" className="users-admin-actions">
           <Button 
             variant="outline-primary" 
-            className="me-2" 
             onClick={handleRefresh}
           >
             <FaSync /> Refresh
@@ -71,17 +71,15 @@ const UsersPage = () => {
       {loading ? (
         <LoadingAnimation text="Loading users..." />
       ) : error ? (
-        <Message variant="danger">{error}</Message>
+        <Message variant="danger" className="mb-3">{error}</Message>
       ) : (
-        <Card>
-          <Card.Body>
+        <div className="users-admin-card">
             <UserList 
               users={users} 
               onEditUser={handleEditUser} 
               onUserUpdated={handleRefresh}
             />
-          </Card.Body>
-        </Card>
+        </div>
       )}
 
       {showEditModal && (

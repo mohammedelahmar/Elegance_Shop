@@ -1,0 +1,62 @@
+/* OrderStats.css */
+/* Adapted from Dashboard.css and general dark theme */
+
+.order-stats-container .dashboard-stat-card {
+  background-color: #1f2937; /* Dark blue-grey, similar to dashboard cards */
+  border: 1px solid #374151; /* Slightly lighter border */
+  border-radius: 0.75rem; /* Consistent rounded corners */
+  color: #f9fafb; /* Light text color */
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.order-stats-container .dashboard-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: #4b5563;
+}
+
+.order-stats-container .dashboard-stat-card .card-body {
+  padding: 1.25rem; /* Consistent padding */
+}
+
+.order-stats-container .dashboard-stat-icon {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(74, 107, 245, 0.1); /* Subtle background for icon container */
+}
+
+.order-stats-container .dashboard-stat-icon.text-success {
+  color: #34d399 !important; /* Vibrant green */
+  background-color: rgba(52, 211, 153, 0.1);
+}
+
+.order-stats-container .dashboard-stat-icon.text-primary {
+  color: #60a5fa !important; /* Vibrant blue */
+  background-color: rgba(96, 165, 250, 0.1);
+}
+
+.order-stats-container .dashboard-stat-icon.text-warning {
+  color: #f59e0b !important; /* Vibrant amber */
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+.order-stats-container .dashboard-stat-icon.text-info {
+  color: #22d3ee !important; /* Vibrant cyan */
+  background-color: rgba(34, 211, 238, 0.1);
+}
+
+.order-stats-container .dashboard-stat-card h6 {
+  color: #9ca3af; /* Muted text for labels */
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.order-stats-container .dashboard-stat-card h3 {
+  color: #f9fafb; /* Bright text for stats */
+  font-weight: 700;
+  font-size: 1.75rem;
+}
