@@ -1,26 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react'; // Added useState, useRef, useEffect
 import { Modal, Button, Row, Col, Badge, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { FaShoppingCart, FaTimes } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../../redux/action';
+import { FaTimes } from 'react-icons/fa';
+// Removed useDispatch and addToCart imports
 import WishlistButton from '../wishlist/WishlistButton';
 import PropTypes from 'prop-types';
 import './QuickViewModal.css';
 
 const QuickViewModal = ({ product, show, onHide }) => {
-  const dispatch = useDispatch();
+  // Removed dispatch constant
   const descriptionRef = useRef(null);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [showViewMoreButton, setShowViewMoreButton] = useState(false);
   
-  const handleAddToCart = (e) => { // Added event parameter
-    if (e) e.stopPropagation(); // Prevent modal close if button is inside clickable area
-    if (product.stock_quantity <= 0) return;
-    dispatch(addToCart({ ...product, quantity: 1 }));
-    onHide();
-  };
-
   // Format price
   const formatPrice = (price) => {
     if (!price) return '0.00';
@@ -136,14 +128,6 @@ const QuickViewModal = ({ product, show, onHide }) => {
               </div>
               
               <div className="action-buttons">
-                <Button 
-                  className="add-cart-btn" 
-                  onClick={handleAddToCart}
-                  disabled={product.stock_quantity <= 0}
-                >
-                  <FaShoppingCart className="me-2" />
-                  Add to Cart
-                </Button>
                 <div className="wishlist-button-container">
                   {/* Ensure WishlistButton receives appropriate props for styling if needed */}
                   <WishlistButton productId={product._id} size="lg" classNameCustom="quick-view-wishlist-btn" />

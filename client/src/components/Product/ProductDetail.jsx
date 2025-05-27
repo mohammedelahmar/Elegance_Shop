@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Image, Badge, Form, Alert } from 'react-bootstrap';
+import { Row, Col, Badge, Form, Alert } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/action';
 import { useCart } from '../../context/CartContext';
@@ -11,6 +11,7 @@ import SizeGuide from './SizeGuide';
 import useRecentlyViewed from '../../hooks/useRecentlyViewed';
 import ProductImageGallery from './ProductImageGallery';
 import LoadingAnimation from '../common/LoadingAnimation';
+import Button from '../UI/Button'; // Import custom Button
 import './ProductDetail.css';
 
 // Existing helper functions remain the same
@@ -59,7 +60,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
   const cart = useCart();
   const addItem = cart?.addItem || (async () => console.log('Cart context not available'));
   const navigate = useNavigate();
-  const { addProduct } = useRecentlyViewed();
   
   // States remain the same
   const [selectedVariant, setSelectedVariant] = useState(null);
@@ -72,7 +72,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
   const [selectedColor, setSelectedColor] = useState('');
   const [availableColors, setAvailableColors] = useState([]);
   const [availableSizes, setAvailableSizes] = useState([]);
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Rest of your hooks and handlers remain the same
   // ...
@@ -179,18 +178,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
     }
   }, [selectedVariant]);
 
-  useEffect(() => {
-    if (product && Object.keys(product).length > 0) {
-      // Add product to recently viewed
-      addProduct({
-        _id: product._id,
-        name: product.name,
-        price: product.price,
-        image_url: product.image_url
-      });
-    }
-  }, [product, addProduct]);
-
   const handleSizeChange = (e) => {
     setSelectedSize(e.target.value);
     setSelectedColor('');
@@ -220,7 +207,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
     }
     
     setAdding(true);
-    setIsAddingToCart(true); // Start showing animation
     
     try {
       const itemToAdd = {
@@ -269,7 +255,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
       });
     } finally {
       setAdding(false);
-      setIsAddingToCart(false); // Stop showing animation
     }
   };
 
@@ -287,7 +272,13 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
           {/* Only show the image column if not hiding main info */}
           {!hideMainInfo && (
             <Col md={5} className="mb-4">
-              <ProductImageGallery product={product} />
+              <div className="product-image-container">
+                <img 
+                  src={product.image_url || 'https://via.placeholder.com/500x500?text=No+Image'} 
+                  alt={product.name}
+                  className="product-detail-image"
+                />
+              </div>
             </Col>
           )}
           
@@ -298,7 +289,7 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
                 <>
                   <div className="product-header">
                     <h2 className="product-title">{product.name}</h2>
-                    <WishlistButton productId={product._id} className="wishlist-button" />
+                    
                   </div>
                   
                   <div className="product-rating">
@@ -371,9 +362,9 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
                         value={selectedSize}
                         onChange={handleSizeChange}
                       >
-                        <option value="">Select Size</option>
+                        <option value="" style={{ background: '#314187' , color: 'white' }}>Select Size</option>
                         {availableSizes.map(size => (
-                          <option 
+                          <option style={{ background: '#393f59' , color: 'white' }}
                             key={size.value} 
                             value={size.value}
                             disabled={!size.inStock}
@@ -489,13 +480,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
           </Col>
         </Row>
       </div>
-      
-      {isAddingToCart && (
-        <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" 
-             style={{backgroundColor: 'rgba(255,255,255,0.8)', zIndex: 1050}}>
-          <LoadingAnimation size="large" text="Adding to cart..." />
-        </div>
-      )}
       
       <SizeGuide 
         show={showSizeGuide} 

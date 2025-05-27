@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Nav, Spinner, Button, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, Nav, Button, ListGroup } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { Link, Navigate } from 'react-router-dom';
 import ProfileForm from '../components/Auth/ProfileForm';
@@ -237,9 +237,6 @@ const ProfilePage = () => {
                         transition={{ duration: 0.3 }}
                       >
                         <ProfileForm />
-                        <div className="mt-5">
-                          <RecentlyViewed />
-                        </div>
                       </motion.div>
                     )}
                     

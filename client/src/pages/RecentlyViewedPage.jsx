@@ -21,15 +21,15 @@ const RecentlyViewedPage = () => {
   }, []);
   
   return (
-    <Container className="py-5">
+    <Container className="py-5"style={{color:"white"}}>
       <Helmet>
-        <title>Recently Viewed Products</title>
+        <title >Recently Viewed Products</title>
       </Helmet>
       
       <Row>
         <Col>
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <h1 className="page-title">
+            <h1 className="page-title" style={{color:"white"}}>
               <FaEye className="me-2" /> Recently Viewed Products
             </h1>
             <Link to="/" className="btn btn-outline-primary">

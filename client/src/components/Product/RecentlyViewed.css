@@ -46,6 +46,10 @@
 
 .recently-viewed-row {
   margin-top: 0.5rem;
+  display: flex; /* Add display flex */
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  width: 100%; /* Ensure it takes full width of its container */
+  /* justify-content: flex-start; */ /* Default, or use space-around for more even spacing if desired */
 }
 
 .recently-viewed-item {
@@ -86,6 +90,13 @@
 
 .recently-viewed-card:hover .recently-viewed-img {
   transform: scale(1.08);
+}
+
+/* Add this to ensure columns have some base width */
+.recently-viewed-row > .col,
+.recently-viewed-row > [class*="col-"] {
+  display: flex; /* Ensure children of Col also behave well with flex */
+  flex-direction: column; /* Stack card content vertically */
 }
 
 .recently-viewed-body {

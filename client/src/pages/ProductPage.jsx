@@ -27,13 +27,11 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [reviewState, setReviewState] = useState({
-    rating: 5,
+    rating: 0, // Changed initial rating to 0
     comment: '',
     isSubmitting: false,
     error: null,
-    success: false,
-    image: null,
-    imagePreview: null
+    success: false
   });
   
   const { addProduct } = useRecentlyViewed();
@@ -133,43 +131,34 @@ const ProductPage = () => {
     e.preventDefault();
     setReviewState(prev => ({ ...prev, isSubmitting: true, error: null }));
     
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    
+    setReviewState(prev => ({
+      ...prev,
+      isSubmitting: true,
+      error: null,
+      success: false
+    }));
+    
     try {
-      // Create form data for multipart/form-data submission
-      const formData = new FormData();
-      formData.append('product_id', id);
-      formData.append('rating', String(reviewState.rating)); // Convert to string explicitly
-      formData.append('comment', reviewState.comment);
-      
-      // Log the values to verify they're being added correctly
-      console.log('Rating being submitted:', reviewState.rating);
-      console.log('Product ID:', id);
-      
-      // Append image if one was selected
-      if (reviewState.image) {
-        formData.append('reviewImage', reviewState.image);
-      }
-      
-      // Call API to create review
-      const response = await createReview(formData);
-      console.log('Review response:', response);
-      
-      // Fetch updated reviews
+      await createReview({
+        product_id: id,  // Changed from product to product_id
+        rating: reviewState.rating,
+        commentaire: reviewState.comment  // Changed from comment to commentaire
+      });
+      // Fetch latest reviews from backend to get correct user info
       const reviewsData = await getProductReviews(id);
       setReviews(reviewsData.data || []);
-      
-      // Clean up and reset form
-      if (reviewState.imagePreview) {
-        URL.revokeObjectURL(reviewState.imagePreview);
-      }
-      
+      // Reset form
       setReviewState({
-        rating: 5,
+        rating: 0, // Changed initial rating to 0 after submission
         comment: '',
         isSubmitting: false,
         error: null,
-        success: true,
-        image: null,
-        imagePreview: null
+        success: true
       });
     } catch (err) {
       console.error('Review submission error:', err);
@@ -214,7 +203,10 @@ const ProductPage = () => {
   if (loading) {
     return (
       <Container className="text-center my-5">
-        <LoadingAnimation size="large" text="Loading product details..." />
+        <Spinner animation="border" role="status" variant="primary">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        <p className="mt-2">Loading product details...</p>
       </Container>
     );
   }
@@ -293,45 +285,41 @@ const ProductPage = () => {
                 <Card.Body>
                   {/* Review Form */}
                   {isAuthenticated ? (
-                    <div className="review-form-wrapper">
+                    <div className="mb-4">
+                      <h5 className="fw-bold mb-3" style={{color:'white'}}>Write a Review</h5>
                       {reviewState.success && (
-                        <Alert variant="success" className="mb-3">
-                          Thank you for your review!
+                        <Alert variant="success" dismissible onClose={() => setReviewState(prev => ({ ...prev, success: false }))}>
+                          Your review has been submitted successfully!
                         </Alert>
                       )}
                       {reviewState.error && (
-                        <Alert variant="danger" className="mb-3">
+                        <Alert variant="danger" dismissible onClose={() => setReviewState(prev => ({ ...prev, error: null }))}>
                           {reviewState.error}
                         </Alert>
                       )}
-                      <Form onSubmit={handleSubmitReview}>
+                      <Form onSubmit={handleSubmitReview} className="review-form">
                         <Form.Group className="mb-3">
-                          <Form.Label>Your Rating</Form.Label>
+                          <Form.Label style={{marginRight:'1.5rem'}}>Rating</Form.Label>
                           <div className="star-rating-select">
                             {[1, 2, 3, 4, 5].map((star) => (
-                              <span
+                              <FaStar
                                 key={star}
-                                onClick={() => {
-                                  console.log('Setting rating to:', star);
-                                  setReviewState(prev => ({...prev, rating: star}));
-                                }}
-                                className={star <= reviewState.rating ? 'star selected' : 'star'}
-                                style={{ cursor: 'pointer', fontSize: '24px', color: star <= reviewState.rating ? '#ffc107' : '#e4e5e9' }}
-                              >
-                                ★
-                              </span>
+                                onClick={() => setReviewState(prev => ({...prev, rating: star}))}
+                                style={{ cursor: 'pointer', fontSize: '24px', color: star <= reviewState.rating ? '#ffc107' : '#e4e5e9', marginRight: '5px' }}
+                              />
                             ))}
                           </div>
-                          <div className="mt-1">Selected rating: {reviewState.rating}</div>
                         </Form.Group>
                         <Form.Group className="mb-3">
-                          <Form.Label>Your Review</Form.Label>
-                          <Form.Control
-                            as="textarea"
+                          <Form.Label>Comment</Form.Label>
+                          <Form.Control 
+                            as="textarea" 
                             rows={3}
                             value={reviewState.comment}
-                            onChange={(e) => setReviewState({...reviewState, comment: e.target.value})}
-                            placeholder="Write your review here..."
+                            onChange={(e) => setReviewState(prev => ({
+                              ...prev,
+                              comment: e.target.value
+                            }))}
                             required
                           />
                         </Form.Group>
@@ -358,12 +346,19 @@ const ProductPage = () => {
                                 </Button>
                               </div>
                             ) : (
-                              <Form.Control
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="image-upload-input"
-                              />
+                              <div className="custom-file-upload">
+                                <Form.Label htmlFor="file-upload" className="btn btn-outline-primary">
+                                  Choose File
+                                </Form.Label>
+                                <Form.Control
+                                  type="file"
+                                  id="file-upload"
+                                  accept="image/*"
+                                  onChange={handleImageChange}
+                                  style={{ display: 'none' }} 
+                                />
+                                <span className="file-name ms-2">{reviewState.image ? reviewState.image.name : "No file chosen"}</span>
+                              </div>
                             )}
                           </div>
                           <Form.Text className="text-muted">
@@ -429,9 +424,6 @@ const ProductPage = () => {
           </Tabs>
         </Col>
       </Row>
-      <Container>
-        <RecentlyViewed />
-      </Container>
     </Container>
   );
 };

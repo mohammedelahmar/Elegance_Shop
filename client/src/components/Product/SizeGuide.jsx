@@ -1,13 +1,16 @@
-import React from 'react';
+import React , { useState } from 'react';
 import { Modal, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import './SizeGuide.css';
 
 const SizeGuide = ({ show, onHide, sizeType = 'clothing' }) => {
+  const [activeSizeType, setActiveSizeType] = useState(sizeType);
+  
   const renderSizeTable = () => {
-    switch (sizeType) {
+    switch (activeSizeType) {
       case 'numeric':
         return (
-          <Table striped bordered hover>
+          <table className="size-guide-table">
             <thead>
               <tr>
                 <th>Size</th>
@@ -23,11 +26,11 @@ const SizeGuide = ({ show, onHide, sizeType = 'clothing' }) => {
               <tr><td>44</td><td>100-102</td><td>39.4-40.2</td></tr>
               <tr><td>46</td><td>103-106</td><td>40.5-41.7</td></tr>
             </tbody>
-          </Table>
+          </table>
         );
       case 'shoe':
         return (
-          <Table striped bordered hover>
+          <table className="size-guide-table">
             <thead>
               <tr>
                 <th>EU</th>
@@ -46,12 +49,12 @@ const SizeGuide = ({ show, onHide, sizeType = 'clothing' }) => {
               <tr><td>44</td><td>12</td><td>11.5</td><td>27.6</td></tr>
               <tr><td>45</td><td>13</td><td>12.5</td><td>28.2</td></tr>
             </tbody>
-          </Table>
+          </table>
         );
       case 'clothing':
       default:
         return (
-          <Table striped bordered hover>
+          <table className="size-guide-table">
             <thead>
               <tr>
                 <th>Size</th>
@@ -70,25 +73,91 @@ const SizeGuide = ({ show, onHide, sizeType = 'clothing' }) => {
               <tr><td>XXL</td><td>113-117</td><td>44.5-46.1</td><td>57-59</td><td>82-84</td></tr>
               <tr><td>3XL</td><td>118-122</td><td>46.5-48.0</td><td>60-62</td><td>85-87</td></tr>
             </tbody>
-          </Table>
+          </table>
         );
     }
   };
 
+  const getIllustrationImage = () => {
+    switch (activeSizeType) {
+      case 'numeric':
+        return "https://i.imgur.com/IjGqTFt.png"; // Pants measurement illustration
+      case 'shoe':
+        return "https://i.imgur.com/rUGpNL7.png"; // Shoe measurement illustration
+      case 'clothing':
+      default:
+        return "https://i.imgur.com/oBZAW3G.png"; // Shirt measurement illustration
+    }
+  };
+
   return (
-    <Modal size="lg" show={show} onHide={onHide} centered>
+    <Modal 
+      size="lg" 
+      show={show} 
+      onHide={onHide} 
+      centered
+      contentClassName="size-guide-modal"
+      backdrop={true} // Changed from "static" to true
+      dialogClassName="size-guide-modal"
+    >
       <Modal.Header closeButton>
         <Modal.Title>Size Guide</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p className="mb-3">Use this size chart to find your perfect fit. Measure yourself and compare with the sizes below.</p>
+        <p className="guide-description">
+          Find your perfect fit with our detailed size chart. Take your measurements and compare with the sizes below for the best fit.
+        </p>
+        
+        <div className="size-type-nav">
+          <button 
+            className={`size-type-btn ${activeSizeType === 'clothing' ? 'active' : ''}`}
+            onClick={() => setActiveSizeType('clothing')}
+          >
+            Clothing Sizes
+          </button>
+          <button 
+            className={`size-type-btn ${activeSizeType === 'numeric' ? 'active' : ''}`}
+            onClick={() => setActiveSizeType('numeric')}
+          >
+            Numeric Sizes
+          </button>
+          <button 
+            className={`size-type-btn ${activeSizeType === 'shoe' ? 'active' : ''}`}
+            onClick={() => setActiveSizeType('shoe')}
+          >
+            Shoe Sizes
+          </button>
+        </div>
+        
         {renderSizeTable()}
-        <div className="mt-3">
-          <h5>How to Measure</h5>
-          <ul className="mt-2">
-            <li><strong>Chest:</strong> Measure around the fullest part of your chest, keeping the measuring tape horizontal.</li>
-            <li><strong>Shoulder:</strong> Measure from the edge of one shoulder to the other, across the back.</li>
-            <li><strong>Length:</strong> Measure from the highest point of the shoulder to the desired length.</li>
+        
+        <div className="size-guide-illustration">
+          <img src={getIllustrationImage()} alt="Measurement guide" />
+        </div>
+        
+        <div className="measure-guide">
+          <h5 className="measure-guide-title">How to Measure</h5>
+          <ul className="measure-list">
+            <li>
+              <strong>Chest:</strong> 
+              Measure around the fullest part of your chest, keeping the tape horizontal.
+            </li>
+            <li>
+              <strong>Waist:</strong> 
+              Measure around your natural waistline, keeping the tape comfortably loose.
+            </li>
+            <li>
+              <strong>Shoulders:</strong> 
+              Measure from the edge of one shoulder across to the other edge.
+            </li>
+            <li>
+              <strong>Length:</strong> 
+              For tops, measure from the highest point of the shoulder to the desired length.
+            </li>
+            <li>
+              <strong>Foot Length:</strong> 
+              Measure from the heel to the tip of your longest toe while standing.
+            </li>
           </ul>
         </div>
       </Modal.Body>

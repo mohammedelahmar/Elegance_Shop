@@ -30,7 +30,7 @@ const RecentlyViewed = () => {
   return (
     <div className="recently-viewed-section">
       <div className="recently-viewed-header">
-        <h3 className="section-title">
+        <h3 className="section-title" style={{ color: 'white' }}>
           <FaEye className="me-2" /> Recently Viewed
         </h3>
         <button 
@@ -44,7 +44,7 @@ const RecentlyViewed = () => {
       
       <Row className="g-4 recently-viewed-row">
         {recentlyViewed.map(product => (
-          <Col xs={6} md={3} lg={3} key={product._id}>
+          <Col xs={6} sm={4} md={4} lg={4} key={product._id}>
             <Link to={`/products/${product._id}`} className="recently-viewed-item">
               <Card className="recently-viewed-card">
                 <div className="recently-viewed-img-container">
@@ -68,4 +68,4 @@ const RecentlyViewed = () => {
   );
 };
 
-export default RecentlyViewed;  
+export default RecentlyViewed;

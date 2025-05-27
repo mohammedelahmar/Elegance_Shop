@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Nav, Container, Badge, NavDropdown, Form } from 'react-bootstrap';
+import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSelector } from 'react-redux';
@@ -11,13 +11,11 @@ import {
   FaHome, 
   FaInfoCircle, 
   FaEnvelope, 
-  FaSearch, 
   FaCog, 
   FaHeart 
 } from 'react-icons/fa';
 import { useWishlist } from '../../context/WishlistContext';
 import Button from '../UI/Button';
-import Input from '../UI/Input';
 import { FaEye } from 'react-icons/fa';
 import './Header.css';
 
@@ -27,8 +25,6 @@ const Header = () => {
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [searchExpanded, setSearchExpanded] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const { wishlistCount } = useWishlist();
 
   // Get cart state from Redux
@@ -58,24 +54,6 @@ const Header = () => {
   const isActive = (path) => {
     if (path === '/' && location.pathname === '/') return true;
     return path !== '/' && location.pathname.startsWith(path);
-  };
-
-  const handleSearchToggle = () => {
-    setSearchExpanded(!searchExpanded);
-  };
-
-  const handleSearchBlur = () => {
-    if (searchExpanded && window.innerWidth > 991) {
-      setTimeout(() => setSearchExpanded(false), 200);
-    }
-  };
-  
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
-      closeNavbar();
-    }
   };
 
   return (
@@ -125,9 +103,6 @@ const Header = () => {
               <FaInfoCircle className="nav-icon" />
               <span>About</span>
             </Nav.Link>
-            <Nav.Link as={Link} to="/recently-viewed" className="nav-item">
-  <FaEye /> Recently Viewed
-</Nav.Link>
             
             <Nav.Link 
               as={Link} 
@@ -235,6 +210,10 @@ const Header = () => {
                 <NavDropdown.Item as={Link} to="/orders" onClick={closeNavbar} className="dropdown-item">
                   <FaClipboardList className="me-2" />
                   My Orders
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/recently-viewed" onClick={closeNavbar} className="dropdown-item">
+                  <FaEye className="me-2" />
+                  Recently Viewed
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={() => { handleLogout(); closeNavbar(); }} className="dropdown-item logout">

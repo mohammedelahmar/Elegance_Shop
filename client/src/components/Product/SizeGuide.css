@@ -1,0 +1,203 @@
+/* Size Guide Modal Styling */
+.size-guide-modal .modal-content {
+  background-color: #161c2d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  color: #fff;
+}
+
+.size-guide-modal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 24px;
+  background: linear-gradient(90deg, rgba(74, 107, 245, 0.1), rgba(111, 136, 255, 0.05));
+}
+
+.size-guide-modal .modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+  padding-left: 15px;
+}
+
+.size-guide-modal .modal-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  background: linear-gradient(to bottom, #4a6bf5, #6f88ff);
+  border-radius: 2px;
+}
+
+.size-guide-modal .modal-body {
+  padding: 24px;
+}
+
+.size-guide-modal .btn-close {
+  color: #fff;
+  text-shadow: none;
+  opacity: 0.8;
+  filter: brightness(0) invert(1);
+}
+
+.size-guide-modal .btn-close:hover {
+  opacity: 1;
+}
+
+/* Table Styling */
+.size-guide-table {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.size-guide-table thead th {
+  background: linear-gradient(90deg, #4a6bf5, #6f88ff);
+  color: #ffffff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 16px 20px;
+  font-size: 0.85rem;
+  border: none;
+}
+
+.size-guide-table tbody tr {
+  background-color: #1e2634;
+  transition: background-color 0.3s;
+}
+
+.size-guide-table tbody tr:nth-child(odd) {
+  background-color: rgba(30, 38, 52, 0.6);
+}
+
+.size-guide-table tbody tr:hover {
+  background-color: #232946;
+}
+
+.size-guide-table td {
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #a3aed0;
+  vertical-align: middle;
+}
+
+.size-guide-table td:first-child {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* How to Measure Section */
+.measure-guide {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.measure-guide-title {
+  position: relative;
+  padding-left: 15px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #ffffff;
+}
+
+.measure-guide-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  background: linear-gradient(to bottom, #4a6bf5, #6f88ff);
+  border-radius: 2px;
+}
+
+.measure-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.measure-list li {
+  position: relative;
+  padding: 10px 0 10px 30px;
+  color: #a3aed0;
+}
+
+.measure-list li:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.measure-list li::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 16px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #4a6bf5, #6f88ff);
+}
+
+.measure-list li strong {
+  display: inline-block;
+  margin-right: 5px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Size Type Navigation */
+.size-type-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.size-type-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #a3aed0;
+  padding: 8px 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.size-type-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.size-type-btn.active {
+  background: linear-gradient(90deg, #4a6bf5, #6f88ff);
+  color: white;
+  border-color: transparent;
+}
+
+.guide-description {
+  color: #a3aed0;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+/* Visual element */
+.size-guide-illustration {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.size-guide-illustration img {
+  max-width: 100%;
+  border-radius: 8px;
+  opacity: 0.9;
+}

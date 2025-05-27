@@ -40,9 +40,9 @@ const WishlistButton = ({ productId, size = "sm", className = "" }) => {
   
   return (
     <Button
-      variant={isLiked ? "danger" : "outline-danger"}
+      variant="light" // Changed to "light" for a neutral base
       size={size}
-      className={`wishlist-btn ${className}`}
+      className={`wishlist-btn ${isLiked ? 'active' : ''} ${className}`} // Added 'active' class conditionally
       onClick={handleToggleWishlist}
       isLoading={processing}
       title={isLiked ? "Remove from wishlist" : "Add to wishlist"}
