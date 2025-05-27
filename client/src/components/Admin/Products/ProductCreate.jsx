@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Row, Col, Button as BsButton } from 'react-bootstrap';
+import { Modal, Form, Row, Col, Spinner, Alert, Image } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
 import { createProduct } from '../../../api/product';
 import { getAllCategories } from '../../../api/category';
-import { FaPlus, FaTrash } from 'react-icons/fa';
-import LoadingAnimation from '../../common/LoadingAnimation';
+import { FaPlus } from 'react-icons/fa';
+import './ProductForms.css';
 
 const ProductCreate = ({ show, onHide, onProductCreated }) => {
   const [formData, setFormData] = useState({
@@ -15,7 +13,6 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
     price: '',
     stock_quantity: '',
     image_url: '',
-    images: [], // New array to store multiple images
     category: ''
   });
   const [categories, setCategories] = useState([]);
@@ -46,52 +43,6 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
     }));
   };
 
-  // Add new image input
-  const addImageInput = () => {
-    setFormData(prev => ({
-      ...prev,
-      images: [...prev.images, { url: '', alt: '', isMain: prev.images.length === 0 }]
-    }));
-  };
-
-  // Remove image input
-  const removeImageInput = (index) => {
-    setFormData(prev => {
-      const newImages = [...prev.images];
-      newImages.splice(index, 1);
-      
-      // If we removed the main image, make the first one main
-      if (newImages.length > 0 && newImages.every(img => !img.isMain)) {
-        newImages[0].isMain = true;
-      }
-      
-      return {
-        ...prev,
-        images: newImages
-      };
-    });
-  };
-
-  // Handle image input changes
-  const handleImageChange = (index, field, value) => {
-    setFormData(prev => {
-      const newImages = [...prev.images];
-      newImages[index] = { ...newImages[index], [field]: value };
-      
-      // If marking this as main, unmark others
-      if (field === 'isMain' && value === true) {
-        newImages.forEach((img, i) => {
-          if (i !== index) img.isMain = false;
-        });
-      }
-      
-      return {
-        ...prev,
-        images: newImages
-      };
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -110,14 +61,8 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
         setLoading(false);
         return;
       }
-      
-      // If no images specified, use the image_url as the main image
-      const dataToSubmit = { ...formData };
-      if (formData.image_url && formData.images.length === 0) {
-        dataToSubmit.images = [{ url: formData.image_url, alt: formData.name, isMain: true }];
-      }
 
-      await createProduct(dataToSubmit);
+      await createProduct(formData);
       resetForm();
       onProductCreated();
     } catch (err) {
@@ -133,179 +78,158 @@ const ProductCreate = ({ show, onHide, onProductCreated }) => {
       price: '',
       stock_quantity: '',
       image_url: '',
-      images: [],
       category: ''
     });
     setLoading(false);
   };
 
   return (
-    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false} size="lg">
+    <Modal 
+      show={show} 
+      onHide={onHide} 
+      backdrop="static" 
+      keyboard={false} 
+      size="lg"
+      centered
+      className="product-modal"
+    >
       <Modal.Header closeButton>
         <Modal.Title>Add New Product</Modal.Title>
       </Modal.Header>
       
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="product-form">
         <Modal.Body>
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <Alert variant="danger">{error}</Alert>}
           
-          <Input
-            label="Product Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          
-          <Input
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            as="textarea"
-            rows={3}
-            helperText="Provide a detailed description of the product"
-          />
-          
-          <Row>
-            <Col md={6}>
-              <Input
-                label="Price ($)"
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                min="0.01"
-                step="0.01"
-                required
+          {formData.image_url && (
+            <div className="product-image-preview">
+              <Image 
+                src={formData.image_url} 
+                alt="Product preview"
+                thumbnail
               />
+            </div>
+          )}
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Product Name</Form.Label>
+            <Form.Control
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter product name"
+              required
+            />
+          </Form.Group>
+          
+          <Form.Group className="mb-3">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Enter product description"
+              rows={3}
+            />
+            <div className="helper-text">
+              Provide a detailed description of the product
+            </div>
+          </Form.Group>
+          
+          <Row className="form-row">
+            <Col md={6}>
+              <Form.Group className="mb-3 mb-md-0">
+                <Form.Label>Price ($)</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  min="0.01"
+                  step="0.01"
+                  placeholder="0.00"
+                  required
+                />
+              </Form.Group>
             </Col>
             <Col md={6}>
-              <Input
-                label="Stock Quantity"
-                type="number"
-                name="stock_quantity"
-                value={formData.stock_quantity}
-                onChange={handleChange}
-                min="0"
-                step="1"
-                required
-              />
+              <Form.Group>
+                <Form.Label>Stock Quantity</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="stock_quantity"
+                  value={formData.stock_quantity}
+                  onChange={handleChange}
+                  min="0"
+                  step="1"
+                  placeholder="0"
+                  required
+                />
+              </Form.Group>
             </Col>
           </Row>
           
-          {/* Legacy single image URL input */}
-          <Input
-            label="Primary Image URL"
-            name="image_url"
-            value={formData.image_url}
-            onChange={handleChange}
-            helperText="Enter the URL for the main product image"
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Image URL</Form.Label>
+            <Form.Control
+              type="text"
+              name="image_url"
+              value={formData.image_url}
+              onChange={handleChange}
+              placeholder="https://example.com/image.jpg"
+            />
+            <div className="helper-text">
+              Enter the URL for the product image
+            </div>
+          </Form.Group>
           
-          {/* Multiple images section */}
-          <div className="mb-3">
-            <label className="form-label d-flex justify-content-between align-items-center">
-              Additional Product Images
-              <BsButton 
-                variant="outline-primary" 
-                size="sm" 
-                onClick={addImageInput} 
-                type="button"
-              >
-                <FaPlus /> Add Image
-              </BsButton>
-            </label>
-            
-            {formData.images.map((image, index) => (
-              <Row key={index} className="mb-3 align-items-end">
-                <Col md={5}>
-                  <Form.Group>
-                    <Form.Label>Image URL</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={image.url}
-                      onChange={(e) => handleImageChange(index, 'url', e.target.value)}
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={3}>
-                  <Form.Group>
-                    <Form.Label>Alt Text</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={image.alt}
-                      onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
-                      placeholder="Product description"
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={2}>
-                  <Form.Group>
-                    <Form.Check
-                      type="checkbox"
-                      label="Main Image"
-                      checked={image.isMain}
-                      onChange={(e) => handleImageChange(index, 'isMain', e.target.checked)}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={2} className="d-flex justify-content-end">
-                  <BsButton 
-                    variant="outline-danger" 
-                    size="sm" 
-                    onClick={() => removeImageInput(index)}
-                    type="button"
-                  >
-                    <FaTrash />
-                  </BsButton>
-                </Col>
-              </Row>
-            ))}
-          </div>
-          
-          <Input
-            label="Category"
-            as="select"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            required
-            options={[
-              { value: '', label: 'Select Category' },
-              ...categories.map(category => ({
-                value: category._id,
-                label: category.name
-              }))
-            ]}
-          />
+          <Form.Group>
+            <Form.Label>Category</Form.Label><br />
+            <Form.Select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+            >
+              <option value="" style={{ backgroundColor: '#29313e' }}>Select Category</option> 
+              {categories.map(category => (
+                <option key={category._id} value={category._id} style={{ backgroundColor: '#29313e' }}>
+                  {category.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
         </Modal.Body>
         
         <Modal.Footer>
-          <Button 
-            variant="secondary" 
+          <button 
+            type="button"
+            className="btn product-form-btn btn-secondary"
             onClick={() => {
               resetForm();
               onHide();
             }}
           >
             Cancel
-          </Button>
-          <Button 
-            type="submit" 
-            variant="primary" 
-            icon={loading ? null : FaPlus}
+          </button>
+          <button 
+            type="submit"
+            className="btn product-form-btn btn-primary"
             disabled={loading}
           >
             {loading ? (
               <>
-                <LoadingAnimation size="small" /> Adding...
+                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                Creating...
               </>
             ) : (
-              'Add Product'
+              <>
+                <FaPlus className="me-2" /> Add Product
+              </>
             )}
-          </Button>
+          </button>
         </Modal.Footer>
       </Form>
     </Modal>

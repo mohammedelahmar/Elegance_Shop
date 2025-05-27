@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Row, Col, Image } from 'react-bootstrap';
+import { Modal, Form, Row, Col, Image, Spinner, Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Input from '../../UI/Input';
-import Button from '../../UI/Button';
 import { updateProduct } from '../../../api/product';
 import { getAllCategories } from '../../../api/category';
-import { FaSave, FaPlus, FaTrash } from 'react-icons/fa';
-import LoadingAnimation from '../../common/LoadingAnimation';
+import { FaSave } from 'react-icons/fa';
+import './ProductForms.css';
 
 const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
   const [formData, setFormData] = useState({
@@ -15,8 +13,7 @@ const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
     price: '',
     stock_quantity: '',
     image_url: '',
-    category: '',
-    images: []
+    category: ''
   });
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,8 +27,7 @@ const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
         price: product.price || '',
         stock_quantity: product.stock_quantity || 0,
         image_url: product.image_url || '',
-        category: product.category?._id || product.category || '',
-        images: product.images || []
+        category: product.category?._id || product.category || ''
       });
     }
   }, [product]);
@@ -88,171 +84,147 @@ const ProductEdit = ({ product, show, onHide, onProductUpdated }) => {
     }
   };
 
-  const addImageInput = () => {
-    setFormData(prev => ({
-      ...prev,
-      images: [...prev.images, { url: '', alt: '', isMain: prev.images.length === 0 }]
-    }));
-  };
-
-  const removeImageInput = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index)
-    }));
-  };
-
-  const handleImageChange = (index, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      images: prev.images.map((image, i) => 
-        i === index ? { ...image, [field]: value } : image
-      )
-    }));
-  };
-
   return (
-    <Modal show={show} onHide={onHide} backdrop="static" keyboard={false} size="lg">
+    <Modal 
+      show={show} 
+      onHide={onHide} 
+      backdrop="static" 
+      keyboard={false} 
+      size="lg"
+      centered
+      className="product-modal"
+    >
       <Modal.Header closeButton>
         <Modal.Title>Edit Product</Modal.Title>
       </Modal.Header>
       
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="product-form">
         <Modal.Body>
-          {error && <div className="alert alert-danger">{error}</div>}
+          {error && <Alert variant="danger">{error}</Alert>}
           
           {formData.image_url && (
-            <div className="text-center mb-3">
+            <div className="product-image-preview">
               <Image 
                 src={formData.image_url} 
                 alt={formData.name} 
-                style={{ maxHeight: '200px' }}
-                className="img-thumbnail"
+                thumbnail
               />
             </div>
           )}
           
-          <Input
-            label="Product Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Product Name</Form.Label>
+            <Form.Control
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter product name"
+              required
+            />
+          </Form.Group>
           
-          <Input
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            as="textarea"
-            rows={3}
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Enter product description"
+              rows={3}
+            />
+          </Form.Group>
           
-          <Row>
+          <Row className="form-row">
             <Col md={6}>
-              <Input
-                label="Price ($)"
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                min="0.01"
-                step="0.01"
-                required
-              />
+              <Form.Group className="mb-3 mb-md-0">
+                <Form.Label>Price ($)</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  min="0.01"
+                  step="0.01"
+                  placeholder="0.00"
+                  required
+                />
+              </Form.Group>
             </Col>
             <Col md={6}>
-              <Input
-                label="Stock Quantity"
-                type="number"
-                name="stock_quantity"
-                value={formData.stock_quantity}
-                onChange={handleChange}
-                min="0"
-                step="1"
-                required
-              />
+              <Form.Group>
+                <Form.Label>Stock Quantity</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="stock_quantity"
+                  value={formData.stock_quantity}
+                  onChange={handleChange}
+                  min="0"
+                  step="1"
+                  placeholder="0"
+                  required
+                />
+              </Form.Group>
             </Col>
           </Row>
           
-          <Input
-            label="Image URL"
-            name="image_url"
-            value={formData.image_url}
-            onChange={handleChange}
-            helperText="Enter the URL for the product image"
-          />
+          <Form.Group className="mb-3">
+            <Form.Label>Image URL</Form.Label>
+            <Form.Control
+              type="text"
+              name="image_url"
+              value={formData.image_url}
+              onChange={handleChange}
+              placeholder="https://example.com/image.jpg"
+            />
+            <div className="helper-text">
+              Enter the URL for the product image
+            </div>
+          </Form.Group>
           
-          <Input
-            label="Category"
-            as="select"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            required
-            options={[
-              { value: '', label: 'Select Category' },
-              ...categories.map(category => ({
-                value: category._id,
-                label: category.name
-              }))
-            ]}
-          />
-
-          <div className="mt-3">
-            <h5>Additional Images</h5>
-            {formData.images.map((image, index) => (
-              <Row key={index} className="align-items-center mb-2">
-                <Col md={5}>
-                  <Input
-                    label="Image URL"
-                    value={image.url}
-                    onChange={(e) => handleImageChange(index, 'url', e.target.value)}
-                  />
-                </Col>
-                <Col md={5}>
-                  <Input
-                    label="Alt Text"
-                    value={image.alt}
-                    onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
-                  />
-                </Col>
-                <Col md={2} className="text-center">
-                  <Button
-                    variant="danger"
-                    icon={FaTrash}
-                    onClick={() => removeImageInput(index)}
-                  >
-                    Remove
-                  </Button>
-                </Col>
-              </Row>
-            ))}
-            <Button variant="success" icon={FaPlus} onClick={addImageInput}>
-              Add Image
-            </Button>
-          </div>
+          <Form.Group>
+            <Form.Label>Category</Form.Label> <br />
+            <Form.Select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+            >
+              <option value="" style={{ backgroundColor: '#29313e' }}>Select Category</option>
+              {categories.map(category => (
+                <option key={category._id} value={category._id} style={{ backgroundColor: '#29313e' }}>
+                  {category.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
         </Modal.Body>
         
         <Modal.Footer>
-          <Button variant="secondary" onClick={onHide}>
+          <button 
+            type="button"
+            className="btn product-form-btn btn-secondary"
+            onClick={onHide}
+          >
             Cancel
-          </Button>
-          <Button 
-            type="submit" 
-            variant="primary" 
-            icon={loading ? null : FaSave}
+          </button>
+          <button 
+            type="submit"
+            className="btn product-form-btn btn-primary"
             disabled={loading}
           >
             {loading ? (
               <>
-                <LoadingAnimation size="small" /> Saving...
+                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                Saving...
               </>
             ) : (
-              'Save Changes'
+              <>
+                <FaSave className="me-2" /> Save Changes
+              </>
             )}
-          </Button>
+          </button>
         </Modal.Footer>
       </Form>
     </Modal>
