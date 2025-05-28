@@ -3,7 +3,7 @@ import { Table, Button, InputGroup, Form } from 'react-bootstrap';
 import { FaEye, FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
 import { deleteAddress } from '../../../api/address';
 import Message from '../../UI/Message';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'; 
 import './AddressList.css';
 
 const AddressList = ({ addresses, onEditAddress, onViewAddress, onAddressDeleted }) => {

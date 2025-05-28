@@ -3,19 +3,39 @@
   max-width: 100%;
   object-fit: contain;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  /* background: rgba(255, 255, 255, 0.05); */
   padding: 0.5rem;
+  /* border: 1px solid rgba(255, 255, 255, 0.1); */
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.quantity-control .form-control {
-  width: 60px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #f8f9fa;
+/* Replace the old .quantity-control .form-control rule with this more specific one */
+.quantity-control input.text-center[type="number"] {
+  width: 45px; /* Adjusted width to better fit the content */
+  background-color: rgba(255, 255, 255, 0.08) !important; /* Slightly adjusted background */
+  border: none !important; /* Remove border */
+  color: #f8f9fa !important; /* Text color */
   font-weight: 600;
   text-align: center;
+  padding: 0.3rem 0.1rem; /* Adjusted padding for a tighter fit */
+  box-shadow: none !important; /* Remove any default browser focus shadow */
+  border-radius: 4px; /* Optional: a slight rounding for the input field itself */
+
+  /* Remove spinner buttons for WebKit based browsers (Chrome, Safari, Edge) */
+  -webkit-appearance: none;
+  /* Remove spinner buttons for Firefox */
+  -moz-appearance: textfield;
+  /* Standard property for compatibility */
+  appearance: none;
+  margin: 0; /* Reset margin if -webkit-appearance adds any */
+}
+
+/* Explicitly hide spinners for WebKit browsers */
+.quantity-control input.text-center[type="number"]::-webkit-outer-spin-button,
+.quantity-control input.text-center[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 .cart-item {
