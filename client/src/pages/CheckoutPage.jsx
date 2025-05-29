@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Alert, Spinner } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { 
@@ -19,11 +19,12 @@ import {
 } from 'react-icons/fa';
 import { createOrder } from '../api/order';
 import { processPayment } from '../api/payment';
-import { addAddress } from '../api/address';
+import { addAddress, getUserAddresses } from '../api/address';
 import './CheckoutPage.css';
 import './CheckoutPageEnhancements.css';
 
-const CheckoutPage = () => {  const navigate = useNavigate();
+const CheckoutPage = () => {  
+  const navigate = useNavigate();
   const { cartItems, subtotal, clearCart } = useCart();
   const { isAuthenticated } = useAuth();
   const [step, setStep] = useState(1);
@@ -39,6 +40,12 @@ const CheckoutPage = () => {  const navigate = useNavigate();
     phone: ''
   });
   const [paymentMethod, setPaymentMethod] = useState('credit_card');
+  
+  // New state variables for user addresses
+  const [userAddresses, setUserAddresses] = useState([]);
+  const [fetchingAddresses, setFetchingAddresses] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [useNewAddress, setUseNewAddress] = useState(false);
   
   // Calculated values
   const shippingCost = subtotal > 50 ? 0 : 10;
@@ -56,6 +63,32 @@ const CheckoutPage = () => {  const navigate = useNavigate();
       navigate('/login?redirect=checkout');
     }
   }, [cartItems, isAuthenticated, navigate]);
+  
+  useEffect(() => {
+    const fetchUserAddresses = async () => {
+      if (isAuthenticated) {
+        try {
+          setFetchingAddresses(true);
+          const addresses = await getUserAddresses();
+          setUserAddresses(addresses);
+          // Pre-select the first address if available
+          if (addresses.length > 0) {
+            setSelectedAddressId(addresses[0]._id);
+            // Pre-fill shipping form with the selected address
+            populateShippingFormWithAddress(addresses[0]);
+          } else {
+            setUseNewAddress(true);
+          }
+        } catch (err) {
+          console.error('Error fetching user addresses:', err);
+        } finally {
+          setFetchingAddresses(false);
+        }
+      }
+    };
+    
+    fetchUserAddresses();
+  }, [isAuthenticated]);
   
   const handleShippingSubmit = (e) => {
     e.preventDefault();
@@ -84,23 +117,32 @@ const CheckoutPage = () => {  const navigate = useNavigate();
     setError(null);
     
     try {
-      // 1. Create the address
-      console.log("Creating address...");
-      const addressData = await addAddress({
-        address: shippingAddress.address,
-        city: shippingAddress.city,
-        postal_code: shippingAddress.postalCode,
-        country: shippingAddress.country,
-        phone_number: shippingAddress.phone || '' 
-      });
+      // If an existing address is selected, use it directly
+      let addressId;
       
-      if (!addressData || !addressData._id) {
-        throw new Error('Failed to create shipping address');
+      if (selectedAddressId && !useNewAddress) {
+        // Use the selected address ID directly
+        addressId = selectedAddressId;
+      } else {
+        // Create a new address
+        console.log("Creating new address...");
+        const addressData = await addAddress({
+          address: shippingAddress.address,
+          city: shippingAddress.city,
+          postal_code: shippingAddress.postalCode,
+          country: shippingAddress.country,
+          phone_number: shippingAddress.phone || '' 
+        });
+        
+        if (!addressData || !addressData._id) {
+          throw new Error('Failed to create shipping address');
+        }
+        
+        addressId = addressData._id;
+        console.log("Address created:", addressData);
       }
       
-      console.log("Address created:", addressData);
-      
-      // 2. Create order
+      // Create order with the address ID
       console.log("Creating order...");
       const orderItems = cartItems.map(item => ({
         product: item.product_id?._id || item.product_id,
@@ -110,7 +152,7 @@ const CheckoutPage = () => {  const navigate = useNavigate();
       
       const orderData = await createOrder({
         orderItems,
-        shippingAddress: addressData._id,
+        shippingAddress: addressId,
         paymentMethod,
         itemsPrice: subtotal,
         taxPrice: tax,
@@ -149,108 +191,207 @@ const CheckoutPage = () => {  const navigate = useNavigate();
     }
   };
   
-  const renderShippingStep = () => (    <div className="checkout-card">
+  const handleAddressSelection = (e) => {
+    const addressId = e.target.value;
+    if (addressId === 'new') {
+      setUseNewAddress(true);
+      setSelectedAddressId(null);
+      // Clear the shipping form
+      setShippingAddress({
+        address: '',
+        city: '',
+        postalCode: '',
+        country: '',
+        phone: ''
+      });
+    } else {
+      setUseNewAddress(false);
+      setSelectedAddressId(addressId);
+      // Find the selected address and populate the form
+      const selectedAddress = userAddresses.find(addr => addr._id === addressId);
+      if (selectedAddress) {
+        populateShippingFormWithAddress(selectedAddress);
+      }
+    }
+  };
+  
+  const populateShippingFormWithAddress = (address) => {
+    setShippingAddress({
+      address: address.address || '',
+      city: address.city || '',
+      postalCode: address.postal_code || '',
+      country: address.country || '',
+      phone: address.phone_number || ''
+    });
+  };
+  
+  const renderShippingStep = () => (
+    <div className="checkout-card">
       <div className="checkout-card-header">
         <FaAddressCard className="me-3" size={24} color="#4f46e5" />
         <h5>Shipping Information</h5>
       </div>
       <div className="checkout-card-body">
-        <Form onSubmit={handleShippingSubmit}>          <Form.Group className="checkout-form-group">
-            <Form.Label className="checkout-form-label">
-              <FaMapMarkerAlt className="me-2" />
-              Address
-            </Form.Label>
-            <Form.Control 
-              type="text" 
-              style={{ color: 'white' }}
-              placeholder="Enter your street address"
-              value={shippingAddress.address}
-              onChange={(e) => setShippingAddress({...shippingAddress, address: e.target.value})}
-              required
-              className="checkout-form-control"
-            />
-          </Form.Group>
-          
-          <Row>            <Col md={6}>
-              <Form.Group className="checkout-form-group">
-                <Form.Label className="checkout-form-label">
-                  <FaMapMarkerAlt className="me-2" />
-                  City
-                </Form.Label>
-                <Form.Control  
-              style={{ color: 'white' }}
-                  type="text" 
-                  placeholder="Enter your city"
-                  value={shippingAddress.city}
-                  onChange={(e) => setShippingAddress({...shippingAddress, city: e.target.value})}
-                  required
-                  className="checkout-form-control"
-                />
-              </Form.Group>
-            </Col>            <Col md={6}>
-              <Form.Group className="checkout-form-group">
-                <Form.Label className="checkout-form-label">
-                  <FaMapMarkerAlt className="me-2" />
-                  Postal/ZIP Code
-                </Form.Label>
-                <Form.Control 
-                  type="text" 
-              style={{ color: 'white' }}
-                  placeholder="Enter postal code"
-                  value={shippingAddress.postalCode}
-                  onChange={(e) => setShippingAddress({...shippingAddress, postalCode: e.target.value})}
-                  required
-                  className="checkout-form-control"
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          
-          <Row>            <Col md={6}>
-              <Form.Group className="checkout-form-group">
-                <Form.Label className="checkout-form-label">
-                  <FaMapMarkerAlt className="me-2" />
-                  Country
-                </Form.Label>
-                <Form.Control 
-                  type="text"  
-              style={{ color: 'white' }}
-                  placeholder="Enter your country"
-                  value={shippingAddress.country}
-                  onChange={(e) => setShippingAddress({...shippingAddress, country: e.target.value})}
-                  required
-                  className="checkout-form-control"
-                />
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group className="checkout-form-group">
-                <Form.Label className="checkout-form-label">
-                  <FaPhone className="me-2" />
-                  Phone Number
-                </Form.Label>
-                <Form.Control 
-                  type="tel" 
-              style={{ color: 'white' }}
-                  placeholder="Enter phone number"
-                  value={shippingAddress.phone}
-                  onChange={(e) => setShippingAddress({...shippingAddress, phone: e.target.value})}
-                  className="checkout-form-control"
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          
-          <div className="text-end mt-4">
-            <Button variant="primary" type="submit" className="btn-checkout">
-              Continue to Payment <FaChevronRight className="ms-2" />
-            </Button>
+        {fetchingAddresses ? (
+          <div className="text-center py-3">
+            <Spinner animation="border" variant="primary" />
+            <p className="mt-2">Loading your addresses...</p>
           </div>
-        </Form>
+        ) : (
+          <Form onSubmit={handleShippingSubmit}>
+            {/* Address Selection Section */}
+            {userAddresses.length > 0 && (
+              <div className="mb-4">
+                <Form.Group className="checkout-form-group">
+                  <Form.Label className="checkout-form-label">
+                    <FaMapMarkerAlt className="me-2" />
+                    Select a Shipping Address
+                  </Form.Label>
+                  <Form.Select 
+                    value={selectedAddressId || 'new'} 
+                    onChange={handleAddressSelection}
+                    style={{ color: 'white', backgroundColor: '#2d2f39' }}
+                    className="checkout-form-control"
+                  >
+                    {userAddresses.map(addr => (
+                      <option key={addr._id} value={addr._id}>
+                        {addr.address}, {addr.city}, {addr.country}
+                      </option>
+                    ))}
+                    <option value="new">+ Add New Address</option>
+                  </Form.Select>
+                </Form.Group>
+                
+                {selectedAddressId && (
+                  <div className="selected-address-preview mt-3 p-3 border rounded">
+                    <div className="d-flex justify-content-between">
+                      <h6>Selected Address</h6>
+                      <Link to={`/address/edit?id=${selectedAddressId}`} target="_blank" className="text-decoration-none">
+                        Edit this address
+                      </Link>
+                    </div>
+                    {userAddresses.find(addr => addr._id === selectedAddressId) && (
+                      <p className="mb-0">
+                        {userAddresses.find(addr => addr._id === selectedAddressId).address}<br />
+                        {userAddresses.find(addr => addr._id === selectedAddressId).city}, {userAddresses.find(addr => addr._id === selectedAddressId).postal_code}<br />
+                        {userAddresses.find(addr => addr._id === selectedAddressId).country}<br />
+                        Phone: {userAddresses.find(addr => addr._id === selectedAddressId).phone_number || 'N/A'}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* New Address Form Section - Only show if useNewAddress is true or no addresses available */}
+            {(useNewAddress || userAddresses.length === 0) && (
+              <>
+                <div className="mb-3">
+                  <h6>{userAddresses.length > 0 ? 'Enter New Address Details' : 'Enter Shipping Address'}</h6>
+                </div>
+                
+                <Form.Group className="checkout-form-group">
+                  <Form.Label className="checkout-form-label">
+                    <FaMapMarkerAlt className="me-2" />
+                    Address
+                  </Form.Label>
+                  <Form.Control 
+                    type="text" 
+                    style={{ color: 'white' }}
+                    placeholder="Enter your street address"
+                    value={shippingAddress.address}
+                    onChange={(e) => setShippingAddress({...shippingAddress, address: e.target.value})}
+                    required
+                    className="checkout-form-control"
+                  />
+                </Form.Group>
+                
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="checkout-form-group">
+                      <Form.Label className="checkout-form-label">
+                        <FaMapMarkerAlt className="me-2" />
+                        City
+                      </Form.Label>
+                      <Form.Control  
+                        style={{ color: 'white' }}
+                        type="text" 
+                        placeholder="Enter your city"
+                        value={shippingAddress.city}
+                        onChange={(e) => setShippingAddress({...shippingAddress, city: e.target.value})}
+                        required
+                        className="checkout-form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="checkout-form-group">
+                      <Form.Label className="checkout-form-label">
+                        <FaMapMarkerAlt className="me-2" />
+                        Postal/ZIP Code
+                      </Form.Label>
+                      <Form.Control 
+                        type="text" 
+                        style={{ color: 'white' }}
+                        placeholder="Enter postal code"
+                        value={shippingAddress.postalCode}
+                        onChange={(e) => setShippingAddress({...shippingAddress, postalCode: e.target.value})}
+                        required
+                        className="checkout-form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="checkout-form-group">
+                      <Form.Label className="checkout-form-label">
+                        <FaMapMarkerAlt className="me-2" />
+                        Country
+                      </Form.Label>
+                      <Form.Control 
+                        type="text"  
+                        style={{ color: 'white' }}
+                        placeholder="Enter your country"
+                        value={shippingAddress.country}
+                        onChange={(e) => setShippingAddress({...shippingAddress, country: e.target.value})}
+                        required
+                        className="checkout-form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="checkout-form-group">
+                      <Form.Label className="checkout-form-label">
+                        <FaPhone className="me-2" />
+                        Phone Number
+                      </Form.Label>
+                      <Form.Control 
+                        type="tel" 
+                        style={{ color: 'white' }}
+                        placeholder="Enter phone number"
+                        value={shippingAddress.phone}
+                        onChange={(e) => setShippingAddress({...shippingAddress, phone: e.target.value})}
+                        className="checkout-form-control"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </>
+            )}
+            
+            <div className="text-end mt-4">
+              <Button variant="primary" type="submit" className="btn-checkout">
+                Continue to Payment <FaChevronRight className="ms-2" />
+              </Button>
+            </div>
+          </Form>
+        )}
       </div>
     </div>
   );
-  
+
   const renderPaymentStep = () => {
     const getPaymentIcon = (method) => {
       switch(method) {
@@ -262,7 +403,8 @@ const CheckoutPage = () => {  const navigate = useNavigate();
       }
     };
     
-    return (      <div className="checkout-card">
+    return (      
+      <div className="checkout-card">
         <div className="checkout-card-header">
           <FaCreditCard className="me-3" size={24} color="#4f46e5" />
           <h5>Payment Method</h5>
@@ -324,7 +466,8 @@ const CheckoutPage = () => {  const navigate = useNavigate();
       return parseFloat(price) || 0;
     };
     
-    return (      <div className="checkout-card">
+    return (      
+      <div className="checkout-card">
         <div className="checkout-card-header">
           <FaShoppingBag className="me-3" size={24} color="#4f46e5" />
           <h5>Review Your Order</h5>
@@ -470,12 +613,14 @@ const CheckoutPage = () => {  const navigate = useNavigate();
               <div className="order-summary-row">
                 <span className="order-summary-label">Tax:</span>
                 <span className="order-summary-value">${tax.toFixed(2)}</span>
-              </div>              <div className="order-summary-row order-summary-total">
+              </div>              
+              <div className="order-summary-row order-summary-total">
                 <span className="order-summary-label">Order Total:</span>
                 <span className="order-summary-value">${orderTotal.toFixed(2)}</span>
               </div>
             </div>
-          </div>        </Col>
+          </div>        
+        </Col>
       </Row>
     </Container>
   </div>

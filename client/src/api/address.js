@@ -49,3 +49,12 @@ export const getAllAddresses = async () => {
   const { data } = await axios.get('/addresses');
   return data;
 };
+
+/**
+ * Get all addresses for the current user
+ * @returns {Promise} - Promise with user's addresses
+ */
+export const getUserAddresses = async () => {
+  const { data } = await axios.get('/addresses/user');
+  return data;
+};

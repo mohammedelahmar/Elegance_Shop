@@ -84,5 +84,13 @@ const deleteAdresse = asyncHandler(async (req, res) => {
      }
 });
 
-export { addAdresse, getAdresseById, getAllAdresses, updateAdresse, deleteAdresse };
+// @desc    Get user addresses
+// @route   GET /api/addresses/user
+// @access  Private
+const getUserAddresses = asyncHandler(async (req, res) => {
+  const addresses = await Adresses.find({ user: req.user._id });
+  res.json(addresses);
+});
+
+export { addAdresse, getAdresseById, getAllAdresses, updateAdresse, deleteAdresse, getUserAddresses };
 

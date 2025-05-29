@@ -196,3 +196,22 @@
                 linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
   }
 }
+
+/* Selected address preview */
+.selected-address-preview {
+  background-color: #33353e;
+  border-color: #4a6bf5 !important;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.selected-address-preview h6 {
+  color: #4a6bf5;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.selected-address-preview p {
+  color: #ccc;
+  line-height: 1.5;
+}
