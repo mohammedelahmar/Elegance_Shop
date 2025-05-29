@@ -30,40 +30,58 @@ const ForgotPasswordForm = () => {
       setLoading(false);
     }
   };
-
   return (
-    <Form onSubmit={handleSubmit}>
-      {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
+    <div className="auth-form">
+      <Form onSubmit={handleSubmit}>
+        {error && (
+          <Alert variant="danger" className="auth-alert alert-danger">
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert variant="success" className="auth-alert alert-success">
+            {success}
+          </Alert>
+        )}
+        
+        <Input
+          label="Email Address"
+          type="email"
+          placeholder="Enter your email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="auth-input"
+        />
+        
+        <Button 
+          type="submit" 
+          className="auth-btn"
+          disabled={loading}
+        >
+          {loading ? (
+            <div className="auth-loading">
+              <span className="auth-spinner"></span>
+              Sending Reset Link...
+            </div>
+          ) : (
+            <>
+              <FaKey className="me-2" />
+              Send Reset Link
+            </>
+          )}
+        </Button>
+      </Form>
       
-      <div className="text-center mb-4">
-        <FaKey size={40} className="text-primary mb-2" />
-        <h2>Forgot Password</h2>
-        <p className="text-muted">Enter your email to receive a password reset link</p>
+      <div className="auth-links">
+        <div className="register-link">
+          Remember your password?{' '}
+          <Link to="/login" className="auth-link primary">
+            Back to Login
+          </Link>
+        </div>
       </div>
-      
-      <Input
-        label="Email Address"
-        type="email"
-        placeholder="Enter your email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      
-      <Button 
-        type="submit" 
-        fullWidth 
-        isLoading={loading}
-        icon={FaKey}
-      >
-        Send Reset Link
-      </Button>
-      
-      <div className="mt-3 text-center">
-        <Link to="/login">Back to Login</Link>
-      </div>
-    </Form>
+    </div>
   );
 };
 

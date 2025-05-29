@@ -31,44 +31,67 @@ const LoginForm = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      {error && <Alert variant="danger">{error}</Alert>}
+    <div className="auth-form">
+      <Form onSubmit={handleSubmit}>
+        {error && (
+          <Alert variant="danger" className="auth-alert alert-danger">
+            {error}
+          </Alert>
+        )}
+        
+        <Input
+          label="Email Address"
+          type="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="auth-input"
+        />
+        
+        <Input
+          label="Password"
+          type="password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="auth-input"
+        />
+        
+        <div className="forgot-password-link">
+          <Link to="/forgot-password" className="auth-link">
+            Forgot Password?
+          </Link>
+        </div>
+        
+        <Button 
+          type="submit" 
+          className="auth-btn"
+          disabled={loading}
+        >
+          {loading ? (
+            <div className="auth-loading">
+              <span className="auth-spinner"></span>
+              Signing In...
+            </div>
+          ) : (
+            <>
+              <FaSignInAlt className="me-2" />
+              Sign In
+            </>
+          )}
+        </Button>
+      </Form>
       
-      <Input
-        label="Email Address"
-        type="email"
-        placeholder="Enter email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      
-      <Input
-        label="Password"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      
-      <Button 
-        type="submit" 
-        fullWidth 
-        isLoading={loading}
-        icon={FaSignInAlt}
-      >
-        Login
-      </Button>
-      
-      <div className="d-flex justify-content-end mb-3">
-        <Link to="/forgot-password">Forgot Password?</Link>
+      <div className="auth-links">
+        <div className="register-link">
+          Don't have an account?{' '}
+          <Link to="/register" className="auth-link primary">          Create Account
+          </Link>
+        </div>
       </div>
-      
-      <div className="mt-3 text-center">
-        Don't have an account? <Link to="/register">Register here</Link>
-      </div>
-    </Form>
+    </div>
   );
 };
 

@@ -54,98 +54,132 @@ const RegisterForm = () => {
     { value: 'male', label: 'Male' },
     { value: 'female', label: 'Female' }
   ];
-
   return (
-    <Form onSubmit={handleSubmit}>
-      {error && <Alert variant="danger">{error}</Alert>}
+    <div className="auth-form">
+      <Form onSubmit={handleSubmit}>
+        {error && (
+          <Alert variant="danger" className="auth-alert alert-danger">
+            {error}
+          </Alert>
+        )}
+        
+        <Row>
+          <Col md={6}>
+            <Input
+              label="First Name"
+              name="Firstname"
+              placeholder="Enter your first name"
+              value={formData.Firstname}
+              onChange={handleChange}
+              required
+              className="auth-input"
+            />
+          </Col>
+          <Col md={6}>
+            <Input
+              label="Last Name"
+              name="Lastname"
+              placeholder="Enter your last name"
+              value={formData.Lastname}
+              onChange={handleChange}
+              required
+              className="auth-input"
+            />
+          </Col>
+        </Row>
+
+        <Input
+          label="Email Address"
+          type="email"
+          name="email"
+          placeholder="Enter your email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="auth-input"
+        />
+        
+        <Input
+          label="Phone Number"
+          type="tel"
+          name="phone_number"
+          placeholder="Enter your phone number"
+          value={formData.phone_number}
+          onChange={handleChange}
+          required
+          className="auth-input"
+        />
+        
+        <Input
+          label="Gender"
+          as="select"
+          name="sexe"
+          value={formData.sexe}
+          onChange={handleChange}
+          options={genderOptions}
+          className="auth-input"
+        />
+        
+        <Input
+          label="Address"
+          name="address"
+          placeholder="Enter your address"
+          value={formData.address}
+          onChange={handleChange}
+          required
+          className="auth-input"
+        />
+        
+        <Input
+          label="Password"
+          type="password"
+          name="password"
+          placeholder="Create a password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          className="auth-input"
+        />
+        
+        <Input
+          label="Confirm Password"
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm your password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
+          className="auth-input"
+        />
+        
+        <Button 
+          type="submit" 
+          className="auth-btn"
+          disabled={loading}
+        >
+          {loading ? (
+            <div className="auth-loading">
+              <span className="auth-spinner"></span>
+              Creating Account...
+            </div>
+          ) : (
+            <>
+              <FaUserPlus className="me-2" />
+              Create Account
+            </>
+          )}
+        </Button>
+      </Form>
       
-      <Row>
-        <Col md={6}>
-          <Input
-            label="First Name"
-            name="Firstname"
-            value={formData.Firstname}
-            onChange={handleChange}
-            required
-          />
-        </Col>
-        <Col md={6}>
-          <Input
-            label="Last Name"
-            name="Lastname"
-            value={formData.Lastname}
-            onChange={handleChange}
-            required
-          />
-        </Col>
-      </Row>
-      
-      <Input
-        label="Email Address"
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
-      
-      <Input
-        label="Phone Number"
-        type="tel"
-        name="phone_number"
-        value={formData.phone_number}
-        onChange={handleChange}
-        required
-      />
-      
-      <Input
-        label="Gender"
-        as="select"
-        name="sexe"
-        value={formData.sexe}
-        onChange={handleChange}
-        options={genderOptions}
-      />
-      
-      <Input
-        label="Address"
-        name="address"
-        value={formData.address}
-        onChange={handleChange}
-        required
-      />
-      
-      <Input
-        label="Password"
-        type="password"
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-        required
-      />
-      
-      <Input
-        label="Confirm Password"
-        type="password"
-        name="confirmPassword"
-        value={formData.confirmPassword}
-        onChange={handleChange}
-        required
-      />
-      
-      <Button 
-        type="submit" 
-        fullWidth 
-        isLoading={loading}
-        icon={FaUserPlus}
-      >
-        Register
-      </Button>
-      
-      <div className="mt-3 text-center">
-        Already have an account? <Link to="/login">Login here</Link>
+      <div className="auth-links">
+        <div className="register-link">
+          Already have an account?{' '}
+          <Link to="/login" className="auth-link primary">
+            Sign In
+          </Link>
+        </div>
       </div>
-    </Form>
+    </div>
   );
 };
 

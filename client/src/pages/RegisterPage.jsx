@@ -1,17 +1,26 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
 import RegisterForm from '../components/Auth/RegisterForm';
+import { FaUserPlus } from 'react-icons/fa';
+import '../components/Auth/AuthForms.css';
 
 const RegisterPage = () => {
   return (
-    <Container className="py-5">
-      <Row className="justify-content-center">
-        <Col md={6}>
-          <h2 className="text-center mb-4">Create an Account</h2>
+    <div className="auth-page">
+      <div className="auth-container">
+        <div className="auth-card">
+          <div className="auth-header">
+            <div className="auth-icon">
+              <FaUserPlus />
+            </div>
+            <h1 className="auth-form-title">Create Account</h1>
+            <p className="auth-form-subtitle">
+              Join us and start your journey today
+            </p>
+          </div>
           <RegisterForm />
-        </Col>
-      </Row>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 };
 
