@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import Header from './Header'; 
 import Footer from './Footer';
-import './layout.css'; // Corrected import path
+import './Layout.css'; // Corrected import path
 
 const Layout = () => {
   return (
