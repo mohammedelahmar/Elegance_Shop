@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { FaArrowLeft, FaReceipt } from 'react-icons/fa';
 import { getOrderById, updateOrderToDelivered } from '../api/order';
 import OrderDetail from '../components/Order/OrderDetail';
 import Loader from '../components/UI/Loader';
 import Message from '../components/UI/Message';
+import './OrderPage.css';
 
 const OrderPage = () => {
   const { id: orderId } = useParams();
@@ -48,35 +50,43 @@ const OrderPage = () => {
       setDeliverLoading(false);
     }
   };
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <button
-        onClick={() => navigate(-1)}
-        className="mb-6 flex items-center text-blue-500 hover:text-blue-700"
-      >
-        ← Back
-      </button>
-      
-      <h1 className="text-2xl font-bold mb-6">
-        Order {orderId && orderId.slice(-6)}
-      </h1>
-      
-      {loading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
-      ) : (
-        <>
-          {deliverError && <Message variant="danger">{deliverError}</Message>}
-          <OrderDetail
-            order={order}
-            isAdmin={isAdmin}
-            onMarkDelivered={handleMarkDelivered}
-            deliverLoading={deliverLoading}
-          />
-        </>
-      )}
+    <div className="order-page-container">
+      <div className="order-page-content">
+        <button
+          onClick={() => navigate(-1)}
+          className="back-button"
+        >
+          <FaArrowLeft />
+          Back
+        </button>
+        
+        <h1 className="order-page-title">
+          <FaReceipt />
+          Order Details
+          {orderId && <span className="order-id-highlight">#{orderId.slice(-8).toUpperCase()}</span>}
+        </h1>
+        
+        {loading ? (
+          <div className="order-loading">
+            <Loader />
+          </div>
+        ) : error ? (
+          <div className="order-error">
+            <Message variant="danger">{error}</Message>
+          </div>
+        ) : (
+          <>
+            {deliverError && <Message variant="danger">{deliverError}</Message>}
+            <OrderDetail
+              order={order}
+              isAdmin={isAdmin}
+              onMarkDelivered={handleMarkDelivered}
+              deliverLoading={deliverLoading}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 };

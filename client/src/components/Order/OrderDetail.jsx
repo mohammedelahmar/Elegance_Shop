@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, Row, Col, ListGroup, Image, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { FaTruck, FaCreditCard, FaShippingFast, FaBoxOpen, FaCalculator } from 'react-icons/fa';
 import Button from '../UI/Button';
-import { FaTruck } from 'react-icons/fa';
+import './OrderDetail.css';
 
 // Add this helper function at the top
 const formatPrice = (price) => {
@@ -25,132 +25,160 @@ const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
   if (!order) return null;
   
   return (
-    <Card className="mb-4 shadow-sm">
-      <Card.Body>
-        <Row>
-          <Col md={6} className="mb-4 mb-md-0">
-            <h2 className="h4 mb-3">Shipping</h2>
-            <p className="mb-1">
-              <strong>Name:</strong> {order.user?.name || 'N/A'}
-            </p>
-            <p className="mb-1">
-              <strong>Email:</strong>{' '}
-              {order.user?.email ? (
-                <a href={`mailto:${order.user.email}`} className="text-primary">
-                  {order.user.email}
-                </a>
+    <div className="order-detail-wrapper">
+      <div className="order-detail-main">
+        {/* Shipping and Payment Information */}
+        <div className="shipping-payment-grid">
+          <div className="info-section">
+            <h3>
+              <FaShippingFast />
+              Shipping Information
+            </h3>
+            <div className="info-item">
+              <span className="info-label">Customer Name:</span>
+              <span className="info-value">{order.user?.name || 'N/A'}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Email:</span>
+              <span className="info-value">
+                {order.user?.email ? (
+                  <a href={`mailto:${order.user.email}`}>
+                    {order.user.email}
+                  </a>
+                ) : (
+                  'N/A'
+                )}
+              </span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Address:</span>
+              <span className="info-value address-text">
+                {order.shippingAddress ? (
+                  <>
+                    {order.shippingAddress.address}<br />
+                    {order.shippingAddress.city}, {order.shippingAddress.postalCode}<br />
+                    {order.shippingAddress.country}
+                  </>
+                ) : (
+                  'Shipping information unavailable'
+                )}
+              </span>
+            </div>
+            <div className={`status-indicator ${order.isDelivered ? 'status-delivered' : 'status-not-delivered'}`}>
+              {order.isDelivered ? (
+                <>Delivered on {new Date(order.deliveredAt).toLocaleDateString()}</>
               ) : (
-                'N/A'
+                'Not Delivered'
               )}
-            </p>
-            {order.shippingAddress ? (
-              <p className="mb-3">
-                <strong>Address:</strong> {order.shippingAddress.address},{' '}
-                {order.shippingAddress.city}, {order.shippingAddress.postalCode},{' '}
-                {order.shippingAddress.country}
-              </p>
-            ) : (
-              <p className="mb-3">
-                <strong>Address:</strong> Shipping information unavailable
-              </p>
-            )}
-            <Card className="bg-light mb-4">
-              <Card.Body className="py-2">
-                {order.isDelivered ? (
-                  <p className="text-success mb-0">
-                    Delivered on {new Date(order.deliveredAt).toLocaleDateString()}
-                  </p>
-                ) : (
-                  <p className="text-danger mb-0">Not Delivered</p>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
+            </div>
+          </div>
           
-          <Col md={6}>
-            <h2 className="h4 mb-3">Payment Method</h2>
-            <p className="mb-3">
-              <strong>Method:</strong> {order.paymentMethod || 'Not specified'}
-            </p>
-            <Card className="bg-light">
-              <Card.Body className="py-2">
-                {order.isPaid ? (
-                  <p className="text-success mb-0">
-                    Paid on {new Date(order.paidAt).toLocaleDateString()}
-                  </p>
-                ) : (
-                  <p className="text-danger mb-0">Not Paid</p>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+          <div className="info-section">
+            <h3>
+              <FaCreditCard />
+              Payment Information
+            </h3>
+            <div className="info-item">
+              <span className="info-label">Payment Method:</span>
+              <span className="info-value">{order.paymentMethod || 'Not specified'}</span>
+            </div>
+            <div className={`status-indicator ${order.isPaid ? 'status-paid' : 'status-not-paid'}`}>
+              {order.isPaid ? (
+                <>Paid on {new Date(order.paidAt).toLocaleDateString()}</>
+              ) : (
+                'Not Paid'
+              )}
+            </div>
+          </div>
+        </div>
 
-        <h2 className="h4 mt-4 mb-3">Order Items</h2>
-        {!order.orderItems || order.orderItems.length === 0 ? (
-          <p>Order is empty</p>
-        ) : (
-          <ListGroup variant="flush">
-            {order.orderItems.map((item, index) => (
-              <ListGroup.Item key={index}>
-                <Row className="align-items-center">
-                  <Col xs={2} md={1}>
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fluid
-                      rounded
-                    />
-                  </Col>
-                  <Col xs={10} md={8} className="d-flex align-items-center">
-                    <Link to={`/product/${item.product}`} className="text-decoration-none">
-                      {item.name || 'Product'}
-                    </Link>
-                  </Col>
-                  <Col md={3} className="text-md-end mt-2 mt-md-0">
-                    {(item.quantity || 1)} x ${formatPrice(item.price)} = ${formatPrice((item.quantity || 1) * (item.price || 0))}
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        )}
+        {/* Order Items */}
+        <div className="order-items-section">
+          <h3 className="order-items-title">
+            <FaBoxOpen />
+            Order Items
+          </h3>
+          {!order.orderItems || order.orderItems.length === 0 ? (
+            <div className="order-items-empty">
+              <p>Order is empty</p>
+            </div>
+          ) : (
+            <div className="order-items-list">
+              {order.orderItems.map((item, index) => (
+                <div key={index} className="order-item-card">
+                  <div className="item-content">
+                    <div className="item-image-container">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="item-image"
+                      />
+                    </div>
+                    <div className="item-info">
+                      <h4>
+                        <Link to={`/product/${item.product}`}>
+                          {item.name || 'Product'}
+                        </Link>
+                      </h4>
+                    </div>
+                    <div className="item-pricing">
+                      <div className="item-quantity">
+                        Quantity: {item.quantity || 1}
+                      </div>
+                      <div className="item-price">
+                        ${formatPrice(item.price)} each
+                      </div>
+                      <div className="item-total">
+                        Total: ${formatPrice((item.quantity || 1) * (item.price || 0))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-        <Card className="mt-4 bg-light">
-          <Card.Body>
-            <h2 className="h4 mb-3">Order Summary</h2>
-            <Row className="mb-2">
-              <Col>Items:</Col>
-              <Col className="text-end">${formatPrice(order.itemsPrice)}</Col>
-            </Row>
-            <Row className="mb-2">
-              <Col>Shipping:</Col>
-              <Col className="text-end">${formatPrice(order.shippingPrice)}</Col>
-            </Row>
-            <Row className="mb-2">
-              <Col>Tax:</Col>
-              <Col className="text-end">${formatPrice(order.taxPrice)}</Col>
-            </Row>
-            <Row className="fw-bold mb-3">
-              <Col>Total:</Col>
-              <Col className="text-end">${formatPrice(order.totalPrice || order.total_amount)}</Col>
-            </Row>
-            
-            {isAdmin && order.isPaid && !order.isDelivered && (
+        {/* Order Summary */}
+        <div className="order-summary">
+          <h3 className="summary-title">
+            <FaCalculator />
+            Order Summary
+          </h3>
+          <div className="summary-item">
+            <span className="summary-label">Items:</span>
+            <span className="summary-value">${formatPrice(order.itemsPrice)}</span>
+          </div>
+          <div className="summary-item">
+            <span className="summary-label">Shipping:</span>
+            <span className="summary-value">${formatPrice(order.shippingPrice)}</span>
+          </div>
+          <div className="summary-item">
+            <span className="summary-label">Tax:</span>
+            <span className="summary-value">${formatPrice(order.taxPrice)}</span>
+          </div>
+          <div className="summary-total">
+            <span>Total:</span>
+            <span>${formatPrice(order.totalPrice || order.total_amount)}</span>
+          </div>
+          
+          {isAdmin && order.isPaid && !order.isDelivered && (
+            <div className="admin-actions">
               <Button
                 variant="success"
                 onClick={onMarkDelivered}
                 isLoading={deliverLoading}
                 fullWidth
                 icon={FaTruck}
+                className="deliver-button"
               >
                 Mark As Delivered
               </Button>
-            )}
-          </Card.Body>
-        </Card>
-      </Card.Body>
-    </Card>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 

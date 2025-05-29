@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaShoppingBag, FaEye, FaCheckCircle, FaTimes, FaClock, FaTruck } from 'react-icons/fa';
 import { getMyOrders } from '../api/order';
-import Loader from '../components/UI/Loader';
 import Message from '../components/UI/Message';
+import './OrderHistoryPage.css';
 
 const OrderHistoryPage = () => {
   const [orders, setOrders] = useState([]);
@@ -40,68 +41,175 @@ const OrderHistoryPage = () => {
 
     fetchOrders();
   }, []);
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Order History</h1>
-      
-      {loading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant="danger">{error}</Message>
-      ) : orders.length === 0 ? (
-        <Message>You have no orders</Message>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="py-3 px-4 border-b text-left">ID</th>
-                <th className="py-3 px-4 border-b text-left">DATE</th>
-                <th className="py-3 px-4 border-b text-left">TOTAL</th>
-                <th className="py-3 px-4 border-b text-left">PAID</th>
-                <th className="py-3 px-4 border-b text-left">DELIVERED</th>
-                <th className="py-3 px-4 border-b text-left">ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order._id} className="hover:bg-gray-50">
-                  <td className="py-3 px-4 border-b">{order._id}</td>
-                  <td className="py-3 px-4 border-b">
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="py-3 px-4 border-b">
-                    ${formatPrice(order.totalPrice || order.total_amount)}
-                  </td>
-                  <td className="py-3 px-4 border-b">
-                    {order.isPaid ? (
-                      new Date(order.paidAt).toLocaleDateString()
-                    ) : (
-                      <span className="text-red-500">Not Paid</span>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 border-b">
-                    {order.isDelivered ? (
-                      new Date(order.deliveredAt).toLocaleDateString()
-                    ) : (
-                      <span className="text-red-500">Not Delivered</span>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 border-b">
+    <div className="order-history-page">
+      <div className="order-history-container">
+        <h1 className="order-history-title">Order History</h1>
+        
+        {loading ? (
+          <div className="order-history-content">
+            <div className="order-history-loading">
+              <div className="loading-spinner"></div>
+              Loading your orders...
+            </div>
+          </div>
+        ) : error ? (
+          <div className="order-history-content">
+            <div className="order-history-error">
+              <Message variant="danger">{error}</Message>
+            </div>
+          </div>
+        ) : orders.length === 0 ? (
+          <div className="order-history-content">
+            <div className="order-history-empty">
+              <div className="empty-icon">
+                <FaShoppingBag />
+              </div>
+              <h2 className="empty-title">No Orders Found</h2>
+              <p className="empty-message">
+                You haven't placed any orders yet. Start shopping to build your order history!
+              </p>
+              <Link to="/products" className="start-shopping-btn">
+                <FaShoppingBag />
+                Start Shopping
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="order-history-content">
+            <div className="order-history-header">
+              <h2>
+                <FaShoppingBag />
+                Your Orders
+                <span className="orders-count-badge">{orders.length}</span>
+              </h2>
+            </div>
+            <div className="order-history-body">
+              {/* Desktop Table */}
+              <div className="desktop-table">
+                <table className="order-history-table">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Date</th>
+                      <th>Total</th>
+                      <th>Payment</th>
+                      <th>Delivery</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order) => (
+                      <tr key={order._id}>
+                        <td className="order-id-cell">#{order._id.slice(-8).toUpperCase()}</td>
+                        <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                        <td className="order-total">
+                          ${formatPrice(order.totalPrice || order.total_amount)}
+                        </td>
+                        <td>
+                          {order.isPaid ? (
+                            <span className="status-paid">
+                              <FaCheckCircle />
+                              {new Date(order.paidAt).toLocaleDateString()}
+                            </span>
+                          ) : (
+                            <span className="status-not-paid">
+                              <FaTimes />
+                              Not Paid
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          {order.isDelivered ? (
+                            <span className="status-delivered">
+                              <FaTruck />
+                              {new Date(order.deliveredAt).toLocaleDateString()}
+                            </span>
+                          ) : (
+                            <span className="status-not-delivered">
+                              <FaClock />
+                              Pending
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          <Link
+                            to={`/order/${order._id}`}
+                            className="order-details-btn"
+                          >
+                            <FaEye />
+                            Details
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Cards */}
+              <div className="mobile-order-cards">
+                {orders.map((order) => (
+                  <div key={order._id} className="mobile-order-card">
+                    <div className="mobile-card-header">
+                      <div className="mobile-order-id">#{order._id.slice(-8).toUpperCase()}</div>
+                      <div className="mobile-order-date">
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div className="mobile-card-details">
+                      <div className="mobile-detail-row">
+                        <span className="mobile-detail-label">Total</span>
+                        <span className="mobile-detail-value order-total">
+                          ${formatPrice(order.totalPrice || order.total_amount)}
+                        </span>
+                      </div>
+                      <div className="mobile-detail-row">
+                        <span className="mobile-detail-label">Payment</span>
+                        <span className={`mobile-detail-value ${order.isPaid ? 'status-paid' : 'status-not-paid'}`}>
+                          {order.isPaid ? (
+                            <>
+                              <FaCheckCircle />
+                              Paid
+                            </>
+                          ) : (
+                            <>
+                              <FaTimes />
+                              Not Paid
+                            </>
+                          )}
+                        </span>
+                      </div>
+                      <div className="mobile-detail-row">
+                        <span className="mobile-detail-label">Delivery</span>
+                        <span className={`mobile-detail-value ${order.isDelivered ? 'status-delivered' : 'status-not-delivered'}`}>
+                          {order.isDelivered ? (
+                            <>
+                              <FaTruck />
+                              Delivered
+                            </>
+                          ) : (
+                            <>
+                              <FaClock />
+                              Pending
+                            </>
+                          )}
+                        </span>
+                      </div>
+                    </div>
                     <Link
                       to={`/order/${order._id}`}
-                      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                      className="order-details-btn"
                     >
-                      Details
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                      <FaEye />
+                      View Details
+                    </Link>                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

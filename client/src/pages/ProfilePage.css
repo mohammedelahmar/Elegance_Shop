@@ -514,141 +514,64 @@ textarea.profile-input-field {
   margin-bottom: 1.5rem;
 }
 
-/* Address Cards Styling */
-.address-card {
-  background-color: #1e2732;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.address-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-}
-
-.address-card .card-body {
-  padding: 1.25rem;
-}
-
-.address-card h5 {
-  color: #fff;
-  font-weight: 600;
-}
-
-.address-card-actions {
-  display: flex;
-  align-items: center;
-}
-
-.address-card-actions .btn-link {
-  padding: 0.25rem;
-  font-size: 0.85rem;
-  transition: transform 0.2s;
-}
-
-.address-card-actions .btn-link:hover {
-  transform: scale(1.15);
-}
-
-.address-card .list-group {
-  margin-top: 1rem;
-  background-color: transparent;
-}
-
-.address-card .list-group-item {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #e2e2e2;
-  padding: 0.7rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 6px;
-}
-
-.address-card .list-group-item svg {
-  color: #4a9fff;
-  min-width: 16px;
-  margin-top: 4px;
-}
-
-/* Badge styling */
-.badge.bg-primary.bg-opacity-25 {
-  background-color: rgba(74, 159, 255, 0.25) !important;
-  color: #4a9fff;
-  font-weight: 500;
-}
-
-/* Security section styling */
-.security-icon {
-  width: 50px;
-  height: 50px;
-  background: rgba(74, 107, 245, 0.1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #4a9fff;
-}
-
-.security-section .card {
-  transition: all 0.3s ease;
-  background-color: #1e2732 !important;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-.security-section .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.change-password-btn {
-  background: #4361ee;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: 600;
-  padding: 10px 20px;
-  transition: all 0.3s ease;
-}
-
-.change-password-btn:hover {
-  background: #3a56d4;
-  box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-}
-
-hr.border-secondary {
-  opacity: 0.1;
-}
-
-/* Add this to your existing ProfilePage.css file */
-
+/* Order History Container Styling */
 .order-history-container {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  overflow: hidden;
+  margin-top: 1rem;
 }
 
-.order-history-container table {
-  margin-bottom: 0;
-}
-
+/* Remove any conflicting Bootstrap table styling when using enhanced OrderList */
 .order-history-container .table-responsive {
-  overflow-y: hidden;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-.order-history-container th {
-  color: #bfc8e6;
-  border-color: rgba(255, 255, 255, 0.1);
-  font-weight: 500;
+/* Ensure smooth integration with profile page theme */
+.order-history-container .profile-orders-container {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.order-history-container td {
-  color: #e6e6f0;
-  border-color: rgba(255, 255, 255, 0.1);
+/* Enhanced Orders Tab Integration */
+.order-history-container {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
 }
 
-.order-history-container tr:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+.profile-tabs .nav-tabs {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
+}
+
+.profile-tabs .nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 8px 8px 0 0;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.profile-tabs .nav-link:hover {
+  color: #4a6bf5;
+  background: rgba(74, 107, 245, 0.1);
+}
+
+.profile-tabs .nav-link.active {
+  color: #fff;
+  background: linear-gradient(135deg, #4a6bf5, #6578f2);
+  border-color: transparent;
+}
+
+.profile-tabs .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #4a6bf5, #6578f2);
 }
