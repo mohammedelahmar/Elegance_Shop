@@ -51,10 +51,10 @@ const BankTransferPage = () => {
                     <div className="d-flex justify-content-between mb-2">
                       <span>Bank Name:</span>
                       <div className="d-flex">
-                        <span className="me-2 fw-bold">YOUR BANK NAME</span>
+                        <span className="me-2 fw-bold">Mohammed El Ahmar</span>
                         <button 
                           className="btn btn-sm"
-                          onClick={() => copyToClipboard('YOUR BANK NAME')}
+                          onClick={() => copyToClipboard('Mohammed El Ahmar')}
                         >
                           <FaCopy />
                         </button>
@@ -64,10 +64,10 @@ const BankTransferPage = () => {
                     <div className="d-flex justify-content-between mb-2">
                       <span>Account Name:</span>
                       <div className="d-flex">
-                        <span className="me-2 fw-bold">YOUR COMPANY NAME</span>
+                        <span className="me-2 fw-bold">Elegance Shop</span>
                         <button 
                           className="btn btn-sm"
-                          onClick={() => copyToClipboard('YOUR COMPANY NAME')}
+                          onClick={() => copyToClipboard('Elegance Shop')}
                         >
                           <FaCopy />
                         </button>

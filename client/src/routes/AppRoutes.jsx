@@ -27,7 +27,7 @@ const RecentlyViewedPage = lazy(() => import('../pages/RecentlyViewedPage'));
 const AddressFormPage = lazy(() => import('../pages/AddressFormPage'));
 const ResetPassword = lazy(() => import('../pages/ResetPasswordPage'));
 const PaymentSuccessPage = lazy(() => import('../pages/PaymentSuccessPage'));
-const BankTransferPage =lazy(()=>import('../pages/BankTransferPage'));
+const BankTransferPage = lazy(() => import('../pages/BankTransferPage'));
 
 // Admin pages
 const Dashboard = lazy(() => import('../pages/Admin/Dashboard'));
@@ -77,7 +77,9 @@ const AppRoutes = () => {
             <Route path="/address/new" element={<AddressFormPage />} />
             <Route path="/address/edit" element={<AddressFormPage />} />
             <Route path="/payment/success/:orderId" element={<PaymentSuccessPage />} />
+            <Route path="/payment-success/:orderId" element={<PaymentSuccessPage />} />
             <Route path="/bank-transfer-instructions/:orderId" element={<BankTransferPage />} />
+            <Route path="/bank-transfer/:orderId" element={<BankTransferPage />} />
           </Route>
 
           {/* Admin routes - require admin role */}

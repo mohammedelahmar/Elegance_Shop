@@ -20,6 +20,8 @@ import {
 import { createOrder } from '../api/order';
 import { processPayment } from '../api/payment';
 import { addAddress, getUserAddresses } from '../api/address';
+import PayPalButton from '../components/Payment/PayPalButton';
+import CreditCardModal from '../components/Payment/CreditCardModal';
 import './CheckoutPage.css';
 import './CheckoutPageEnhancements.css';
 
@@ -46,6 +48,14 @@ const CheckoutPage = () => {
   const [fetchingAddresses, setFetchingAddresses] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [useNewAddress, setUseNewAddress] = useState(false);
+
+  // New state variables for PayPal
+  const [showPayPalButtons, setShowPayPalButtons] = useState(false);
+  const [createdOrderId, setCreatedOrderId] = useState(null);
+
+  // New state variables for Credit Card Modal
+  const [showCreditCardModal, setShowCreditCardModal] = useState(false);
+  const [creatingOrder, setCreatingOrder] = useState(false);
   
   // Calculated values
   const shippingCost = subtotal > 50 ? 0 : 10;
@@ -117,78 +127,176 @@ const CheckoutPage = () => {
     setError(null);
     
     try {
-      // If an existing address is selected, use it directly
-      let addressId;
-      
-      if (selectedAddressId && !useNewAddress) {
-        // Use the selected address ID directly
-        addressId = selectedAddressId;
-      } else {
-        // Create a new address
-        console.log("Creating new address...");
-        const addressData = await addAddress({
-          address: shippingAddress.address,
-          city: shippingAddress.city,
-          postal_code: shippingAddress.postalCode,
-          country: shippingAddress.country,
-          phone_number: shippingAddress.phone || '' 
-        });
+      // If credit card payment, we need to create the order first but not process payment yet
+      if (paymentMethod === 'credit_card') {
+        setCreatingOrder(true);
         
-        if (!addressData || !addressData._id) {
-          throw new Error('Failed to create shipping address');
+        // Create a new address or use existing one
+        let addressId;
+        if (selectedAddressId && !useNewAddress) {
+          addressId = selectedAddressId;
+        } else {
+          // Create a new address code...
+          const addressData = await addAddress({
+            address: shippingAddress.address,
+            city: shippingAddress.city,
+            postal_code: shippingAddress.postalCode,
+            country: shippingAddress.country,
+            phone_number: shippingAddress.phone || '' 
+          });
+          addressId = addressData._id;
         }
         
-        addressId = addressData._id;
-        console.log("Address created:", addressData);
+        // Create order
+        const orderData = await createOrder({
+          orderItems: cartItems.map(item => ({
+            product: item.product_id?._id || item.product_id,
+            quantity: item.quantity,
+            variant: item.variant_id || undefined
+          })),
+          shippingAddress: addressId,
+          paymentMethod,
+          itemsPrice: subtotal,
+          taxPrice: tax,
+          shippingPrice: shippingCost,
+          totalPrice: orderTotal
+        });
+        
+        setCreatedOrderId(orderData._id);
+        setCreatingOrder(false);
+        setLoading(false);
+        
+        // Show credit card modal
+        setShowCreditCardModal(true);
+        return;
       }
       
-      // Create order with the address ID
-      console.log("Creating order...");
-      const orderItems = cartItems.map(item => ({
-        product: item.product_id?._id || item.product_id,
-        quantity: item.quantity,
-        variant: item.variant_id || undefined
-      }));
-      
-      const orderData = await createOrder({
-        orderItems,
-        shippingAddress: addressId,
-        paymentMethod,
-        itemsPrice: subtotal,
-        taxPrice: tax,
-        shippingPrice: shippingCost,
-        totalPrice: orderTotal
-      });
-      
-      if (!orderData || !orderData._id) {
-        throw new Error('Failed to create order');
+      // For PayPal, create the order first and then show PayPal buttons
+      if (paymentMethod === 'paypal') {
+        setCreatingOrder(true);
+        
+        // Create a new address or use existing one
+        let addressId;
+        if (selectedAddressId && !useNewAddress) {
+          addressId = selectedAddressId;
+        } else {
+          // Create a new address
+          const addressData = await addAddress({
+            address: shippingAddress.address,
+            city: shippingAddress.city,
+            postal_code: shippingAddress.postalCode,
+            country: shippingAddress.country,
+            phone_number: shippingAddress.phone || '' 
+          });
+          addressId = addressData._id;
+        }
+        
+        // Create order
+        const orderData = await createOrder({
+          orderItems: cartItems.map(item => ({
+            product: item.product_id?._id || item.product_id,
+            quantity: item.quantity,
+            variant: item.variant_id || undefined
+          })),
+          shippingAddress: addressId,
+          paymentMethod,
+          itemsPrice: subtotal,
+          taxPrice: tax,
+          shippingPrice: shippingCost,
+          totalPrice: orderTotal
+        });
+        
+        setCreatedOrderId(orderData._id);
+        setCreatingOrder(false);
+        
+        // Show PayPal buttons after creating order
+        setShowPayPalButtons(true);
+        setLoading(false);
+        return;
       }
       
-      console.log("Order created:", orderData);
-      
-      // 3. Process payment - Bypass user ID check if authenticated
-      // This fixes the "User information is missing" error
-      console.log("Processing payment...");
-      await processPayment({
-        paymentMethod,
-        amount: orderTotal,
-        currency: 'USD',
-        orderId: orderData._id
-        // We're not sending userId if it's not available
-      });
-      
-      console.log("Payment processed successfully");
-      
-      // 4. Clear cart and redirect to success page
-      await clearCart();
-      navigate(`/order/${orderData._id}`);
-      
+      // For Cash on Delivery, redirect to payment success page with COD method
+      if (paymentMethod === 'cash_on_delivery') {
+        await processPayment({
+          paymentMethod,
+          amount: orderTotal,
+          currency: 'USD',
+          orderId: createdOrderId
+        });
+        
+        await clearCart();
+        navigate(`/payment-success/${createdOrderId}?method=cod`);
+      } else if (paymentMethod === 'bank_transfer') {
+        // For bank transfer, redirect to bank transfer instructions page
+        await processPayment({
+          paymentMethod,
+          amount: orderTotal,
+          currency: 'USD',
+          orderId: createdOrderId
+        });
+        
+        await clearCart();
+        navigate(`/bank-transfer/${createdOrderId}`);
+      } else {
+        // For other payment methods, process payment as usual
+        await processPayment({
+          paymentMethod,
+          amount: orderTotal,
+          currency: 'USD',
+          orderId: createdOrderId
+        });
+        
+        await clearCart();
+        navigate(`/order/${createdOrderId}`);
+      }
     } catch (err) {
       console.error('Checkout error:', err);
       setError(err.message || 'Failed to complete your order. Please try again.');
-    } finally {
+      setLoading(false);
+      setCreatingOrder(false);
+    }
+  };
+
+  const handleCreditCardSubmit = async (cardData) => {
+    setLoading(true);
+    try {
+      // Process the payment using the credit card data
+      await processPayment({
+        paymentMethod: 'credit_card',
+        amount: orderTotal,
+        currency: 'USD',
+        orderId: createdOrderId,
+        cardDetails: cardData // You might need to add this to your API
+      });
+      
+      await clearCart();
+      navigate(`/payment-success/${createdOrderId}?method=credit_card`);
+    } catch (err) {
+      setError(err.message || 'Payment processing failed. Please try again.');
       setLoading(false);
     }
+  };
+
+  const handlePayPalSuccess = async (details) => {
+    try {
+      // Process the successful PayPal payment on your server
+      await processPayment({
+        paymentMethod: 'paypal',
+        amount: orderTotal,
+        currency: 'USD',
+        orderId: createdOrderId,
+        paypalDetails: details
+      });
+      
+      await clearCart();
+      navigate(`/payment-success/${createdOrderId}?method=paypal`);
+    } catch (err) {
+      setError('Payment was processed but we encountered an error. Please contact support.');
+    }
+  };
+
+  const handlePayPalError = (err) => {
+    setError(`PayPal error: ${err.message || 'Unknown error'}`);
   };
   
   const handleAddressSelection = (e) => {
@@ -532,29 +640,40 @@ const CheckoutPage = () => {
             <span className="order-summary-value">${orderTotal.toFixed(2)}</span>
           </div>
           
-          <div className="d-flex justify-content-between mt-4">
-            <Button variant="outline-secondary" onClick={() => setStep(2)} className="btn-back">
-              Back
-            </Button>
-            <Button 
-              variant="success" 
-              onClick={handlePlaceOrder}
-              disabled={loading}
-              className="btn-checkout"
-            >
-              {loading ? (
-                <>
-                  <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <FaLock className="me-2" />
-                  Place Order
-                </>
-              )}
-            </Button>
-          </div>
+          {showPayPalButtons && paymentMethod === 'paypal' ? (
+            <div className="w-100 mt-3">
+              <PayPalButton 
+                amount={orderTotal} 
+                onSuccess={handlePayPalSuccess} 
+                onError={handlePayPalError} 
+                orderId={createdOrderId} 
+              />
+            </div>
+          ) : (
+            <div className="d-flex justify-content-between mt-4">
+              <Button variant="outline-secondary" onClick={() => setStep(2)} className="btn-back">
+                Back
+              </Button>
+              <Button 
+                variant="success" 
+                onClick={handlePlaceOrder}
+                disabled={loading}
+                className="btn-checkout"
+              >
+                {loading ? (
+                  <>
+                    <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <FaLock className="me-2" />
+                    {paymentMethod === 'paypal' ? 'Continue to PayPal' : 'Place Order'}
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -622,6 +741,15 @@ const CheckoutPage = () => {
           </div>        
         </Col>
       </Row>
+      
+      {/* Credit Card Modal */}
+      <CreditCardModal
+        show={showCreditCardModal}
+        onHide={() => setShowCreditCardModal(false)}
+        amount={orderTotal}
+        onSubmit={handleCreditCardSubmit}
+        loading={loading}
+      />
     </Container>
   </div>
 );

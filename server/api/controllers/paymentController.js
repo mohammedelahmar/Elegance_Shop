@@ -30,8 +30,8 @@ const processPayment = asyncHandler(async (req, res) => {
 
     const createdPayment = await payment.save();
 
-    // Update order as paid only for instant payment methods (not COD or bank transfer)
-    if (paymentMethod !== 'cash_on_delivery' && paymentMethod !== 'bank_transfer') {
+    // Update order as paid only for instant payment methods (not COD, bank transfer, or PayPal)
+    if (paymentMethod !== 'cash_on_delivery' && paymentMethod !== 'bank_transfer' && paymentMethod !== 'paypal') {
         const order = await Commande.findById(orderId);
         if (order) {
             order.isPaid = true;
