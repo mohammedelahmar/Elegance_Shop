@@ -3,15 +3,15 @@
   --dark-bg: #161c2d;
   --dark-card-bg: #1e2634;
   --dark-secondary-bg: #141b2d;
-  --accent-primary: #4a6bf5;
-  --accent-secondary: #6f88ff;
-  --accent-gradient: linear-gradient(45deg, #4a6bf5, #6f88ff);
-  --accent-glow: 0 0 15px rgba(74, 107, 245, 0.6);
+  --accent-primary: #f45da0;
+  --accent-secondary: #ff9a8b;
+  --accent-gradient: linear-gradient(45deg, #f45da0, #ff9a8b);
+  --accent-glow: 0 0 15px rgba(244, 93, 160, 0.6);
   --dark-text: #ffffff;
   --dark-text-muted: #a3aed0;
   --dark-border: rgba(255, 255, 255, 0.08);
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --hover-shadow: 0 15px 45px rgba(74, 107, 245, 0.3);
+  --hover-shadow: 0 15px 45px rgba(244, 93, 160, 0.3);
 }
 
 /* Force dark background on all elements */
@@ -158,7 +158,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   position: relative;
   overflow: hidden;
   z-index: 1;
-  box-shadow: 0 8px 25px rgba(74, 107, 245, 0.25);
+  box-shadow: 0 8px 25px rgba(244, 93, 160, 0.25);
   animation: fadeInUp 1s ease 0.8s forwards;
   opacity: 0;
   margin-right:0.9rem ;
@@ -183,9 +183,9 @@ body, .container, .container-fluid, .row, .col, section, main, div {
 
 .hero-button-outline:hover {
   border-color: var(--accent-primary);
-  background: rgba(74, 107, 245, 0.1);
+  background: rgba(244, 93, 160, 0.1);
   transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(74, 107, 245, 0.2);
+  box-shadow: 0 10px 30px rgba(244, 93, 160, 0.2);
   color: rgb(104, 131, 253);
 }
 
@@ -290,7 +290,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(74, 107, 245, 0.03) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(244, 93, 160, 0.03) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -308,7 +308,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
 .product-card:hover {
   transform: translateY(-15px) rotateX(5deg);
   box-shadow: var(--hover-shadow);
-  border-color: rgba(74, 107, 245, 0.3);
+  border-color: rgba(244, 93, 160, 0.3);
 }
 
 .product-img-wrapper {
@@ -339,7 +339,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   border-radius: 50px;
   background: var(--accent-gradient);
   color: white;
-  box-shadow: 0 5px 15px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 5px 15px rgba(244, 93, 160, 0.4);
   transform: translateZ(20px);
   z-index: 2;
 }
@@ -430,7 +430,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   background: var(--accent-primary);
   color: white;
   transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(74, 107, 245, 0.3);
+  box-shadow: 0 5px 15px rgba(244, 93, 160, 0.3);
 }
 
 /* View All Button */
@@ -486,7 +486,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(74, 107, 245, 0.03) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(244, 93, 160, 0.03) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -503,7 +503,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
 .category-card:hover {
   transform: translateY(-20px) scale(1.03);
   box-shadow: var(--hover-shadow);
-  border-color: rgba(74, 107, 245, 0.3);
+  border-color: rgba(244, 93, 160, 0.3);
 }
 
 .category-card::before {
@@ -519,7 +519,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
 }
 
 .category-card:hover::before {
-  background: linear-gradient(to bottom, rgba(22, 28, 45, 0.3) 0%, rgba(74, 107, 245, 0.6) 100%);
+  background: linear-gradient(to bottom, rgba(22, 28, 45, 0.3) 0%, rgba(244, 93, 160, 0.6) 100%);
 }
 
 .category-content {
@@ -604,7 +604,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
 .testimonial-card:hover {
   transform: translateY(-15px);
   box-shadow: var(--hover-shadow);
-  border-color: rgba(74, 107, 245, 0.3);
+  border-color: rgba(244, 93, 160, 0.3);
 }
 
 .testimonial-card::before {
@@ -614,7 +614,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   left: 20px;
   font-size: 120px;
   font-family: Georgia, serif;
-  color: rgba(74, 107, 245, 0.1);
+  color: rgba(244, 93, 160, 0.1);
   line-height: 0.7;
 }
 
@@ -685,7 +685,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at center, rgba(74, 107, 245, 0.03) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(244, 93, 160, 0.03) 0%, transparent 70%);
   animation: rotateGradient 20s linear infinite;
   pointer-events: none;
 }
@@ -716,7 +716,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(74, 107, 245, 0.05) 0%, rgba(111, 136, 255, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(244, 93, 160, 0.05) 0%, rgba(111, 136, 255, 0.05) 100%);
   pointer-events: none;
 }
 
@@ -739,7 +739,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
 .newsletter-form .form-control:focus {
   background: rgba(255, 255, 255, 0.08);
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(74, 107, 245, 0.2);
+  box-shadow: 0 0 0 3px rgba(244, 93, 160, 0.2);
 }
 
 .newsletter-form .btn {
@@ -750,7 +750,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   border: none;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 10px 20px rgba(74, 107, 245, 0.3);
+  box-shadow: 0 10px 20px rgba(244, 93, 160, 0.3);
   transition: all 0.3s;
 }
 
@@ -775,7 +775,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(74, 107, 245, 0.03) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(244, 93, 160, 0.03) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -790,7 +790,7 @@ body, .container, .container-fluid, .row, .col, section, main, div {
 .signup-banner .btn-primary {
   background: var(--accent-gradient);
   border: none;
-  box-shadow: 0 10px 20px rgba(74, 107, 245, 0.3);
+  box-shadow: 0 10px 20px rgba(244, 93, 160, 0.3);
 }
 
 .signup-banner .btn-outline-primary {

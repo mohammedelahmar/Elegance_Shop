@@ -1,0 +1,63 @@
+/* Global theme palette refresh */
+:root {
+	--color-primary: #f45da0;
+	--color-primary-dark: #d13f7a;
+	--color-primary-light: #ff9dbd;
+	--color-secondary: #ff9a8b;
+	--color-accent: #ffd56f;
+	--color-surface: #1c1727;
+	--color-surface-alt: #221c33;
+	--gradient-primary: linear-gradient(135deg, #f45da0 0%, #ff9dbd 100%);
+	--gradient-secondary: linear-gradient(135deg, #ff9a8b 0%, #ffd56f 100%);
+	--glow-primary: 0 12px 40px rgba(244, 93, 160, 0.35);
+	--glow-secondary: 0 10px 30px rgba(255, 154, 139, 0.32);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+		sans-serif;
+	background-color: #0f0b16;
+	color: #f7f5fb;
+	min-height: 100vh;
+	scroll-behavior: smooth;
+}
+
+a {
+	color: var(--color-primary);
+	text-decoration: none;
+	transition: color 0.25s ease;
+}
+
+a:hover {
+	color: var(--color-secondary);
+}
+
+.btn-primary,
+.btn-accent {
+	background: var(--gradient-primary);
+	border: none;
+	color: #fff;
+	border-radius: 999px;
+	padding: 0.75rem 1.5rem;
+	font-weight: 600;
+	box-shadow: var(--glow-primary);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-accent:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 14px 45px rgba(244, 93, 160, 0.45);
+}
+
+.pill-card {
+	background: var(--color-surface);
+	border-radius: 18px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	box-shadow: var(--glow-secondary);
+}

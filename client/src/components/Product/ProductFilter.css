@@ -120,7 +120,7 @@
 
 .category-item input:checked + label {
   font-weight: 500;
-  color: #0d6efd;
+  color: #ff6584;
 }
 
 .price-input-wrapper {
@@ -954,11 +954,11 @@
 }
 
 .category-item:hover {
-  color: #007bff;
+  color: #ff6584;
 }
 
 .category-item.selected {
-  color: #007bff;
+  color: #ff6584;
   font-weight: 500;
 }
 
@@ -1135,7 +1135,7 @@
   flex-direction: column;
   /* Custom scrollbar styling */
   scrollbar-width: thin;
-  scrollbar-color: #4a6bf5 #232b42;
+  scrollbar-color: #f45da0 #232b42;
   overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
@@ -1182,7 +1182,7 @@
   padding: 0;
   background-color: #161c2d;
   scrollbar-width: thin;
-  scrollbar-color: #4a6bf5 #232b42;
+  scrollbar-color: #f45da0 #232b42;
   padding: 1rem; /* Ensure padding doesn't cause overflow if not already set */
 }
 
@@ -1314,11 +1314,11 @@
 }
 
 .category-item:hover {
-  color: #90cdf4;
+  color: #ffd1b5;
 }
 
 .category-item.selected {
-  color: #90cdf4;
+  color: #ffd1b5;
   font-weight: 500;
 }
 
@@ -1408,7 +1408,7 @@
 }
 
 .stock-checkbox input[type="checkbox"]:checked {
-  background-color: #90cdf4;
+  background-color: #ffd1b5;
 }
 
 /* Custom Checkbox */
@@ -1448,8 +1448,8 @@
 }
 
 .custom-checkbox input:checked ~ .checkmark {
-  background-color: #90cdf4;
-  border-color: #90cdf4;
+  background-color: #ffd1b5;
+  border-color: #ffd1b5;
 }
 
 .checkmark:after {
@@ -1505,15 +1505,15 @@
   /* Glassmorphism effect */
   background: rgba(22, 28, 45, 0.85);
   backdrop-filter: blur(12px);
-  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.10), 0 1.5px 8px rgba(0,0,0,0.18);
-  border-right: 1.5px solid rgba(74, 107, 245, 0.12);
+  box-shadow: 0 8px 32px rgba(244, 93, 160, 0.10), 0 1.5px 8px rgba(0,0,0,0.18);
+  border-right: 1.5px solid rgba(244, 93, 160, 0.12);
   border-radius: 18px 0 0 18px;
   transition: box-shadow 0.3s, border 0.3s;
 }
 
 .filter-sidebar.active {
-  box-shadow: 0 12px 40px 0 rgba(74, 107, 245, 0.18), 0 1.5px 8px rgba(0,0,0,0.22);
-  border-right: 2.5px solid #4a6bf5;
+  box-shadow: 0 12px 40px 0 rgba(244, 93, 160, 0.18), 0 1.5px 8px rgba(0,0,0,0.22);
+  border-right: 2.5px solid #f45da0;
 }
 
 .filter-sidebar-header {
@@ -1521,7 +1521,7 @@
   top: 0;
   z-index: 2;
   background: rgba(16, 21, 37, 0.95);
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.04);
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.04);
   border-radius: 18px 0 0 0;
   border-bottom: 1.5px solid #232b42;
 }
@@ -1533,26 +1533,26 @@
 }
 
 .filter-section-header:hover, .filter-section-header:focus {
-  background: rgba(74, 107, 245, 0.10);
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.08);
+  background: rgba(244, 93, 160, 0.10);
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.08);
 }
 
 .filter-title {
-  color: #90cdf4;
+  color: #ffd1b5;
   letter-spacing: 0.5px;
 }
 
 .category-item.selected, .category-item.active {
-  color: #4a6bf5 !important;
-  background: rgba(74, 107, 245, 0.10);
+  color: #f45da0 !important;
+  background: rgba(244, 93, 160, 0.10);
   border-radius: 6px;
   font-weight: 600;
   padding-left: 8px;
 }
 
 .category-item:hover {
-  color: #6f88ff;
-  background: rgba(74, 107, 245, 0.07);
+  color: #ff9a8b;
+  background: rgba(244, 93, 160, 0.07);
   border-radius: 6px;
 }
 
@@ -1565,16 +1565,16 @@
 }
 
 .price-input:focus, .select-container select:focus, .search-box input:focus {
-  border: 1.5px solid #4a6bf5;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18);
+  border: 1.5px solid #f45da0;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18);
 }
 
 .active-filter-badge {
-  background: rgba(74, 107, 245, 0.13) !important;
-  color: #90cdf4 !important;
-  border: 1px solid #4a6bf5;
+  background: rgba(244, 93, 160, 0.13) !important;
+  color: #ffd1b5 !important;
+  border: 1px solid #f45da0;
   font-weight: 500;
-  box-shadow: 0 1px 4px rgba(74, 107, 245, 0.08);
+  box-shadow: 0 1px 4px rgba(244, 93, 160, 0.08);
 }
 
 .remove-filter-icon {
@@ -1595,19 +1595,19 @@
 }
 
 .filter-close-btn:hover {
-  background: #4a6bf5;
+  background: #f45da0;
   color: #fff;
 }
 
 /* Subtle divider for sections */
 .filter-section {
-  border-bottom: 1.5px solid rgba(74, 107, 245, 0.10);
+  border-bottom: 1.5px solid rgba(244, 93, 160, 0.10);
 }
 
 /* Soft shadow for sidebar on mobile */
 @media (max-width: 991.98px) {
   .filter-sidebar {
-    box-shadow: 0 8px 32px rgba(74, 107, 245, 0.18), 0 1.5px 8px rgba(0,0,0,0.22);
+    box-shadow: 0 8px 32px rgba(244, 93, 160, 0.18), 0 1.5px 8px rgba(0,0,0,0.22);
     border-radius: 0 18px 18px 0;
   }
   .filter-sidebar-header {
@@ -1624,8 +1624,8 @@
 .filter-sidebar {
   background: rgba(22, 28, 45, 0.97) !important;
   color: #fff !important;
-  border-right: 2px solid #4a6bf5 !important;
-  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.18) !important;
+  border-right: 2px solid #f45da0 !important;
+  box-shadow: 0 8px 32px rgba(244, 93, 160, 0.18) !important;
   border-radius: 18px 0 0 18px !important;
   min-width: 260px !important;
   max-width: 320px !important;
@@ -1645,7 +1645,7 @@
 
 .filter-section-header {
   background: transparent !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-weight: 600 !important;
   border-radius: 8px !important;
   margin: 0 0.5rem !important;
@@ -1654,11 +1654,11 @@
 }
 
 .filter-section-header:hover, .filter-section-header:focus {
-  background: rgba(74, 107, 245, 0.10) !important;
+  background: rgba(244, 93, 160, 0.10) !important;
 }
 
 .filter-title {
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1rem !important;
   letter-spacing: 0.5px !important;
 }
@@ -1676,20 +1676,20 @@
   border-radius: 24px !important;
   padding: 0.7rem 1.2rem 0.7rem 2.5rem !important;
   font-size: 1rem !important;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.04) !important;
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.04) !important;
   outline: none !important;
   transition: border 0.2s, box-shadow 0.2s !important;
 }
 .search-box input:focus {
-  border: 2px solid #4a6bf5 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 2px solid #f45da0 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 .search-box svg, .search-box .fa-search {
   position: absolute !important;
   left: 1rem !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1.2rem !important;
   pointer-events: none !important;
 }
@@ -1706,12 +1706,12 @@
 }
 .category-item.selected, .category-item.active {
   background: #232b42 !important;
-  color: #4a6bf5 !important;
+  color: #f45da0 !important;
   font-weight: 600 !important;
 }
 .category-item:hover {
   background: #232b42 !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
 }
 
 /* --- PRICE RANGE --- */
@@ -1732,22 +1732,22 @@
   transition: border 0.2s, box-shadow 0.2s !important;
 }
 .price-input:focus {
-  border: 2px solid #4a6bf5 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 2px solid #f45da0 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 .price-currency {
   position: absolute !important;
   left: 0.7rem !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1rem !important;
   z-index: 2 !important;
 }
 
 /* --- CHECKBOX --- */
 input[type="checkbox"] {
-  accent-color: #4a6bf5 !important;
+  accent-color: #f45da0 !important;
   width: 18px !important;
   height: 18px !important;
   border-radius: 4px !important;
@@ -1768,13 +1768,13 @@ input[type="checkbox"] {
   margin: 0.5rem 0 !important;
 }
 .select-container select:focus, select:focus, .sort-controls select:focus {
-  border: 2px solid #4a6bf5 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 2px solid #f45da0 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 
 .sort-direction-btn, .sort-controls button {
   background: #232b42 !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   border: 2px solid #232b42 !important;
   border-radius: 10px !important;
   padding: 0.5rem 0.7rem !important;
@@ -1783,7 +1783,7 @@ input[type="checkbox"] {
   transition: background 0.2s, color 0.2s !important;
 }
 .sort-direction-btn:hover, .sort-controls button:hover {
-  background: #4a6bf5 !important;
+  background: #f45da0 !important;
   color: #fff !important;
 }
 
@@ -1816,11 +1816,11 @@ input[type="checkbox"] {
 .filter-sidebar .search-box input[type="search"] {
   background: #232b42 !important;
   color: #fff !important;
-  border: 2px solid #4a6bf5 !important;
+  border: 2px solid #f45da0 !important;
   border-radius: 24px !important;
   padding: 0.7rem 1.2rem 0.7rem 2.5rem !important;
   font-size: 1rem !important;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.10) !important;
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.10) !important;
   outline: none !important;
   width: 100% !important;
   min-height: 44px !important;
@@ -1828,8 +1828,8 @@ input[type="checkbox"] {
 }
 .filter-sidebar .search-box input[type="text"]:focus,
 .filter-sidebar .search-box input[type="search"]:focus {
-  border: 2px solid #90cdf4 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 2px solid #ffd1b5 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 .filter-sidebar .search-box svg,
 .filter-sidebar .search-box .fa-search {
@@ -1837,7 +1837,7 @@ input[type="checkbox"] {
   left: 1.1rem !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1.2rem !important;
   pointer-events: none !important;
   z-index: 2 !important;
@@ -1865,11 +1865,11 @@ input[type="checkbox"] {
 .filter-sidebar .price-input {
   background: #232b42 !important;
   color: #fff !important;
-  border: 2px solid #4a6bf5 !important;
+  border: 2px solid #f45da0 !important;
   border-radius: 16px !important;
   padding: 0.7rem 1.2rem 0.7rem 2.1rem !important;
   font-size: 1rem !important;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.10) !important;
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.10) !important;
   outline: none !important;
   width: 100% !important;
   min-height: 44px !important;
@@ -1877,21 +1877,21 @@ input[type="checkbox"] {
   transition: border 0.2s, box-shadow 0.2s !important;
 }
 .filter-sidebar .price-input:focus {
-  border: 2px solid #90cdf4 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 2px solid #ffd1b5 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 .filter-sidebar .price-currency {
   position: absolute !important;
   left: 1rem !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1rem !important;
   z-index: 2 !important;
   pointer-events: none !important;
 }
 .filter-sidebar .price-separator {
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1.1rem !important;
   font-weight: 600 !important;
   margin: 0 0.2rem !important;
@@ -1915,11 +1915,11 @@ input[type="checkbox"] {
   appearance: textfield !important;
   background: #232b42 !important;
   color: #fff !important;
-  border: 2px solid #4a6bf5 !important;
+  border: 2px solid #f45da0 !important;
   border-radius: 24px !important;
   padding: 0.7rem 1.2rem 0.7rem 2.1rem !important;
   font-size: 1rem !important;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.10) !important;
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.10) !important;
   outline: none !important;
   width: 100% !important;
   min-height: 44px !important;
@@ -1927,8 +1927,8 @@ input[type="checkbox"] {
   transition: border 0.2s, box-shadow 0.2s !important;
 }
 .filter-sidebar .price-input:focus {
-  border: 2px solid #90cdf4 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 2px solid #ffd1b5 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 /* Remove arrows for Chrome, Safari, Edge */
 .filter-sidebar .price-input::-webkit-outer-spin-button,
@@ -1952,13 +1952,13 @@ input[type="checkbox"] {
   left: 1.1rem !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1.1rem !important;
   z-index: 2 !important;
   pointer-events: none !important;
 }
 .filter-sidebar .price-separator {
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1.1rem !important;
   font-weight: 600 !important;
   margin: 0 0.5rem !important;
@@ -1991,46 +1991,46 @@ input[type="checkbox"] {
 
 .filter-sidebar {
   animation: filterFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.18), 0 1.5px 8px rgba(0,0,0,0.22), 0 0 24px 0 #4a6bf5;
+  box-shadow: 0 8px 32px rgba(244, 93, 160, 0.18), 0 1.5px 8px rgba(0,0,0,0.22), 0 0 24px 0 #f45da0;
   backdrop-filter: blur(18px) saturate(1.2);
 }
 
 .filter-sidebar.active {
-  box-shadow: 0 12px 40px 0 #4a6bf5, 0 1.5px 8px rgba(0,0,0,0.22);
-  border-right: 2.5px solid #4a6bf5;
+  box-shadow: 0 12px 40px 0 #f45da0, 0 1.5px 8px rgba(0,0,0,0.22);
+  border-right: 2.5px solid #f45da0;
 }
 
 /* Section header accent and hover */
 .filter-section-header {
   transition: background 0.2s, box-shadow 0.2s, color 0.2s;
-  box-shadow: 0 1px 4px rgba(74, 107, 245, 0.08);
+  box-shadow: 0 1px 4px rgba(244, 93, 160, 0.08);
 }
 
 .filter-section-header:hover, .filter-section-header:focus {
-  background: rgba(74, 107, 245, 0.18) !important;
+  background: rgba(244, 93, 160, 0.18) !important;
   color: #fff !important;
-  box-shadow: 0 2px 12px #4a6bf5;
+  box-shadow: 0 2px 12px #f45da0;
 }
 
 /* Vibrant accent for selected category */
 .category-item.selected, .category-item.active {
-  background: linear-gradient(90deg, #4a6bf5 0%, #6f88ff 100%) !important;
+  background: linear-gradient(90deg, #f45da0 0%, #ff9a8b 100%) !important;
   color: #fff !important;
-  box-shadow: 0 0 12px #4a6bf5;
+  box-shadow: 0 0 12px #f45da0;
   border-radius: 10px !important;
 }
 
 .category-item:hover {
-  background: rgba(74, 107, 245, 0.18) !important;
-  color: #90cdf4 !important;
+  background: rgba(244, 93, 160, 0.18) !important;
+  color: #ffd1b5 !important;
 }
 
 /* Glow for active filter badges */
 .active-filter-badge {
-  background: linear-gradient(90deg, #4a6bf5 0%, #6f88ff 100%) !important;
+  background: linear-gradient(90deg, #f45da0 0%, #ff9a8b 100%) !important;
   color: #fff !important;
-  border: 1.5px solid #4a6bf5;
-  box-shadow: 0 0 8px #4a6bf5, 0 1px 4px rgba(74, 107, 245, 0.18);
+  border: 1.5px solid #f45da0;
+  box-shadow: 0 0 8px #f45da0, 0 1px 4px rgba(244, 93, 160, 0.18);
   font-weight: 600;
 }
 
@@ -2058,12 +2058,12 @@ input[type="checkbox"] {
 }
 .filter-sidebar::-webkit-scrollbar-thumb,
 .filter-sidebar-content::-webkit-scrollbar-thumb {
-  background: #4a6bf5;
+  background: #f45da0;
   border-radius: 8px;
 }
 .filter-sidebar::-webkit-scrollbar-thumb:hover,
 .filter-sidebar-content::-webkit-scrollbar-thumb:hover {
-  background: #6f88ff;
+  background: #ff9a8b;
 }
 
 /* === Enhanced Filter Section Styling === */
@@ -2130,8 +2130,8 @@ input[type="checkbox"] {
 .simple-search-input:focus,
 .simple-price-input:focus {
   background-color: var(--dark-card-bg, #1e2634) !important; /* Darker focus background */
-  border-color: var(--accent-primary, #4a6bf5) !important; /* Use variable or fallback */
-  box-shadow: 0 0 0 0.2rem rgba(74, 107, 245, 0.25); /* Accent focus shadow */
+  border-color: var(--accent-primary, #f45da0) !important; /* Use variable or fallback */
+  box-shadow: 0 0 0 0.2rem rgba(244, 93, 160, 0.25); /* Accent focus shadow */
   outline: none;
 }
 
@@ -2166,7 +2166,7 @@ input[type="number"] {
   --filter-border-color: #36405c;
   --filter-text-color: #e0e0e0; /* Primary text color */
   --filter-text-secondary-color: #8a94ad; /* Placeholder, secondary icons */
-  --filter-accent-color: #0d6efd; /* Primary accent (e.g., selected items) */
+  --filter-accent-color: #ff6584; /* Primary accent (e.g., selected items) */
   --filter-hover-bg: #36405c;
   --filter-active-badge-bg: #36405c;
   --filter-active-badge-text: #e0e0e0;

@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 2.5rem 0 2rem;
-  box-shadow: 0 4px 32px 0 rgba(74,107,245,0.10), 0 1.5px 8px rgba(0,0,0,0.18);
+  box-shadow: 0 4px 32px 0 rgba(244,93,160,0.10), 0 1.5px 8px rgba(0,0,0,0.18);
   position: sticky;
   top: 0;
   z-index: 1001;
@@ -23,7 +23,7 @@
 .sidebar-toggle-btn {
   background: none;
   border: none;
-  color: #4a6bf5;
+  color: #f45da0;
   font-size: 1.7rem;
   margin-right: 1.2rem;
   display: flex;
@@ -32,24 +32,24 @@
   transition: color 0.2s;
 }
 .sidebar-toggle-btn:hover {
-  color: #90cdf4;
+  color: #ffd1b5;
 }
 .admin-header-title {
   font-size: 1.6rem;
   font-weight: 900;
   letter-spacing: 1.5px;
-  color: #4a6bf5;
-  background: linear-gradient(90deg, #4a6bf5 30%, #90cdf4 100%);
+  color: #f45da0;
+  background: linear-gradient(90deg, #f45da0 30%, #ffd1b5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
-  text-shadow: 0 2px 16px #4a6bf5aa;
+  text-shadow: 0 2px 16px #f45da0aa;
   animation: glowTitle 2.5s infinite alternate;
 }
 @keyframes glowTitle {
-  from { text-shadow: 0 2px 16px #4a6bf5aa; }
-  to { text-shadow: 0 4px 32px #90cdf4cc, 0 2px 16px #4a6bf5aa; }
+  from { text-shadow: 0 2px 16px #f45da0aa; }
+  to { text-shadow: 0 4px 32px #ffd1b5cc, 0 2px 16px #f45da0aa; }
 }
 .admin-header-user {
   display: flex;
@@ -57,16 +57,16 @@
   font-size: 1.08rem;
   font-weight: 600;
   color: #bfc8e6;
-  background: rgba(74,107,245,0.13);
+  background: rgba(244,93,160,0.13);
   border-radius: 999px;
   padding: 0.4rem 1.2rem 0.4rem 0.8rem;
-  box-shadow: 0 2px 12px rgba(74,107,245,0.10);
+  box-shadow: 0 2px 12px rgba(244,93,160,0.10);
   transition: background 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
 .admin-header-user:hover {
-  background: rgba(74,107,245,0.22);
-  box-shadow: 0 4px 18px #4a6bf5;
+  background: rgba(244,93,160,0.22);
+  box-shadow: 0 4px 18px #f45da0;
 }
 .admin-header-username {
   margin-left: 0.6rem;

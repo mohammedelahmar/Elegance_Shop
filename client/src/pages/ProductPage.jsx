@@ -244,7 +244,7 @@ const ProductPage = () => {
   return (
     <Container className="my-5 product-page">
       {/* Product Hero Section */}
-      <div className="product-hero-section mb-5 p-4 rounded-4 shadow-lg position-relative d-flex flex-column flex-md-row align-items-center justify-content-between" style={{background: 'linear-gradient(135deg, #232946 60%, #4a6bf5 100%)', minHeight: 320}}>
+      <div className="product-hero-section mb-5 p-4 rounded-4 shadow-lg position-relative d-flex flex-column flex-md-row align-items-center justify-content-between" style={{background: 'linear-gradient(135deg, #232946 60%, #f45da0 100%)', minHeight: 320}}>
         <div className="product-hero-img-wrapper bg-white rounded-4 shadow-sm p-3 me-md-5 mb-4 mb-md-0" style={{maxWidth: 340, minWidth: 220}}>
           <img src={product.image_url || 'https://via.placeholder.com/400x400?text=No+Image'} alt={product.name} className="img-fluid product-hero-img" style={{maxHeight: 260, objectFit: 'contain'}} />
         </div>
@@ -256,7 +256,7 @@ const ProductPage = () => {
           </div>
           <div className="mb-3 d-flex align-items-center gap-3 justify-content-center justify-content-md-start">
             <span className="badge bg-success fs-6 px-3 py-2">{product.category?.name || 'Uncategorized'}</span>
-            <span className="product-hero-price fw-bold" style={{fontSize:'2.2rem', color:'#00d4ff', background:'#181f2e', borderRadius:'1rem', padding:'0.3rem 1.2rem', boxShadow:'0 2px 12px rgba(0,212,255,0.10)'}}>${formatPrice(product.price)}</span>
+            <span className="product-hero-price fw-bold" style={{fontSize:'2.2rem', color:'#ffd56f', background:'#181f2e', borderRadius:'1rem', padding:'0.3rem 1.2rem', boxShadow:'0 2px 12px rgba(0,212,255,0.10)'}}>${formatPrice(product.price)}</span>
           </div>
           {/* Add to Cart and Quantity Controls Inline */}
           <div className="w-100 d-flex flex-column flex-md-row align-items-center justify-content-md-start mt-2">

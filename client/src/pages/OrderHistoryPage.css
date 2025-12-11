@@ -19,7 +19,7 @@
   font-weight: 700;
   margin-bottom: 2rem;
   text-align: center;
-  background: linear-gradient(135deg, #4a6bf5, #6578f2);
+  background: linear-gradient(135deg, #f45da0, #ff85a1);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -36,7 +36,7 @@
 }
 
 .order-history-header {
-  background: linear-gradient(135deg, #232946 0%, #4a6bf5 100%);
+  background: linear-gradient(135deg, #232946 0%, #f45da0 100%);
   padding: 1.5rem 2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -74,7 +74,7 @@
 }
 
 .order-history-table thead {
-  background: linear-gradient(90deg, #232946 60%, #4a6bf5 100%);
+  background: linear-gradient(90deg, #232946 60%, #f45da0 100%);
 }
 
 .order-history-table th {
@@ -103,7 +103,7 @@
 }
 
 .order-history-table tbody tr:hover {
-  background: rgba(74, 107, 245, 0.1);
+  background: rgba(244, 93, 160, 0.1);
   transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
@@ -129,7 +129,7 @@
 
 .order-id-cell {
   font-family: 'Courier New', monospace;
-  color: #4a6bf5;
+  color: #f45da0;
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -167,7 +167,7 @@
 }
 
 .order-details-btn {
-  background: linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%);
+  background: linear-gradient(135deg, #f45da0 0%, #ff85a1 100%);
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -185,7 +185,7 @@
   background: linear-gradient(135deg, #3b5cf4 0%, #5a6ff1 100%);
   color: white;
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 4px 15px rgba(244, 93, 160, 0.4);
   text-decoration: none;
 }
 
@@ -205,7 +205,7 @@
 
 .mobile-order-card:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(74, 107, 245, 0.3);
+  border-color: rgba(244, 93, 160, 0.3);
   transform: translateY(-2px);
 }
 
@@ -217,7 +217,7 @@
 }
 
 .mobile-order-id {
-  color: #4a6bf5;
+  color: #f45da0;
   font-family: 'Courier New', monospace;
   font-weight: 600;
   font-size: 0.9rem;
@@ -284,7 +284,7 @@
 }
 
 .start-shopping-btn {
-  background: linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%);
+  background: linear-gradient(135deg, #f45da0 0%, #ff85a1 100%);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -301,7 +301,7 @@
   background: linear-gradient(135deg, #3b5cf4 0%, #5a6ff1 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 8px 25px rgba(244, 93, 160, 0.4);
   text-decoration: none;
 }
 
@@ -319,7 +319,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top: 3px solid #4a6bf5;
+  border-top: 3px solid #f45da0;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-right: 1rem;

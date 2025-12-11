@@ -14,7 +14,7 @@
 }
 
 .product-price {
-  color: #0d6efd;
+  color: #ff6584;
   font-weight: 600;
 }
 
@@ -48,13 +48,13 @@
 }
 
 .breadcrumb a:hover {
-  color: #0d6efd;
+  color: #ff6584;
 }
 
 .product-hero-section {
-  background: linear-gradient(135deg, #232946 60%, #4a6bf5 100%);
+  background: linear-gradient(135deg, #232946 60%, #f45da0 100%);
   min-height: 320px;
-  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.15);
+  box-shadow: 0 8px 32px rgba(244, 93, 160, 0.15);
   border-radius: 2rem;
   margin-bottom: 2.5rem;
   display: flex;
@@ -69,7 +69,7 @@
 .product-hero-img-wrapper {
   background: #fff;
   border-radius: 1.5rem;
-  box-shadow: 0 4px 24px rgba(74, 107, 245, 0.08);
+  box-shadow: 0 4px 24px rgba(244, 93, 160, 0.08);
   padding: 1.5rem;
   margin-right: 2.5rem;
   margin-bottom: 1.5rem;
@@ -87,23 +87,23 @@
 }
 
 .hero-add-to-cart-btn {
-  box-shadow: 0 4px 16px rgba(74, 107, 245, 0.18);
+  box-shadow: 0 4px 16px rgba(244, 93, 160, 0.18);
   border-radius: 2rem;
   font-size: 1.15rem;
   transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 .hero-add-to-cart-btn:hover {
-  background: #4a6bf5 !important;
+  background: #f45da0 !important;
   color: #fff !important;
   transform: translateY(-2px) scale(1.04);
 }
 
 .modern-tabs .nav-link.active {
-  background: linear-gradient(90deg, #4a6bf5 60%, #6f88ff 100%);
+  background: linear-gradient(90deg, #f45da0 60%, #ff9a8b 100%);
   color: #fff !important;
   border-radius: 1.5rem 1.5rem 0 0;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.08);
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.08);
 }
 
 .review-list-modern {
@@ -113,7 +113,7 @@
 .review-item-modern {
   background: #fff;
   border-radius: 1rem;
-  box-shadow: 0 2px 12px rgba(74, 107, 245, 0.07);
+  box-shadow: 0 2px 12px rgba(244, 93, 160, 0.07);
   display: flex;
   align-items: flex-start;
   gap: 1.2rem;
@@ -126,14 +126,14 @@
   width: 48px;
   height: 48px;
   font-size: 22px;
-  background: linear-gradient(135deg, #4a6bf5 60%, #6f88ff 100%);
+  background: linear-gradient(135deg, #f45da0 60%, #ff9a8b 100%);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.12);
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.12);
 }
 
 @keyframes fadeInUp {
@@ -147,38 +147,38 @@
   padding: 0 !important;
 }
 .quantity-btn {
-  color: #4a6bf5 !important;
+  color: #f45da0 !important;
   background: transparent !important;
   border: none !important;
   font-size: 1.5rem !important;
   transition: color 0.2s;
 }
 .quantity-btn:hover:not(:disabled) {
-  color: #00d4ff !important;
+  color: #ffd56f !important;
 }
 .quantity-input {
   width: 48px !important;
   background: #f4f8ff !important;
   color: #232946 !important;
-  border: 2px solid #4a6bf5 !important;
+  border: 2px solid #f45da0 !important;
   border-radius: 0.7rem !important;
   font-weight: bold !important;
   font-size: 1.2rem !important;
   text-align: center !important;
   margin: 0 0.5rem !important;
-  box-shadow: 0 2px 8px rgba(74,107,245,0.08);
+  box-shadow: 0 2px 8px rgba(244,93,160,0.08);
   transition: border 0.2s, box-shadow 0.2s;
 }
 .quantity-input:focus {
-  border: 2px solid #00d4ff !important;
+  border: 2px solid #ffd56f !important;
   outline: none !important;
-  box-shadow: 0 0 0 2px #00d4ff33;
+  box-shadow: 0 0 0 2px #ffd56f33;
 }
 .add-to-cart-main-btn {
   margin-left: 1.2rem !important;
   font-size: 1.1rem !important;
   border-radius: 2rem !important;
-  box-shadow: 0 4px 16px rgba(74,107,245,0.18);
+  box-shadow: 0 4px 16px rgba(244,93,160,0.18);
   font-weight: 600;
 }
 
@@ -186,7 +186,7 @@
 .card.shadow-sm.rounded-4, .review-form {
   background: #181f2e !important;
   border-radius: 1.5rem !important;
-  box-shadow: 0 4px 24px rgba(74,107,245,0.10) !important;
+  box-shadow: 0 4px 24px rgba(244,93,160,0.10) !important;
   border: none !important;
 }
 .review-form label, .review-form .form-label {
@@ -196,21 +196,21 @@
 .review-form textarea, .review-form select, .review-form input[type="text"] {
   background: #232946 !important;
   color: #fff !important;
-  border: 1.5px solid #4a6bf5 !important;
+  border: 1.5px solid #f45da0 !important;
   border-radius: 0.7rem !important;
   font-size: 1.1rem;
 }
 .review-form textarea:focus, .review-form select:focus {
-  border: 1.5px solid #00d4ff !important;
-  box-shadow: 0 0 0 2px #00d4ff33;
+  border: 1.5px solid #ffd56f !important;
+  box-shadow: 0 0 0 2px #ffd56f33;
 }
 .review-form .btn-primary, .review-form button[type="submit"] {
-  background: linear-gradient(90deg, #4a6bf5 60%, #00d4ff 100%) !important;
+  background: linear-gradient(90deg, #f45da0 60%, #ffd56f 100%) !important;
   border: none !important;
   border-radius: 1.2rem !important;
   font-weight: 600;
   font-size: 1.1rem;
-  box-shadow: 0 2px 8px rgba(74,107,245,0.10);
+  box-shadow: 0 2px 8px rgba(244,93,160,0.10);
   margin-top: 0.5rem;
 }
 .review-list-modern {
@@ -219,7 +219,7 @@
 .review-item-modern {
   background: #20263a !important;
   border-radius: 1.2rem !important;
-  box-shadow: 0 2px 12px rgba(74,107,245,0.10) !important;
+  box-shadow: 0 2px 12px rgba(244,93,160,0.10) !important;
   display: flex;
   align-items: flex-start;
   gap: 1.2rem;
@@ -237,14 +237,14 @@
   width: 48px;
   height: 48px;
   font-size: 22px;
-  background: linear-gradient(135deg, #4a6bf5 60%, #00d4ff 100%);
+  background: linear-gradient(135deg, #f45da0 60%, #ffd56f 100%);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.12);
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.12);
 }
 .review-item-modern .fw-semibold {
   color: #fff !important;
@@ -274,7 +274,7 @@
   font-size: 1.1rem;
 }
 .tabs .nav-link.active, .nav-tabs .nav-link.active {
-  background: linear-gradient(90deg, #4a6bf5 60%, #00d4ff 100%) !important;
+  background: linear-gradient(90deg, #f45da0 60%, #ffd56f 100%) !important;
   color: #fff !important;
   border: none !important;
   font-weight: 700;

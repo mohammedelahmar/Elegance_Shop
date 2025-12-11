@@ -20,9 +20,9 @@
   bottom: 0;
   background: linear-gradient(
     135deg,
-    rgba(74, 107, 245, 0.03) 0%,
+    rgba(244, 93, 160, 0.03) 0%,
     rgba(101, 120, 242, 0.01) 50%,
-    rgba(74, 107, 245, 0.03) 100%
+    rgba(244, 93, 160, 0.03) 100%
   );
   border-radius: inherit;
   pointer-events: none;
@@ -48,7 +48,7 @@
 }
 
 .info-section h3 {
-  color: #4a6bf5;
+  color: #f45da0;
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -78,13 +78,13 @@
 }
 
 .info-value a {
-  color: #4a6bf5;
+  color: #f45da0;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .info-value a:hover {
-  color: #6578f2;
+  color: #ff85a1;
   text-decoration: underline;
 }
 
@@ -138,7 +138,7 @@
 }
 
 .order-items-title {
-  color: #4a6bf5;
+  color: #f45da0;
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
@@ -165,7 +165,7 @@
 
 .order-item-card:hover {
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(74, 107, 245, 0.3);
+  border-color: rgba(244, 93, 160, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
@@ -199,13 +199,13 @@
 }
 
 .item-info a {
-  color: #4a6bf5;
+  color: #f45da0;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .item-info a:hover {
-  color: #6578f2;
+  color: #ff85a1;
   text-decoration: underline;
 }
 
@@ -241,7 +241,7 @@
 }
 
 .summary-title {
-  color: #4a6bf5;
+  color: #f45da0;
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
@@ -439,8 +439,8 @@
 /* Enhanced hover effects */
 .info-section:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(74, 107, 245, 0.15);
-  border-color: rgba(74, 107, 245, 0.2);
+  box-shadow: 0 8px 25px rgba(244, 93, 160, 0.15);
+  border-color: rgba(244, 93, 160, 0.2);
 }
 
 /* Loading pulse effect for order details */

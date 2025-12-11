@@ -97,7 +97,7 @@ const WishlistPage = () => {
               </div>
 
               {successMessage && (
-                <Alert variant="info" className="mb-4" style={{ background: 'rgba(74, 107, 245, 0.2)', borderColor: 'rgba(74, 107, 245, 0.3)', color: '#4a9fff' }}>
+                <Alert variant="info" className="mb-4" style={{ background: 'rgba(244, 93, 160, 0.2)', borderColor: 'rgba(244, 93, 160, 0.3)', color: '#ff85a1' }}>
                   <div className="d-flex align-items-center">
                     <div className="me-2">✓</div> {successMessage}
                   </div>

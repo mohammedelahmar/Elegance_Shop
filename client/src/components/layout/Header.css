@@ -33,12 +33,12 @@
   position: absolute;
   width: 8px;
   height: 8px;
-  background: linear-gradient(45deg, #4a6bf5, #5e86ff);
+  background: linear-gradient(45deg, #f45da0, #ff85a1);
   border-radius: 50%;
   bottom: -4px;
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 0 10px rgba(74, 107, 245, 0.6);
+  box-shadow: 0 0 10px rgba(244, 93, 160, 0.6);
 }
 
 .brand-text {
@@ -54,7 +54,7 @@
   font-size: 1.6rem;
   letter-spacing: -0.5px;
   margin-left: 2px;
-  background: linear-gradient(45deg, #4a6bf5, #5e86ff);
+  background: linear-gradient(45deg, #f45da0, #ff85a1);
   -webkit-background-clip: text;
   background-clip: text; /* Add this standard property */
   -webkit-text-fill-color: transparent;
@@ -83,7 +83,7 @@
   height: 3px;
   bottom: 0;
   left: 0;
-  background: linear-gradient(90deg, #4a6bf5, #6f88ff);
+  background: linear-gradient(90deg, #f45da0, #ff9a8b);
   transition: width 0.3s ease;
   border-radius: 4px;
 }
@@ -132,12 +132,12 @@
 /* Admin dropdown items organized in groups */
 .admin-dropdown-header {
   padding: 8px 16px;
-  color: #4a6bf5;
+  color: #f45da0;
   font-weight: 600;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background-color: rgba(74, 107, 245, 0.05);
+  background-color: rgba(244, 93, 160, 0.05);
 }
 
 /* Enhanced Search form */
@@ -238,8 +238,8 @@
 
 .search-input:focus {
   background-color: rgba(255, 255, 255, 0.09) !important;
-  border-color: #4a6bf5 !important;
-  box-shadow: 0 0 0 4px rgba(74, 107, 245, 0.15) !important;
+  border-color: #f45da0 !important;
+  box-shadow: 0 0 0 4px rgba(244, 93, 160, 0.15) !important;
 }
 
 .input-icon {
@@ -256,7 +256,7 @@
 }
 
 .search-form:focus-within .input-icon {
-  color: #4a6bf5 !important;
+  color: #f45da0 !important;
 }
 
 /* Cart styling */
@@ -381,7 +381,7 @@
 
 .dropdown-item:hover {
   background-color: rgba(255, 255, 255, 0.05);
-  color: #4a6bf5;
+  color: #f45da0;
 }
 
 .dropdown-item.logout {
@@ -423,13 +423,13 @@
 }
 
 .register-btn {
-  background: linear-gradient(45deg, #4a6bf5, #6f88ff) !important;
+  background: linear-gradient(45deg, #f45da0, #ff9a8b) !important;
   border: none !important;
   border-radius: 24px !important;
   padding: 0.5rem 1.3rem !important;
   font-weight: 500;
   transition: all 0.3s ease !important;
-  box-shadow: 0 4px 15px rgba(74, 107, 245, 0.25);
+  box-shadow: 0 4px 15px rgba(244, 93, 160, 0.25);
   font-size: 0.9rem;
   letter-spacing: 0.3px;
   height: 42px;
@@ -439,7 +439,7 @@
 
 .register-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(74, 107, 245, 0.4) !important;
+  box-shadow: 0 8px 20px rgba(244, 93, 160, 0.4) !important;
 }
 
 /* Navbar actions */
@@ -470,7 +470,7 @@
 }
 
 .navbar-toggler:focus {
-  box-shadow: 0 0 0 3px rgba(74, 107, 245, 0.2);
+  box-shadow: 0 0 0 3px rgba(244, 93, 160, 0.2);
   outline: none;
 }
 

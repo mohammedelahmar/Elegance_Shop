@@ -4,7 +4,7 @@
   --qv-text-primary: #e5e7eb;
   --qv-text-secondary: #9ca3af;
   --qv-accent: #5c7cfa;
-  --qv-accent-darker: #4a6bf5;
+  --qv-accent-darker: #f45da0;
   --qv-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
   --qv-img-bg: rgba(255, 255, 255, 0.03);
 }
@@ -265,7 +265,7 @@
 }
 
 .quick-view-title {
-  color: #90cdf4;
+  color: #ffd1b5;
   font-weight: 600;
 }
 
@@ -316,7 +316,7 @@
 .price-section .product-price {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #4a6bf5;
+  color: #f45da0;
 }
 
 .product-description {
@@ -394,7 +394,7 @@
 }
 
 .add-cart-btn {
-  background: linear-gradient(135deg, #4a6bf5 0%, #3755d8 100%);
+  background: linear-gradient(135deg, #f45da0 0%, #d63a7c 100%);
   border: none;
   padding: 0.6rem 1.2rem;
   font-weight: 600;
@@ -405,7 +405,7 @@
 .add-cart-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #5a7bf5 0%, #4765e8 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 15px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 8px 15px rgba(244, 93, 160, 0.4);
 }
 
 .wishlist-button-container {
@@ -415,16 +415,16 @@
 }
 
 .view-details-btn {
-  border-color: #4a6bf5;
-  color: #4a6bf5;
+  border-color: #f45da0;
+  color: #f45da0;
   font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .view-details-btn:hover {
-  background: rgba(74, 107, 245, 0.1);
-  border-color: #4a6bf5;
-  color: #6f88ff;
+  background: rgba(244, 93, 160, 0.1);
+  border-color: #f45da0;
+  color: #ff9a8b;
 }
 
 .close-btn {

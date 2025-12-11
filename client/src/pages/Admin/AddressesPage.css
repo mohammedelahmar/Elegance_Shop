@@ -22,11 +22,11 @@
 }
 
 .addresses-admin-actions .btn-primary {
-  background: #4a6bf5;
-  border-color: #4a6bf5;
+  background: #f45da0;
+  border-color: #f45da0;
   border-radius: 8px; /* Slightly less rounded than categories */
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(74,107,245,0.15);
+  box-shadow: 0 4px 12px rgba(244,93,160,0.15);
   transition: background 0.2s, transform 0.2s;
 }
 

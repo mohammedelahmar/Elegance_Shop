@@ -4,7 +4,7 @@
 .order-list-container { /* This will be styled like .category-list-card */
   background: #181f2e;
   border-radius: 1.5rem;
-  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.13), 0 1.5px 8px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 32px rgba(244, 93, 160, 0.13), 0 1.5px 8px rgba(0,0,0,0.18);
   padding: 2.5rem 2rem 2rem 2rem;
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
@@ -26,7 +26,7 @@
 }
 
 .order-table thead tr {
-  background: linear-gradient(90deg, #232946 60%, #4a6bf5 100%);
+  background: linear-gradient(90deg, #232946 60%, #f45da0 100%);
   color: #fff;
   /* border-radius: 1rem 1rem 0 0; */ /* Handled by table's overflow:hidden and border-radius */
 }
@@ -44,7 +44,7 @@
 
 .order-table td {
   border: none; /* No cell borders */
-  border-bottom: 1px solid rgba(74, 107, 245, 0.2); /* Subtle separator line, adjust color/opacity as needed */
+  border-bottom: 1px solid rgba(244, 93, 160, 0.2); /* Subtle separator line, adjust color/opacity as needed */
   vertical-align: middle;
   font-size: 1.0rem; /* Slightly smaller than header, or match CategoryList's 1.05rem */
   padding: 0.75rem 1rem;
@@ -61,7 +61,7 @@
 }
 
 .order-table tbody tr:hover {
-  background: rgba(74, 107, 245, 0.10); /* Hover effect from CategoryList */
+  background: rgba(244, 93, 160, 0.10); /* Hover effect from CategoryList */
 }
 
 /* Badges - Keep existing badge styling or adapt if necessary */
@@ -100,12 +100,12 @@
 /* Adapting .btn-outline-primary from CategoryList */
 .order-table .action-button.view-button, 
 .order-table .btn-outline-primary { /* Target Bootstrap class directly if needed */
-  border-color: #4a6bf5;
-  color: #4a6bf5;
+  border-color: #f45da0;
+  color: #f45da0;
 }
 .order-table .action-button.view-button:hover,
 .order-table .btn-outline-primary:hover {
-  background: #4a6bf5;
+  background: #f45da0;
   color: #fff;
 }
 

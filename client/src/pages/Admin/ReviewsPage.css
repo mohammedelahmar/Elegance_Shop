@@ -25,17 +25,17 @@
 }
 
 .reviews-admin-actions .btn-primary {
-  background: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  background: linear-gradient(45deg, #f45da0, #ff9a8b);
   border: none;
   border-radius: 12px;
   font-weight: 600;
-  box-shadow: 0 4px 16px rgba(74,107,245,0.18);
+  box-shadow: 0 4px 16px rgba(244,93,160,0.18);
   transition: background 0.2s, transform 0.2s;
   padding: 0.6rem 1.2rem;
 }
 
 .reviews-admin-actions .btn-primary:hover {
-  background: linear-gradient(45deg, #6f88ff, #4a6bf5);
+  background: linear-gradient(45deg, #ff9a8b, #f45da0);
   transform: translateY(-2px) scale(1.04);
 }
 
@@ -70,23 +70,23 @@
 }
 
 .review-btn-primary {
-  background: linear-gradient(45deg, #4a6bf5, #6f88ff) !important;
+  background: linear-gradient(45deg, #f45da0, #ff9a8b) !important;
   border: none !important;
   border-radius: 0.5rem !important;
   font-weight: 600 !important;
   padding: 0.6rem 1.2rem !important;
-  box-shadow: 0 4px 12px rgba(74,107,245,0.2) !important;
+  box-shadow: 0 4px 12px rgba(244,93,160,0.2) !important;
 }
 .review-btn-primary:hover {
-  background: linear-gradient(45deg, #6f88ff, #4a6bf5) !important;
+  background: linear-gradient(45deg, #ff9a8b, #f45da0) !important;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(74,107,245,0.3) !important;
+  box-shadow: 0 6px 16px rgba(244,93,160,0.3) !important;
 }
 
 .review-filter-select {
   background-color: #2c3657 !important;
   color: #ffffff !important;
-  border: 1px solid #4a6bf5 !important;
+  border: 1px solid #f45da0 !important;
   border-radius: 0.5rem !important;
   padding: 0.75rem 1rem !important;
 }
@@ -104,13 +104,13 @@
 }
 
 .review-tabs .nav-link.active {
-  color: #4a6bf5;
-  border-bottom-color: #4a6bf5;
+  color: #f45da0;
+  border-bottom-color: #f45da0;
   background-color: transparent;
 }
 
 .review-tabs .nav-link:hover {
-  color: #6f88ff;
+  color: #ff9a8b;
 }
 
 /* Responsive adjustments */

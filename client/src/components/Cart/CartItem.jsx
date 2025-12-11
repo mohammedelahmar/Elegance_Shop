@@ -110,7 +110,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
           <Link to={productUrl} className="text-decoration-none">
             <motion.h5 
               className="cart-item-title mb-1"
-              whileHover={{ color: "#4a9fff" }}
+              whileHover={{ color: "#ff85a1" }}
               transition={{ duration: 0.2 }}
             >
               {productName}
@@ -154,7 +154,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
         <Col xs={6} md={3} className="mt-3 mt-md-0">
           <motion.div 
             className="quantity-control"
-            whileHover={{ boxShadow: '0 4px 12px rgba(74,107,245,0.15)' }}
+            whileHover={{ boxShadow: '0 4px 12px rgba(244,93,160,0.15)' }}
           >
             <Button 
               variant="outline-secondary" 

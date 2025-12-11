@@ -45,7 +45,7 @@ Enhanced the orders section in the user profile page with a modern, clean, and v
 - **Empty States**: Encouraging empty state with shopping CTA
 
 ### Design System
-- **Primary Colors**: #4a6bf5, #6578f2 (blue gradient)
+- **Primary Colors**: #f45da0, #ff85a1 (sunset rose gradient)
 - **Success Color**: #22c55e (green)
 - **Warning Color**: #f59e0b (amber)
 - **Error Color**: #ef4444 (red)

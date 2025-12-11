@@ -56,11 +56,11 @@
 .thumbnail-item:hover,
 .thumbnail-item.active {
   opacity: 1;
-  border-color: #0d6efd;
+  border-color: #ff6584;
 }
 
 .thumbnail-item.active {
-  box-shadow: 0 0 0 2px #0d6efd;
+  box-shadow: 0 0 0 2px #ff6584;
 }
 
 .thumbnail-image {
@@ -236,9 +236,9 @@
 }
 
 .thumbnail.active {
-  border-color: #4a6bf5;
+  border-color: #f45da0;
   opacity: 1;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.5); /* Stronger highlight */
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.5); /* Stronger highlight */
 }
 
 .thumbnail img {

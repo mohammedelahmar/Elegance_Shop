@@ -200,13 +200,13 @@
 /* Selected address preview */
 .selected-address-preview {
   background-color: #33353e;
-  border-color: #4a6bf5 !important;
+  border-color: #f45da0 !important;
   color: #fff;
   transition: all 0.3s ease;
 }
 
 .selected-address-preview h6 {
-  color: #4a6bf5;
+  color: #f45da0;
   font-size: 0.95rem;
   margin-bottom: 10px;
 }

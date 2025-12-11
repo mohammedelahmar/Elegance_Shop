@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(74, 107, 245, 0.1); /* Subtle background for icon container */
+  background-color: rgba(244, 93, 160, 0.1); /* Subtle background for icon container */
 }
 
 .order-stats-container .dashboard-stat-icon.text-success {
@@ -35,7 +35,7 @@
 }
 
 .order-stats-container .dashboard-stat-icon.text-primary {
-  color: #60a5fa !important; /* Vibrant blue */
+  color: #ff9a8b !important; /* Vibrant blue */
   background-color: rgba(96, 165, 250, 0.1);
 }
 

@@ -60,7 +60,7 @@ const CartList = ({
           to="/products" 
           variant="primary"
           style={{
-            background: "linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%)",
+            background: "linear-gradient(135deg, #f45da0 0%, #ff85a1 100%)",
             border: "none",
             borderRadius: "8px",
             padding: "0.6rem 1.5rem"

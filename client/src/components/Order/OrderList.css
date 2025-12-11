@@ -11,7 +11,7 @@
 }
 
 .orders-header {
-  background: linear-gradient(135deg, #232946 0%, #4a6bf5 100%);
+  background: linear-gradient(135deg, #232946 0%, #f45da0 100%);
   padding: 1.5rem 2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -58,7 +58,7 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(135deg, #4a6bf5, #6578f2);
+  background: linear-gradient(135deg, #f45da0, #ff85a1);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -70,13 +70,13 @@
   right: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #4a6bf5, #6578f2);
+  background: linear-gradient(90deg, #f45da0, #ff85a1);
   transition: width 0.3s ease;
 }
 
 .order-card:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(74, 107, 245, 0.3);
+  border-color: rgba(244, 93, 160, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
@@ -97,7 +97,7 @@
 }
 
 .order-id {
-  color: #4a6bf5;
+  color: #f45da0;
   font-size: 0.9rem;
   font-weight: 600;
   font-family: 'Courier New', monospace;
@@ -202,7 +202,7 @@
 }
 
 .view-order-btn {
-  background: linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%);
+  background: linear-gradient(135deg, #f45da0 0%, #ff85a1 100%);
   color: white;
   border: none;
   padding: 0.5rem 1.25rem;
@@ -220,7 +220,7 @@
   background: linear-gradient(135deg, #3b5cf4 0%, #5a6ff1 100%);
   color: white;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 6px 20px rgba(244, 93, 160, 0.4);
   text-decoration: none;
 }
 
@@ -255,7 +255,7 @@
 }
 
 .empty-state-btn {
-  background: linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%);
+  background: linear-gradient(135deg, #f45da0 0%, #ff85a1 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -273,7 +273,7 @@
   background: linear-gradient(135deg, #3b5cf4 0%, #5a6ff1 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 8px 25px rgba(244, 93, 160, 0.4);
   text-decoration: none;
 }
 
@@ -289,7 +289,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top: 3px solid #4a6bf5;
+  border-top: 3px solid #f45da0;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-right: 1rem;

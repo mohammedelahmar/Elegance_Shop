@@ -22,16 +22,16 @@
 }
 
 .variants-admin-actions .btn-primary {
-  background: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  background: linear-gradient(45deg, #f45da0, #ff9a8b);
   border: none;
   border-radius: 12px;
   font-weight: 600;
-  box-shadow: 0 4px 16px rgba(74,107,245,0.18);
+  box-shadow: 0 4px 16px rgba(244,93,160,0.18);
   transition: background 0.2s, transform 0.2s;
 }
 
 .variants-admin-actions .btn-primary:hover {
-  background: linear-gradient(45deg, #6f88ff, #4a6bf5);
+  background: linear-gradient(45deg, #ff9a8b, #f45da0);
   transform: translateY(-2px) scale(1.04);
 }
 
@@ -52,7 +52,7 @@
 .variants-admin-card {
   background: #1e2634; /* Adjusted to match category list card background */
   border-radius: 1.5rem; /* Adjusted to match category list card border-radius */
-  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.13), 0 1.5px 8px rgba(0,0,0,0.18); /* Copied from category list */
+  box-shadow: 0 8px 32px rgba(244, 93, 160, 0.13), 0 1.5px 8px rgba(0,0,0,0.18); /* Copied from category list */
   padding: 2.5rem 2rem 2rem 2rem; /* Copied from category list */
   margin-top: 2.5rem; /* Copied from category list */
   margin-bottom: 2.5rem; /* Copied from category list */
@@ -92,7 +92,7 @@
 .variants-admin-container .form-select {
   background-color: #2c3657 !important; /* Darker background for select */
   color: #fff !important; /* White text */
-  border: 1px solid #4a6bf5 !important; /* Blue border */
+  border: 1px solid #f45da0 !important; /* Blue border */
   border-radius: 0.5rem !important;
   padding: 0.75rem 1rem !important;
   font-size: 1rem !important;
@@ -105,8 +105,8 @@
 }
 
 .variants-admin-container .form-select:focus {
-  border-color: #90cdf4 !important; /* Lighter blue on focus */
-  box-shadow: 0 0 0 0.2rem rgba(74, 107, 245, 0.25) !important; /* Blue glow on focus */
+  border-color: #ffd1b5 !important; /* Lighter blue on focus */
+  box-shadow: 0 0 0 0.2rem rgba(244, 93, 160, 0.25) !important; /* Blue glow on focus */
 }
 
 .variants-admin-container .form-select option {

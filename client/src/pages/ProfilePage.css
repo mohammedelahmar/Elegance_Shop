@@ -22,7 +22,7 @@
   left: 0;
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, #4a6bf5, #6578f2);
+  background: linear-gradient(90deg, #f45da0, #ff85a1);
   border-radius: 3px;
 }
 
@@ -30,7 +30,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(45deg, #4a6bf5, #6578f2);
+  background: linear-gradient(45deg, #f45da0, #ff85a1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,7 +43,7 @@
 
 .profile-avatar:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 25px rgba(74, 107, 245, 0.3);
+  box-shadow: 0 8px 25px rgba(244, 93, 160, 0.3);
 }
 
 .profile-avatar img {
@@ -81,9 +81,9 @@
 
 .form-control:focus {
   background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(74, 107, 245, 0.5);
+  border-color: rgba(244, 93, 160, 0.5);
   color: #f8f9fa;
-  box-shadow: 0 0 0 3px rgba(74, 107, 245, 0.2);
+  box-shadow: 0 0 0 3px rgba(244, 93, 160, 0.2);
 }
 
 .form-control:disabled {
@@ -98,18 +98,18 @@
 }
 
 .update-btn {
-  background: linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%);
+  background: linear-gradient(135deg, #f45da0 0%, #ff85a1 100%);
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(74, 107, 245, 0.3);
+  box-shadow: 0 5px 15px rgba(244, 93, 160, 0.3);
 }
 
 .update-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 8px 25px rgba(244, 93, 160, 0.4);
 }
 
 .update-btn:active {
@@ -138,9 +138,9 @@
 }
 
 .profile-nav-link.active {
-  color: #4a9fff;
-  background: rgba(74, 107, 245, 0.1);
-  border-left-color: #4a9fff;
+  color: #ff85a1;
+  background: rgba(244, 93, 160, 0.1);
+  border-left-color: #ff85a1;
 }
 
 .profile-nav-link svg {
@@ -149,7 +149,7 @@
 
 /* Alert styling */
 .alert-success {
-  background: rgba(25, 135, 84, 0.2);
+  background-color: rgba(244, 93, 160, 0.25) !important;
   border-color: rgba(25, 135, 84, 0.3);
   color: #d1fae5;
 }
@@ -206,8 +206,8 @@
 }
 
 .profile-page-container .form-control:focus {
-  border-color: #4a6bf5 !important;
-  box-shadow: 0 0 0 3px rgba(74, 107, 245, 0.25) !important;
+  border-color: #f45da0 !important;
+  box-shadow: 0 0 0 3px rgba(244, 93, 160, 0.25) !important;
   background: rgba(30, 38, 66, 0.95) !important;
 }
 
@@ -448,15 +448,15 @@ textarea.profile-input-field {
 }
 
 .address-card .list-group-item svg {
-  color: #4a9fff;
+  color: #ff85a1;
   min-width: 16px;
   margin-top: 4px;
 }
 
 /* Badge styling */
 .badge.bg-primary.bg-opacity-25 {
-  background-color: rgba(74, 159, 255, 0.25) !important;
-  color: #4a9fff;
+  background-color: rgba(244, 93, 160, 0.25) !important;
+  color: #ff85a1;
   font-weight: 500;
 }
 
@@ -468,14 +468,14 @@ textarea.profile-input-field {
 
 /* Button styling */
 .btn-primary {
-  background: linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%);
+  background: linear-gradient(135deg, #f45da0 0%, #ff85a1 100%);
   border: none;
-  box-shadow: 0 4px 10px rgba(74, 107, 245, 0.3);
+  box-shadow: 0 4px 10px rgba(244, 93, 160, 0.3);
 }
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #5a7af5 0%, #7588f2 100%);
-  box-shadow: 0 6px 12px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 6px 12px rgba(244, 93, 160, 0.4);
 }
 
 /* Add animation for the cards */
@@ -556,13 +556,13 @@ textarea.profile-input-field {
 }
 
 .profile-tabs .nav-link:hover {
-  color: #4a6bf5;
-  background: rgba(74, 107, 245, 0.1);
+  color: #f45da0;
+  background: rgba(244, 93, 160, 0.1);
 }
 
 .profile-tabs .nav-link.active {
   color: #fff;
-  background: linear-gradient(135deg, #4a6bf5, #6578f2);
+  background: linear-gradient(135deg, #f45da0, #ff85a1);
   border-color: transparent;
 }
 
@@ -573,5 +573,5 @@ textarea.profile-input-field {
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #4a6bf5, #6578f2);
+  background: linear-gradient(90deg, #f45da0, #ff85a1);
 }

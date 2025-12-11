@@ -32,9 +32,9 @@
 }
 
 .back-button:hover {
-  background: rgba(74, 107, 245, 0.1);
-  border-color: rgba(74, 107, 245, 0.3);
-  color: #4a6bf5;
+  background: rgba(244, 93, 160, 0.1);
+  border-color: rgba(244, 93, 160, 0.3);
+  color: #f45da0;
   transform: translateX(-4px);
   text-decoration: none;
 }
@@ -51,7 +51,7 @@
 }
 
 .order-id-highlight {
-  background: linear-gradient(135deg, #4a6bf5, #6578f2);
+  background: linear-gradient(135deg, #f45da0, #ff85a1);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -68,7 +68,7 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, #4a6bf5, #6578f2, #4a6bf5);
+  background: linear-gradient(45deg, #f45da0, #ff85a1, #f45da0);
   border-radius: 10px;
   z-index: -1;
   animation: gradientShift 3s ease-in-out infinite;
@@ -96,7 +96,7 @@
 }
 
 .order-detail-header {
-  background: linear-gradient(135deg, #232946 0%, #4a6bf5 100%);
+  background: linear-gradient(135deg, #232946 0%, #f45da0 100%);
   padding: 1.5rem 2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -124,7 +124,7 @@
 }
 
 .section-title {
-  color: #4a6bf5;
+  color: #f45da0;
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -232,7 +232,7 @@
 
 .order-item:hover {
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(74, 107, 245, 0.3);
+  border-color: rgba(244, 93, 160, 0.3);
   transform: translateY(-2px);
 }
 
@@ -259,13 +259,13 @@
 }
 
 .item-details a {
-  color: #4a6bf5;
+  color: #f45da0;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .item-details a:hover {
-  color: #6578f2;
+  color: #ff85a1;
   text-decoration: underline;
 }
 
@@ -505,7 +505,7 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, #4a6bf5, #6578f2, #4a6bf5);
+  background: linear-gradient(45deg, #f45da0, #ff85a1, #f45da0);
   border-radius: 10px;
   z-index: -1;
   animation: gradientShift 3s ease-in-out infinite;
@@ -563,7 +563,7 @@
 }
 
 .order-item:hover .item-details h4 {
-  color: #6578f2;
+  color: #ff85a1;
   transition: color 0.3s ease;
 }
 
@@ -583,7 +583,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: linear-gradient(135deg, #4a6bf5, #22c55e);
+  background: linear-gradient(135deg, #f45da0, #22c55e);
   border-radius: 2px;
   width: var(--progress-width, 0%);
   transition: width 1s ease-out;
@@ -629,10 +629,10 @@
 }
 
 .order-page-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #4a6bf5, #6578f2);
+  background: linear-gradient(135deg, #f45da0, #ff85a1);
   border-radius: 4px;
 }
 
 .order-page-container::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #6578f2, #4a6bf5);
+  background: linear-gradient(135deg, #ff85a1, #f45da0);
 }

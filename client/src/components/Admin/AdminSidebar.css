@@ -6,7 +6,7 @@
   width: 230px;
   background: #232946;
   color: #fff;
-  box-shadow: 2px 0 16px rgba(74,107,245,0.08);
+  box-shadow: 2px 0 16px rgba(244,93,160,0.08);
   z-index: 1100;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@
 .sidebar-title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #4a6bf5;
+  color: #f45da0;
   letter-spacing: 1px;
 }
 .sidebar-close-btn {
@@ -56,8 +56,8 @@
 }
 .sidebar-link.active, .sidebar-link:hover {
   background: #1a1f35;
-  color: #4a6bf5;
-  border-left: 3px solid #4a6bf5;
+  color: #f45da0;
+  border-left: 3px solid #f45da0;
 }
 .sidebar-icon {
   font-size: 1.25rem;
@@ -93,7 +93,7 @@
   }
   .admin-sidebar.open {
     transform: translateX(0);
-    box-shadow: 2px 0 24px #4a6bf5;
+    box-shadow: 2px 0 24px #f45da0;
   }
 }
 @media (max-width: 767.98px) {

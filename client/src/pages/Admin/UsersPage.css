@@ -25,15 +25,15 @@
 
 .users-admin-actions .btn-outline-primary {
   border-radius: 8px;
-  color: #4a6bf5;
-  border-color: #4a6bf5;
+  color: #f45da0;
+  border-color: #f45da0;
   background: transparent;
   font-weight: 600;
   transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 
 .users-admin-actions .btn-outline-primary:hover {
-  background: #4a6bf5;
+  background: #f45da0;
   color: #fff;
   transform: translateY(-1px);
 }

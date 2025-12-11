@@ -44,15 +44,15 @@
 }
 
 .orders-admin-actions .btn-outline-primary {
-  border-color: #4a6bf5;
-  color: #4a6bf5;
+  border-color: #f45da0;
+  color: #f45da0;
 }
 
 .orders-admin-actions .btn-outline-primary:hover {
-  background-color: #4a6bf5;
+  background-color: #f45da0;
   color: #fff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(74, 107, 245, 0.2);
+  box-shadow: 0 4px 12px rgba(244, 93, 160, 0.2);
 }
 
 .orders-list-card {
@@ -71,22 +71,22 @@
 .order-search-input {
   background: rgba(44, 54, 87, 0.95) !important;
   color: #fff !important;
-  border: 2px solid #4a6bf5 !important;
+  border: 2px solid #f45da0 !important;
   border-radius: 2rem !important;
   padding: 0.75rem 1.25rem 0.75rem 2.5rem !important; /* Adjusted padding for icon */
   font-size: 1rem !important;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.10) !important;
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.10) !important;
 }
 
 .order-search-input:focus {
-  border: 2px solid #90cdf4 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 2px solid #ffd1b5 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 
 .order-search-icon {
   background: transparent !important;
   border: none !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1.1rem !important;
   position: absolute;
   left: 0.75rem;
@@ -107,13 +107,13 @@
 }
 
 .order-tabs .nav-link.active {
-  color: #4a6bf5;
-  border-bottom-color: #4a6bf5;
-  background-color: rgba(74, 107, 245, 0.1);
+  color: #f45da0;
+  border-bottom-color: #f45da0;
+  background-color: rgba(244, 93, 160, 0.1);
 }
 
 .order-tabs .nav-link:hover {
-  color: #6f88ff;
+  color: #ff9a8b;
   border-bottom-color: rgba(111, 136, 255, 0.5);
 }
 

@@ -91,21 +91,21 @@ const ContactPage = () => {
           <Row className="justify-content-center mb-5">
             <Col md={4} className="mb-4 fade-in">
               <Card className="product-card text-center p-4 h-100">
-                <FaEnvelope className="mb-3" style={{ fontSize: '2rem', color: '#4a6bf5' }} />
+                <FaEnvelope className="mb-3" style={{ fontSize: '2rem', color: '#f45da0' }} />
                 <h5>Email</h5>
                 <p className="text-muted mb-0">eleganceshop.sender@gmail.com</p>
               </Card>
             </Col>
             <Col md={4} className="mb-4 fade-in">
               <Card className="product-card text-center p-4 h-100">
-                <FaPhone className="mb-3" style={{ fontSize: '2rem', color: '#4a6bf5' }} />
+                <FaPhone className="mb-3" style={{ fontSize: '2rem', color: '#f45da0' }} />
                 <h5>Phone</h5>
                 <p className="text-muted mb-0">+212 682-480-268</p>
               </Card>
             </Col>
             <Col md={4} className="mb-4 fade-in">
               <Card className="product-card text-center p-4 h-100">
-                <FaMapMarkerAlt className="mb-3" style={{ fontSize: '2rem', color: '#4a6bf5' }} />
+                <FaMapMarkerAlt className="mb-3" style={{ fontSize: '2rem', color: '#f45da0' }} />
                 <h5>Location</h5>
                 <p className="text-muted mb-0">Casablanca, Morocco</p>
               </Card>
@@ -137,7 +137,7 @@ const ContactPage = () => {
                       <Col md={6} className="mb-3">
                         <Form.Group controlId="contactName">
                           <Form.Label>Name</Form.Label>
-                          <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
+                          <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#f45da0'}}
                             type="text"
                             name="name"
                             value={form.name}
@@ -149,7 +149,7 @@ const ContactPage = () => {
                       <Col md={6} className="mb-3">
                         <Form.Group controlId="contactEmail">
                           <Form.Label>Email</Form.Label>
-                          <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
+                          <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#f45da0'}}
                             type="email"
                             name="email"
                             value={form.email}
@@ -161,7 +161,7 @@ const ContactPage = () => {
                     </Row>
                     <Form.Group controlId="contactMessage" className="mb-3">
                       <Form.Label>Message</Form.Label>
-                      <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#4a6bf5'}}
+                      <Form.Control style={{backgroundColor: '#303b60' , borderColor: '#f45da0'}}
                         as="textarea"
                         name="message"
                         value={form.message}

@@ -7,7 +7,7 @@
 }
 
 .wishlist-item:hover {
-  box-shadow: 0 8px 25px rgba(74, 107, 245, 0.15) !important;
+  box-shadow: 0 8px 25px rgba(244, 93, 160, 0.15) !important;
   transform: translateY(-3px);
 }
 
@@ -47,7 +47,7 @@
 }
 
 .wishlist-item-title:hover {
-  color: #4a9fff;
+  color: #ff85a1;
 }
 
 .wishlist-item-category {
@@ -67,7 +67,7 @@
 }
 
 .wishlist-item-price {
-  color: #4a9fff;
+  color: #ff85a1;
   font-weight: 700;
   font-size: 1.2rem;
   display: block;
@@ -87,13 +87,13 @@
 }
 
 .add-to-cart-btn {
-  background: linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%);
+  background: linear-gradient(135deg, #f45da0 0%, #ff85a1 100%);
   border: none;
 }
 
 .add-to-cart-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 107, 245, 0.25);
+  box-shadow: 0 4px 12px rgba(244, 93, 160, 0.25);
 }
 
 .remove-btn {

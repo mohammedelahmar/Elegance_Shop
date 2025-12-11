@@ -96,8 +96,8 @@ const AddressDetail = ({ address, show, onHide, onEdit }) => {
           variant="primary"
           onClick={onEdit}
           style={{
-            background: '#4a6bf5', 
-            borderColor: '#4a6bf5'
+            background: '#f45da0', 
+            borderColor: '#f45da0'
           }}
         >
           <FaEdit className="me-1" /> Edit Address

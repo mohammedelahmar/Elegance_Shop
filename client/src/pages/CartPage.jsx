@@ -167,7 +167,7 @@ const CartPage = () => {
 
                 {cartSubtotal < 50 && cartSubtotal > 0 && (
                   <div className="mt-3 mb-4">
-                    <div className="free-shipping-alert p-2 rounded" style={{ background: 'rgba(74, 107, 245, 0.1)', fontSize: '0.9rem' }}>
+                    <div className="free-shipping-alert p-2 rounded" style={{ background: 'rgba(244, 93, 160, 0.1)', fontSize: '0.9rem' }}>
                       <FaTag className="me-2" />
                       Add <strong>${(50 - cartSubtotal).toFixed(2)}</strong> more to get <strong>FREE shipping!</strong>
                     </div>

@@ -32,9 +32,9 @@
   font-weight: 700;
   font-size: 2rem;
   letter-spacing: -0.5px;
-  color: #4a6bf5;
+  color: #f45da0;
   margin-left: 2px;
-  background: linear-gradient(45deg, #4a6bf5, #5e86ff);
+  background: linear-gradient(45deg, #f45da0, #ff85a1);
   -webkit-background-clip: text;
   background-clip: text; /* Add this standard property */
   -webkit-text-fill-color: transparent;
@@ -79,7 +79,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  background: linear-gradient(45deg, #f45da0, #ff9a8b);
   z-index: -1;
   opacity: 0;
   transform: scale(0.5);
@@ -89,7 +89,7 @@
 .social-icon:hover {
   color: #fff;
   transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(74, 107, 245, 0.3);
+  box-shadow: 0 8px 15px rgba(244, 93, 160, 0.3);
 }
 
 .social-icon:hover::before {
@@ -120,7 +120,7 @@
   bottom: 0;
   height: 3px;
   width: 60px;
-  background: linear-gradient(90deg, #4a6bf5, #6f88ff);
+  background: linear-gradient(90deg, #f45da0, #ff9a8b);
   border-radius: 10px;
 }
 
@@ -151,7 +151,7 @@
 
 .contact-icon {
   margin-right: 1rem;
-  color: #4a6bf5;
+  color: #f45da0;
   margin-top: 0.2rem;
   font-size: 1.1rem;
 }
@@ -184,7 +184,7 @@
   left: -15px;
   opacity: 0;
   transition: all 0.3s ease;
-  color: #4a6bf5;
+  color: #f45da0;
   font-size: 1.2rem;
   line-height: 0.9;
 }
@@ -228,7 +228,7 @@
 .newsletter-input:focus {
   background: rgba(255, 255, 255, 0.12) !important;
   box-shadow: none !important;
-  border-color: #4a6bf5 !important;
+  border-color: #f45da0 !important;
 }
 
 .newsletter-input::placeholder {
@@ -239,7 +239,7 @@
 .newsletter-button {
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
-  background: linear-gradient(45deg, #4a6bf5, #6f88ff) !important;
+  background: linear-gradient(45deg, #f45da0, #ff9a8b) !important;
   border: none !important;
   padding: 0 1.5rem !important;
   height: 52px;
@@ -250,7 +250,7 @@
 
 .newsletter-button:hover {
   background: linear-gradient(45deg, #3957d5, #5e7ff0) !important;
-  box-shadow: 0 5px 15px rgba(74, 107, 245, 0.4) !important;
+  box-shadow: 0 5px 15px rgba(244, 93, 160, 0.4) !important;
 }
 
 .success-message {
@@ -333,7 +333,7 @@
   height: 1px;
   bottom: -3px;
   left: 0;
-  background-color: #4a6bf5;
+  background-color: #f45da0;
   transition: width 0.3s ease;
 }
 
@@ -352,7 +352,7 @@
   right: 30px;
   width: 48px;
   height: 48px;
-  background: linear-gradient(45deg, #4a6bf5, #6f88ff);
+  background: linear-gradient(45deg, #f45da0, #ff9a8b);
   color: #fff;
   border-radius: 50%;
   display: flex;
@@ -360,7 +360,7 @@
   justify-content: center;
   cursor: pointer;
   border: none;
-  box-shadow: 0 6px 20px rgba(74, 107, 245, 0.35);
+  box-shadow: 0 6px 20px rgba(244, 93, 160, 0.35);
   opacity: 0.9;
   transition: all 0.3s ease;
   z-index: 999;
@@ -369,7 +369,7 @@
 .back-to-top:hover {
   opacity: 1;
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(74, 107, 245, 0.5);
+  box-shadow: 0 10px 25px rgba(244, 93, 160, 0.5);
 }
 
 /* Trust Badges */
@@ -393,7 +393,7 @@
 
 .trust-icon {
   font-size: 1.8rem;
-  color: #4a6bf5;
+  color: #f45da0;
   margin-right: 0.5rem;
 }
 

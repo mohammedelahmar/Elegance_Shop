@@ -2,7 +2,7 @@
 .review-list-card {
   background: #181f2e;
   border-radius: 1.5rem;
-  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.13), 0 1.5px 8px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 32px rgba(244, 93, 160, 0.13), 0 1.5px 8px rgba(0,0,0,0.18);
   padding: 2.5rem 2rem 2rem 2rem;
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
@@ -19,24 +19,24 @@
 .review-search-input {
   background: rgba(44, 54, 87, 0.95) !important;
   color: #fff !important;
-  border: 2px solid #4a6bf5 !important;
+  border: 2px solid #f45da0 !important;
   border-radius: 2rem !important;
   padding: 0.8rem 1.5rem 0.8rem 2.7rem !important;
   font-size: 1.1rem !important;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.10) !important;
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.10) !important;
   outline: none !important;
   transition: border 0.2s, box-shadow 0.2s !important;
 }
 
 .review-search-input:focus {
-  border: 2px solid #90cdf4 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 2px solid #ffd1b5 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 
 .review-search-icon {
   background: transparent !important;
   border: none !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1.2rem !important;
   padding-left: 1rem !important;
 }
@@ -44,15 +44,15 @@
 .review-filter-select {
   background: rgba(44, 54, 87, 0.95) !important;
   color: #fff !important;
-  border: 1px solid #4a6bf5 !important;
+  border: 1px solid #f45da0 !important;
   border-radius: 0.5rem !important;
   font-size: 1rem !important;
   padding: 0.6rem 1rem !important;
 }
 
 .review-filter-select:focus {
-  border: 1px solid #90cdf4 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 1px solid #ffd1b5 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 
 .review-table {
@@ -63,7 +63,7 @@
 }
 
 .review-table thead tr {
-  background: linear-gradient(90deg, #232946 60%, #4a6bf5 100%);
+  background: linear-gradient(90deg, #232946 60%, #f45da0 100%);
   color: #fff;
   border-radius: 1rem 1rem 0 0;
 }
@@ -81,11 +81,11 @@
 }
 
 .review-table tbody tr:hover {
-  background: rgba(74, 107, 245, 0.10);
+  background: rgba(244, 93, 160, 0.10);
 }
 
 .review-tabs .nav-link {
-  color: #90cdf4;
+  color: #ffd1b5;
   border: none;
   border-bottom: 2px solid transparent;
   padding: 0.75rem 1.5rem;
@@ -94,9 +94,9 @@
 }
 
 .review-tabs .nav-link.active {
-  color: #4a6bf5;
+  color: #f45da0;
   background: transparent;
-  border-bottom: 2px solid #4a6bf5;
+  border-bottom: 2px solid #f45da0;
 }
 
 .review-page-header {
@@ -112,8 +112,8 @@
 }
 
 .review-btn-primary {
-  background: #4a6bf5;
-  border-color: #4a6bf5;
+  background: #f45da0;
+  border-color: #f45da0;
 }
 
 .review-btn-primary:hover {

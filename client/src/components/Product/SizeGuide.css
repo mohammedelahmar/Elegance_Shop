@@ -10,7 +10,7 @@
 .size-guide-modal .modal-header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 20px 24px;
-  background: linear-gradient(90deg, rgba(74, 107, 245, 0.1), rgba(111, 136, 255, 0.05));
+  background: linear-gradient(90deg, rgba(244, 93, 160, 0.1), rgba(111, 136, 255, 0.05));
 }
 
 .size-guide-modal .modal-title {
@@ -28,7 +28,7 @@
   top: 4px;
   bottom: 4px;
   width: 4px;
-  background: linear-gradient(to bottom, #4a6bf5, #6f88ff);
+  background: linear-gradient(to bottom, #f45da0, #ff9a8b);
   border-radius: 2px;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .size-guide-table thead th {
-  background: linear-gradient(90deg, #4a6bf5, #6f88ff);
+  background: linear-gradient(90deg, #f45da0, #ff9a8b);
   color: #ffffff;
   font-weight: 600;
   text-transform: uppercase;
@@ -118,7 +118,7 @@
   top: 4px;
   bottom: 4px;
   width: 4px;
-  background: linear-gradient(to bottom, #4a6bf5, #6f88ff);
+  background: linear-gradient(to bottom, #f45da0, #ff9a8b);
   border-radius: 2px;
 }
 
@@ -146,7 +146,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: linear-gradient(90deg, #4a6bf5, #6f88ff);
+  background: linear-gradient(90deg, #f45da0, #ff9a8b);
 }
 
 .measure-list li strong {
@@ -179,7 +179,7 @@
 }
 
 .size-type-btn.active {
-  background: linear-gradient(90deg, #4a6bf5, #6f88ff);
+  background: linear-gradient(90deg, #f45da0, #ff9a8b);
   color: white;
   border-color: transparent;
 }

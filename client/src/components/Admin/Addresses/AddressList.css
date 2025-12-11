@@ -2,7 +2,7 @@
 .address-list-card {
   background: #181f2e;
   border-radius: 1.5rem;
-  box-shadow: 0 8px 32px rgba(74, 107, 245, 0.13), 0 1.5px 8px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 32px rgba(244, 93, 160, 0.13), 0 1.5px 8px rgba(0,0,0,0.18);
   padding: 2.5rem 2rem 2rem 2rem;
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
@@ -19,24 +19,24 @@
 .address-search-input {
   background: rgba(44, 54, 87, 0.95) !important;
   color: #fff !important;
-  border: 2px solid #4a6bf5 !important;
+  border: 2px solid #f45da0 !important;
   border-radius: 2rem !important;
   padding: 0.8rem 1.5rem 0.8rem 2.7rem !important;
   font-size: 1.1rem !important;
-  box-shadow: 0 2px 8px rgba(74, 107, 245, 0.10) !important;
+  box-shadow: 0 2px 8px rgba(244, 93, 160, 0.10) !important;
   outline: none !important;
   transition: border 0.2s, box-shadow 0.2s !important;
 }
 
 .address-search-input:focus {
-  border: 2px solid #90cdf4 !important;
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.18) !important;
+  border: 2px solid #ffd1b5 !important;
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.18) !important;
 }
 
 .address-search-icon {
   background: transparent !important;
   border: none !important;
-  color: #90cdf4 !important;
+  color: #ffd1b5 !important;
   font-size: 1.2rem !important;
   padding-left: 1rem !important;
 }
@@ -49,7 +49,7 @@
 }
 
 .address-table thead tr {
-  background: linear-gradient(90deg, #232946 60%, #4a6bf5 100%);
+  background: linear-gradient(90deg, #232946 60%, #f45da0 100%);
   color: #fff;
   border-radius: 1rem 1rem 0 0;
 }
@@ -67,7 +67,7 @@
 }
 
 .address-table tbody tr:hover {
-  background: rgba(74, 107, 245, 0.10);
+  background: rgba(244, 93, 160, 0.10);
 }
 
 .address-table .btn-outline-info {
@@ -83,14 +83,14 @@
 }
 
 .address-table .btn-outline-primary {
-  border-color: #4a6bf5;
-  color: #4a6bf5;
+  border-color: #f45da0;
+  color: #f45da0;
   background: transparent;
   transition: background 0.2s, color 0.2s;
 }
 
 .address-table .btn-outline-primary:hover {
-  background: #4a6bf5;
+  background: #f45da0;
   color: #fff;
 }
 
@@ -133,7 +133,7 @@
 }
 
 .address-card .card-header {
-  background: rgba(74, 107, 245, 0.15);
+  background: rgba(244, 93, 160, 0.15);
   border-bottom: 1px solid #323c5a;
 }
 

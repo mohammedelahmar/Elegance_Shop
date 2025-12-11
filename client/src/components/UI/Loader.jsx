@@ -19,8 +19,8 @@ const Loader = ({ size = 'md' }) => {
       >
         <defs>
           <linearGradient id="loader-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#4a6bf5" />
-            <stop offset="100%" stopColor="#6f88ff" />
+            <stop offset="0%" stopColor="#f45da0" />
+            <stop offset="100%" stopColor="#ff9a8b" />
           </linearGradient>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />

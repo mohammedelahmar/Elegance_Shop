@@ -51,7 +51,7 @@
   left: 0;
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, #e94560, #4a6bf5);
+  background: linear-gradient(90deg, #e94560, #f45da0);
   border-radius: 3px;
 }
 
@@ -70,8 +70,8 @@
 }
 
 .wishlist-counter {
-  background: rgba(74, 107, 245, 0.2);
-  color: #4a9fff;
+  background: rgba(244, 93, 160, 0.2);
+  color: #ff85a1;
   border-radius: 20px;
   padding: 0.2rem 0.8rem;
   font-size: 0.9rem;
@@ -93,13 +93,13 @@
 
 .move-to-cart-btn {
   border-radius: 8px;
-  background: linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%);
+  background: linear-gradient(135deg, #f45da0 0%, #ff85a1 100%);
   border: none;
   transition: all 0.3s ease;
 }
 
 .move-to-cart-btn:hover {
-  box-shadow: 0 5px 15px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 5px 15px rgba(244, 93, 160, 0.4);
 }
 
 /* Empty state */
@@ -158,8 +158,8 @@
 
 /* Make the buttons match the image */
 .wishlist-page .btn-primary {
-  background-color: #4a9fff;
-  border-color: #4a9fff;
+  background-color: #ff85a1;
+  border-color: #ff85a1;
 }
 
 .wishlist-page .btn-danger {

@@ -8,8 +8,8 @@
   --dark-bg: #1b2040;
   --darker-bg: #161c2d;
   --card-bg: #232946;
-  --accent-blue: #4a6bf5;
-  --accent-light-blue: #6f88ff;
+  --accent-blue: #f45da0;
+  --accent-light-blue: #ff9a8b;
   --text-light: #ffffff;
   --text-muted: #b0b0b0;
   --text-dim: #8e8e8e;
@@ -252,7 +252,7 @@ select.form-control {
 select.form-control:hover, 
 select.form-control:focus {
   background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 0 2px rgba(74, 107, 245, 0.2);
+  box-shadow: 0 0 0 2px rgba(244, 93, 160, 0.2);
   outline: none;
   color: var(--text-light); /* Ensure text color is light on focus as well */
 }
@@ -302,7 +302,7 @@ select.form-control option:disabled {
 
 .color-option.selected {
   border: 2px solid var(--accent-blue);
-  box-shadow: 0 0 0 3px rgba(74, 107, 245, 0.3);
+  box-shadow: 0 0 0 3px rgba(244, 93, 160, 0.3);
 }
 
 .color-option.out-of-stock {
@@ -377,7 +377,7 @@ select.form-control option:disabled {
 
 /* Add to Cart Button */
 .add-to-cart-main-btn {
-  background: linear-gradient(135deg, var(--accent-blue) 0%, #3755d8 100%);
+  background: linear-gradient(135deg, var(--accent-blue) 0%, #d63a7c 100%);
   border: none;
   color: white;
   width: 100%;
@@ -419,7 +419,7 @@ select.form-control option:disabled {
 .add-to-cart-main-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #5a7bf5 0%, #4765e8 100%);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(74, 107, 245, 0.4);
+  box-shadow: 0 8px 20px rgba(244, 93, 160, 0.4);
 }
 
 .add-to-cart-main-btn:hover:not(:disabled)::before {

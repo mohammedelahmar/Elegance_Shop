@@ -15,7 +15,7 @@ const WishlistList = ({ products, loading, error }) => {
           width: "3rem", 
           height: "3rem",
           borderWidth: "0.3rem",
-          color: "#4a9fff"
+          color: "#ff85a1"
         }} />
         <p className="mt-3 text-white-50">Loading your wishlist items...</p>
       </div>
@@ -58,7 +58,7 @@ const WishlistList = ({ products, loading, error }) => {
           to="/products" 
           variant="primary"
           style={{
-            background: "linear-gradient(135deg, #4a6bf5 0%, #6578f2 100%)",
+            background: "linear-gradient(135deg, #f45da0 0%, #ff85a1 100%)",
             border: "none",
             borderRadius: "8px",
             padding: "0.6rem 1.5rem"

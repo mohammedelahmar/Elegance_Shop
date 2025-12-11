@@ -29,7 +29,7 @@ The order section styling has been comprehensively enhanced with modern, clean, 
 
 ### Color Scheme & Theme
 - **Dark Theme**: Deep blue-grey backgrounds (#0f172a, #1e293b, #334155)
-- **Accent Colors**: Primary blue (#4a6bf5, #6578f2) and success green (#22c55e)
+- **Accent Colors**: Sunset rose gradient (#f45da0, #ff85a1) and success green (#22c55e)
 - **Glass Morphism**: Transparent elements with backdrop blur effects
 
 ### Layout Enhancements
@@ -114,8 +114,8 @@ The order section styling has been comprehensively enhanced with modern, clean, 
 
 ### Colors
 ```css
---primary-blue: #4a6bf5
---secondary-blue: #6578f2
+--primary-rose: #f45da0
+--secondary-rose: #ff85a1
 --success-green: #22c55e
 --warning-amber: #f59e0b
 --danger-red: #ef4444
