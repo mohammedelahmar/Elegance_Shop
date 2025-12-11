@@ -39,7 +39,7 @@
   min-height: 100vh;
   padding: var(--spacing-md);
   color: var(--text-light);
-  width: 40rem;
+  width: 100%;
 }
 
 @keyframes gradientShift {
@@ -531,6 +531,8 @@ select.form-control option:disabled {
   background: transparent !important;
   padding: 0 !important;
   min-height: auto !important;
+  width: 100% !important;
+  animation: none !important;
 }
 
 .integrated-product-detail .product-showcase-card {
