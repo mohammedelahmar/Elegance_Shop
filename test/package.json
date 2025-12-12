@@ -5,7 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "critical-inventory": "node 1_critical_inventory_test.js"
+    "critical-inventory": "node 1_critical_inventory_test.js",
+    "critical-admin": "node 2_critical_admin_test.js"
   },
   "dependencies": {
     "axios": "^1.7.2",
