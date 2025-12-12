@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Badge, Form, Alert } from 'react-bootstrap';
+import { Row, Col, Badge, Alert } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/action';
 import { useCart } from '../../context/CartContext';
 import { FaShoppingCart, FaPlus, FaMinus, FaCheck } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import WishlistButton from '../wishlist/WishlistButton';
 import SizeGuide from './SizeGuide';
-import useRecentlyViewed from '../../hooks/useRecentlyViewed';
-import ProductImageGallery from './ProductImageGallery';
-import LoadingAnimation from '../common/LoadingAnimation';
-import Button from '../UI/Button'; // Import custom Button
 import './ProductDetail.css';
 
 // Existing helper functions remain the same
@@ -55,7 +50,7 @@ const getColorHex = (colorName) => {
 };
 
 // Updated component with hideMainInfo prop
-const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
+const ProductDetail = ({ product, variants, hideMainInfo }) => {
   const dispatch = useDispatch();
   const cart = useCart();
   const addItem = cart?.addItem || (async () => console.log('Cart context not available'));
@@ -64,7 +59,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
   // States remain the same
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [adding, setAdding] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [sizeType, setSizeType] = useState('clothing');
   const [cartMessage, setCartMessage] = useState({ show: false, type: '', text: '' });
@@ -75,18 +69,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
 
   // Rest of your hooks and handlers remain the same
   // ...
-
-  const getVariantStatus = (variant) => {
-    if (!variant) return null;
-    
-    if (variant.stock <= 0) {
-      return { status: 'danger', text: 'Out of Stock' };
-    } else if (variant.stock <= 5) {
-      return { status: 'warning', text: `Only ${variant.stock} left!` };
-    } else {
-      return { status: 'success', text: 'In Stock' };
-    }
-  };
 
   // Keep all your existing useEffects and handlers
   useEffect(() => {
@@ -206,8 +188,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
       return;
     }
     
-    setAdding(true);
-    
     try {
       const itemToAdd = {
         id: product._id,
@@ -233,10 +213,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
         );
       }
       
-      if (onAddToCart) {
-        onAddToCart(itemToAdd);
-      }
-      
       setCartMessage({
         show: true,
         type: 'success',
@@ -253,8 +229,6 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
         type: 'danger',
         text: 'Failed to add item to cart. Please try again.'
       });
-    } finally {
-      setAdding(false);
     }
   };
 
@@ -493,13 +467,11 @@ const ProductDetail = ({ product, variants, onAddToCart, hideMainInfo }) => {
 ProductDetail.propTypes = {
   product: PropTypes.object.isRequired,
   variants: PropTypes.array,
-  onAddToCart: PropTypes.func,
   hideMainInfo: PropTypes.bool
 };
 
 ProductDetail.defaultProps = {
   variants: [],
-  onAddToCart: null,
   hideMainInfo: false
 };
 

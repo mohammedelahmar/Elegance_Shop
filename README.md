@@ -92,7 +92,46 @@ root
 │   ├── pages
 │   ├── redux
 │   └── ...
+├── test
+│   ├── 1_critical_inventory_test.js
+│   ├── package.json
+│   └── .env.example
 ```
+
+---
+
+## 🧪 Critical Inventory Selenium Test
+
+The `test/1_critical_inventory_test.js` script simulates the most sensitive customer flow (login → add to cart → checkout → credit card payment) and validates that MongoDB immediately decrements the product stock once the transaction succeeds.
+
+1. **Provide test configuration**
+  - Duplicate `test/.env.example` into `test/.env` and fill in:
+    - `E2E_USER_EMAIL` / `E2E_USER_PASSWORD` → credentials of a real shopper account.
+    - `E2E_PRODUCT_ID` → MongoDB ObjectId of the product whose inventory you want to guard.
+    - `MONGO_URI` (+ optional `MONGO_DB_NAME` if the URI does not include one).
+  - Adjust shipping placeholders or headless mode if necessary.
+2. **Install the test harness dependencies**
+
+  ```bash
+  cd test
+  npm install
+  ```
+
+3. **Start the platform** (API on `:5000`, client on `:3000`) and ensure the MongoDB instance used in production/testing is reachable from the runner machine.
+4. **Launch the regression**
+
+  ```bash
+  npm run critical-inventory
+  ```
+
+The script:
+
+- Logs in through the public UI (Selenium/Chrome, headless by default).
+- Clears the remote cart via the REST API to guarantee a deterministic basket.
+- Walks through the checkout wizard, completes a credit-card modal, and lands on the payment success page.
+- Polls MongoDB mathematically to ensure `stock_quantity` has decreased by the purchased quantity. The run fails fast with actionable logs if any prerequisite is missing (credentials, stock, DB connectivity, etc.).
+
+> ℹ️ Chrome/Chromium must be installed on the runner host. Selenium Manager is used automatically, so no manual driver download is needed.
 
 ---
 

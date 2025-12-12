@@ -27,7 +27,7 @@ import './CheckoutPageEnhancements.css';
 
 const CheckoutPage = () => {  
   const navigate = useNavigate();
-  const { cartItems, subtotal, clearCart } = useCart();
+  const { cartItems, subtotal, clearCart, loading: cartLoading } = useCart();
   const { isAuthenticated } = useAuth();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -64,7 +64,7 @@ const CheckoutPage = () => {
   
   useEffect(() => {
     // Redirect to cart if cart is empty
-    if (cartItems.length === 0) {
+    if (!cartLoading && cartItems.length === 0) {
       navigate('/cart');
     }
     
@@ -72,7 +72,7 @@ const CheckoutPage = () => {
     if (!isAuthenticated) {
       navigate('/login?redirect=checkout');
     }
-  }, [cartItems, isAuthenticated, navigate]);
+  }, [cartItems, cartLoading, isAuthenticated, navigate]);
   
   useEffect(() => {
     const fetchUserAddresses = async () => {
@@ -521,30 +521,30 @@ const CheckoutPage = () => {
           <Form onSubmit={handlePaymentSubmit}>
             <div className="checkout-form-group">
               {['credit_card', 'paypal', 'bank_transfer', 'cash_on_delivery'].map((method) => (
-                <div 
+                <label
                   key={method}
+                  htmlFor={`payment-${method}`}
                   className={`payment-method-option ${paymentMethod === method ? 'selected' : ''}`}
-                  onClick={() => setPaymentMethod(method)}
                 >
-                  <Form.Check 
+                  <input
                     type="radio"
-                    id={method}
+                    id={`payment-${method}`}
                     name="paymentMethod"
                     value={method}
-                    label={
-                      <span className="d-flex align-items-center" style={{ color: 'white' }}>
-                        {getPaymentIcon(method)}
-                        <span className="ms-2" style={{ color: 'white' }}>
-                          {method === 'credit_card' ? 'Credit Card' :
-                           method === 'paypal' ? 'PayPal' :
-                           method === 'bank_transfer' ? 'Bank Transfer' : 'Cash on Delivery'}
-                        </span>
-                      </span>
-                    }
                     checked={paymentMethod === method}
                     onChange={handlePaymentMethodChange}
+                    className="form-check-input"
+                    style={{ marginRight: '12px' }}
                   />
-                </div>
+                  <span className="d-flex align-items-center" style={{ color: 'white' }}>
+                    {getPaymentIcon(method)}
+                    <span className="ms-2" style={{ color: 'white' }}>
+                      {method === 'credit_card' ? 'Credit Card' :
+                       method === 'paypal' ? 'PayPal' :
+                       method === 'bank_transfer' ? 'Bank Transfer' : 'Cash on Delivery'}
+                    </span>
+                  </span>
+                </label>
               ))}
             </div>
             

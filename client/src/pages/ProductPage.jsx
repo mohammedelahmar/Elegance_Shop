@@ -187,10 +187,6 @@ const ProductPage = () => {
     }
   };
 
-  const handleAddToCart = () => {
-    navigate('/cart');
-  };
-
   const renderStarRating = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -339,7 +335,6 @@ const ProductPage = () => {
               <ProductDetail
                 product={product}
                 variants={variants}
-                onAddToCart={handleAddToCart}
                 hideMainInfo
               />
             </div>

@@ -1,6 +1,7 @@
 # Ignore node modules
 client/node_modules/
 server/node_modules/
+test/node_modules/
 
 # Ignore environment variables
 server/.env
@@ -11,6 +12,12 @@ client/.env.production
 client/.env.test
 client/.env.development.local
 client/.env.production.local
+test/.env
+test/.env.local
+test/.env.development
+test/.env.production
+test/.env.test
+
 
 # Ignore build files
 client/build/

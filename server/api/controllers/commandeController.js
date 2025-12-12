@@ -2,6 +2,8 @@ import commande from "../../models/Commande.js";
 import ligneCommande from "../../models/ligneCommande.js";
 import asyncHandler from 'express-async-handler';
 import Adresses from "../../models/Adresses.js";
+import Product from "../../models/Product.js";
+import VarianteProduct from "../../models/VarianteProduct.js";
 
 // @desc    Create new order
 // @route   POST /api/commandes
@@ -26,16 +28,64 @@ const addOrderItems = asyncHandler(async (req, res) => {
         throw new Error('Invalid shipping address');
     }
     
-    const order = new commande({
-        orderItems,
-        user_id: req.user._id,  // Changed from user to user_id to match model
-        shippingAddress,
-        paymentMethod,
-        itemsPrice,
-        taxPrice,
-        shippingPrice,
-        total_amount: totalPrice  // Changed from totalPrice to total_amount to match model
-    });
+     const normalizedItems = [];
+
+     for (const item of orderItems) {
+          if (!item.product) {
+               res.status(400);
+               throw new Error('Each order item must reference a product.');
+          }
+
+          const product = await Product.findById(item.product);
+          if (!product) {
+               res.status(404);
+               throw new Error('Product not found.');
+          }
+
+          const quantity = Number.parseInt(item.quantity, 10) || 1;
+          if (quantity <= 0) {
+               res.status(400);
+               throw new Error('Quantity must be at least 1.');
+          }
+
+          if (product.stock_quantity < quantity) {
+               res.status(400);
+               throw new Error(`Insufficient stock for ${product.name}.`);
+          }
+
+          let variantId = null;
+          if (item.variant) {
+               const variant = await VarianteProduct.findById(item.variant);
+               if (!variant) {
+                    res.status(404);
+                    throw new Error('Variant not found.');
+               }
+
+               if (variant.stock < quantity) {
+                    res.status(400);
+                    throw new Error('Insufficient stock for the selected variant.');
+               }
+               variantId = variant._id;
+          }
+
+          normalizedItems.push({
+               product: product._id,
+               quantity,
+               variant: variantId,
+               price: product.price
+          });
+     }
+
+     const order = new commande({
+          orderItems: normalizedItems,
+          user_id: req.user._id,
+          shippingAddress,
+          paymentMethod,
+          itemsPrice,
+          taxPrice,
+          shippingPrice,
+          total_amount: totalPrice
+     });
     
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);
