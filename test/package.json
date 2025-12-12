@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "critical-inventory": "node 1_critical_inventory_test.js",
-    "critical-admin": "node 2_critical_admin_test.js"
+    "critical-admin": "node 2_critical_admin_test.js",
+    "critical-security": "node 3_critical_security_test.js"
   },
   "dependencies": {
     "axios": "^1.7.2",
