@@ -6,8 +6,16 @@ import { MongoClient, ObjectId } from 'mongodb';
 import { Builder, By, Key, until } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 
+/**
+ * Test critique d'inventaire : ce script E2E reproduit un parcours complet (login ➜ panier ➜ paiement)
+ * puis vérifie la décrémentation réelle du stock dans MongoDB. L'objectif est de garantir que la chaîne
+ * UI ↔ API ↔ base de données reste cohérente même en conditions réelles.
+ */
 const config = buildConfig();
 
+/**
+ * Point d'entrée du scénario : instancie le navigateur, exécute le flux métier et compare le stock initial/final.
+ */
 async function run() {
 	const chromeOptions = new chrome.Options()
 		.addArguments('--disable-gpu', '--window-size=1920,1080', '--no-sandbox', '--disable-dev-shm-usage');
@@ -22,13 +30,16 @@ async function run() {
 	});
 
 	try {
+		// 1) Connexion à la base et récupération de la collection produit.
 		await mongoClient.connect();
 		const db = mongoClient.db(config.mongoDbName);
 		const productsCollection = db.collection('products');
 
+		// 2) Lecture du stock initial et garde-fou sur la quantité demandée.
 		const initialStock = await fetchProductStock(productsCollection, config.productObjectId);
 		assert.ok(initialStock >= config.productQuantity, `Not enough stock (${initialStock}) for requested quantity (${config.productQuantity}).`);
 
+		// 3) Initialisation de WebDriver (mode headless configurable).
 		driver = await new Builder()
 			.forBrowser('chrome')
 			.setChromeOptions(chromeOptions)
@@ -71,6 +82,10 @@ async function run() {
 	}
 }
 
+/**
+ * Lit les variables d'environnement, applique des valeurs par défaut et valide les paramètres requis.
+ * Retourne un objet de configuration partagé par l'ensemble du test.
+ */
 function buildConfig() {
 	const baseUrl = process.env.E2E_BASE_URL || 'http://localhost:3000';
 	const apiBaseUrl = process.env.E2E_API_BASE_URL || 'http://localhost:5000/api';
@@ -133,6 +148,9 @@ function buildConfig() {
 	};
 }
 
+/**
+ * Simule la connexion utilisateur via l'UI et renvoie le token JWT stocké côté navigateur.
+ */
 async function loginAndGetToken(driver) {
 	await driver.get(`${config.baseUrl}/login`);
 
@@ -153,6 +171,9 @@ async function loginAndGetToken(driver) {
 	return driver.executeScript('return window.localStorage.getItem("userToken");');
 }
 
+/**
+ * Vide le panier via l'API afin de partir d'un état propre avant de manipuler l'UI.
+ */
 async function clearRemoteCart(token) {
 	const client = axios.create({
 		baseURL: config.apiBaseUrl,
@@ -169,6 +190,9 @@ async function clearRemoteCart(token) {
 	}
 }
 
+/**
+ * Ouvre la page produit, applique les variantes nécessaires et dépose l'article dans le panier.
+ */
 async function addProductToCart(driver) {
 	await driver.get(`${config.baseUrl}/products/${config.productId}`);
 
@@ -182,6 +206,9 @@ async function addProductToCart(driver) {
 	await driver.wait(until.elementLocated(By.css('.alert-success, .alert.alert-success')), config.waitTimeout);
 }
 
+/**
+ * Choisit automatiquement une taille et une couleur disponible pour éviter les blocages sur les produits configurables.
+ */
 async function maybeSelectVariantOptions(driver) {
 	const sizeSelects = await driver.findElements(By.css('.size-section select'));
 	if (sizeSelects.length) {
@@ -204,6 +231,9 @@ async function maybeSelectVariantOptions(driver) {
 	}
 }
 
+/**
+ * Ajuste la quantité demandée en cliquant sur le bouton d'incrément autant de fois que nécessaire.
+ */
 async function adjustQuantity(driver, quantity) {
 	if (quantity <= 1) return;
 	const buttons = await driver.findElements(By.css('.quantity-section .quantity-btn'));
@@ -216,6 +246,9 @@ async function adjustQuantity(driver, quantity) {
 	}
 }
 
+/**
+ * Navigue jusqu'au tunnel de checkout et enchaîne les étapes expédition/paiement/revue.
+ */
 async function completeCheckout(driver) {
 	await driver.get(`${config.baseUrl}/cart`);
 	const checkoutButton = await waitForElement(driver, By.css('.checkout-btn'));
@@ -229,6 +262,9 @@ async function completeCheckout(driver) {
 	return completeReviewAndPayment(driver);
 }
 
+/**
+ * Renseigne les informations d'expédition si le formulaire est présent.
+ */
 async function completeShippingStep(driver) {
 	await waitForElement(driver, By.css('.checkout-card'));
 	const addressField = await findOptionalInput(driver, 'Enter your street address');
@@ -246,6 +282,9 @@ async function completeShippingStep(driver) {
 	await driver.wait(until.elementLocated(By.css('.checkout-card h5')), config.waitTimeout);
 }
 
+/**
+ * Sélectionne un mode de paiement et passe à l'écran de revue de commande.
+ */
 async function completePaymentStep(driver) {
 	const creditRadio = await waitForElement(driver, By.css('input[value="credit_card"]'));
 	await driver.executeScript('arguments[0].click();', creditRadio);
@@ -255,6 +294,9 @@ async function completePaymentStep(driver) {
 	await continueButton.click();
 }
 
+/**
+ * Presse le bouton de commande, remplit la modale de carte et récupère l'identifiant de commande.
+ */
 async function completeReviewAndPayment(driver) {
 	const placeOrderButton = await waitForElement(driver, By.xpath('//button[contains(., "Place Order")]'));
 	await scrollIntoView(driver, placeOrderButton);
@@ -268,6 +310,9 @@ async function completeReviewAndPayment(driver) {
 	return orderIdMatch ? orderIdMatch[1] : null;
 }
 
+/**
+ * Remplit la modale de paiement avec des données de carte bancaires fictives.
+ */
 async function fillCreditCardModal(driver) {
 	const cardNumber = await waitForElement(driver, By.css('input[name="cardNumber"]'));
 	await fillInput(cardNumber, '4111 1111 1111 1111');
@@ -285,6 +330,9 @@ async function fillCreditCardModal(driver) {
 	await payButton.click();
 }
 
+/**
+ * Lit la quantité en stock du produit cible dans MongoDB et valide le format de la donnée.
+ */
 async function fetchProductStock(collection, productId) {
 	const product = await collection.findOne({ _id: productId }, { projection: { stock_quantity: 1 } });
 	if (!product) {
@@ -296,6 +344,9 @@ async function fetchProductStock(collection, productId) {
 	return product.stock_quantity;
 }
 
+/**
+ * Patiente jusqu'à ce que la base reflète la décrémentation attendue du stock, avec un nombre maximal d'essais.
+ */
 async function waitForStockDecrease(collection, productId, initialStock, expectedDecrease, { attempts, delayMs }) {
 	for (let attempt = 1; attempt <= attempts; attempt += 1) {
 		const currentStock = await fetchProductStock(collection, productId);
@@ -307,16 +358,25 @@ async function waitForStockDecrease(collection, productId, initialStock, expecte
 	throw new Error('Le stock ne s’est pas décrémenté comme prévu dans le délai imparti.');
 }
 
+/**
+ * Wrapper utilitaire pour `driver.wait` avec le timeout global.
+ */
 async function waitForElement(driver, locator) {
 	return driver.wait(until.elementLocated(locator), config.waitTimeout);
 }
 
+/**
+ * Scroll jusqu'à l'élément cible et vérifie qu'il est visible/enabled avant interaction.
+ */
 async function scrollIntoView(driver, element) {
 	await driver.executeScript('arguments[0].scrollIntoView({ block: "center" });', element);
 	await driver.wait(until.elementIsVisible(element), config.waitTimeout);
 	await driver.wait(until.elementIsEnabled(element), config.waitTimeout);
 }
 
+/**
+ * Filtre les options de select en retirant celles qui sont désactivées ou sans valeur.
+ */
 async function filterSelectableOptions(options) {
 	const enabled = [];
 	for (const option of options) {
@@ -329,11 +389,17 @@ async function filterSelectableOptions(options) {
 	return enabled;
 }
 
+/**
+ * Recherche un champ par placeholder et retourne null si le champ n'existe pas.
+ */
 async function findOptionalInput(driver, placeholder) {
 	const elements = await driver.findElements(By.xpath(`//input[@placeholder="${placeholder}"]`));
 	return elements[0] || null;
 }
 
+/**
+ * Tente de remplir un champ optionnel. Lève une erreur si `required` et que le champ est introuvable.
+ */
 async function fillByPlaceholder(driver, placeholder, value, required = true) {
 	const element = await findOptionalInput(driver, placeholder);
 	if (!element) {
@@ -345,6 +411,9 @@ async function fillByPlaceholder(driver, placeholder, value, required = true) {
 	await fillInput(element, value);
 }
 
+/**
+ * Efface complètement la valeur d'un champ avant d'y injecter la nouvelle donnée.
+ */
 async function fillInput(element, value) {
 	await element.click();
 	const modifier = process.platform === 'darwin' ? Key.COMMAND : Key.CONTROL;
@@ -353,16 +422,25 @@ async function fillInput(element, value) {
 	await element.sendKeys(value);
 }
 
+/**
+ * Extrait le nom de base de données à partir d'une URI MongoDB classique ou SRV.
+ */
 function extractDbNameFromUri(uri) {
 	if (!uri) return null;
 	const match = uri.match(/mongodb(?:\+srv)?:\/\/[^/]+\/([^/?]+)/i);
 	return match ? match[1] : null;
 }
 
+/**
+ * Renvoie une promesse qui se résout après `ms` millisecondes.
+ */
 function delay(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * Petite pause (300 ms) utilisée pour laisser l'UI se stabiliser entre deux actions.
+ */
 function waitShort() {
 	return delay(300);
 }
