@@ -1,15 +1,56 @@
+.products-admin-shell {
+  background: linear-gradient(135deg, #0f172a 0%, #1f2937 50%, #111827 100%);
+  border-radius: 22px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  padding: 2rem 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #e0e0e0;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.products-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.products-hero .eyebrow {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 0.2rem;
+}
+
+.products-hero h1 {
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.products-hero .subtitle {
+  color: #cbd5e1;
+  margin: 0.15rem 0 0;
+}
+
 .products-admin-actions .btn-primary {
   background: linear-gradient(45deg, #f45da0, #ff9a8b);
   border: none;
   border-radius: 12px;
   font-weight: 600;
   box-shadow: 0 4px 16px rgba(244,93,160,0.18);
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .products-admin-actions .btn-primary:hover {
   background: linear-gradient(45deg, #ff9a8b, #f45da0);
   transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 22px rgba(244,93,160,0.25);
 }
 
 .products-admin-actions .btn-outline-secondary {
@@ -18,10 +59,40 @@
   border: 1.5px solid #232b42;
   background: #181f2e;
   font-weight: 500;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 
 .products-admin-actions .btn-outline-secondary:hover {
   background: #232b42;
   color: #fff;
+  transform: translateY(-1px);
+}
+
+.products-card {
+  background: rgba(255,255,255,0.03);
+  border-radius: 18px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 768px) {
+  .products-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .products-hero h1 {
+    font-size: 1.6rem;
+  }
+  .products-hero .subtitle {
+    font-size: 0.95rem;
+  }
+  .products-admin-actions {
+    width: 100%;
+  }
+  .products-admin-actions .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
 }

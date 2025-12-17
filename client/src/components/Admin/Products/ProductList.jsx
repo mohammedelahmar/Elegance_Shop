@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Table, Button, InputGroup, Form, Image, Badge } from 'react-bootstrap';
-import { FaEdit, FaTrash, FaSearch } from 'react-icons/fa';
+import { Table, Button, InputGroup, Form, Image } from 'react-bootstrap';
+import { FaEdit, FaTrash, FaSearch, FaTag, FaBoxes } from 'react-icons/fa';
 import { deleteProduct } from '../../../api/product';
 import Message from '../../../components/UI/Message';
 import PropTypes from 'prop-types';
-import '../Categories/CategoryList.css'; // Use the same CSS as CategoryList for consistent style
+import './ProductList.css';
 
 const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -57,10 +57,10 @@ const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
         </Message>
       )}
       
-      <div className="category-list-card"> {/* Use same card class as CategoryList */}
-        <div className="category-search-bar mb-4"> {/* Use same search bar class */}
+      <div className="product-list-card">
+        <div className="product-search-bar mb-4">
           <InputGroup>
-            <InputGroup.Text id="search-addon" className="category-search-icon">
+            <InputGroup.Text id="search-addon" className="product-search-icon">
               <FaSearch />
             </InputGroup.Text>
             <Form.Control
@@ -70,22 +70,23 @@ const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
               onChange={(e) => setSearchTerm(e.target.value)}
               aria-label="Search"
               aria-describedby="search-addon"
-              className="category-search-input"
+              className="product-search-input"
             />
           </InputGroup>
+          <div className="mt-2 text-muted small text-end">
+            Showing {filteredProducts.length} of {products.length} products
+          </div>
         </div>
 
         <div className="table-responsive">
-          <Table hover className="category-table"> {/* Use same table class */}
+          <Table hover className="product-table align-middle">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Price</th>
+                <th>Product</th>
+                <th>Pricing</th>
                 <th>Category</th>
                 <th>Stock</th>
-                <th>Actions</th>
+                <th className="text-end">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -98,35 +99,49 @@ const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
               ) : (
                 filteredProducts.map(product => (
                   <tr key={product._id}>
-                    <td>{product._id.substring(product._id.length - 6).toUpperCase()}</td>
                     <td>
-                      {product.image_url ? (
-                        <Image 
-                          src={product.image_url} 
-                          alt={product.name} 
-                          width="50" 
-                          height="50"
-                          className="object-fit-cover"
-                        />
-                      ) : (
-                        <div className="placeholder-image">No Image</div>
-                      )}
+                      <div className="product-main">
+                        <div className="product-thumb">
+                          {product.image_url ? (
+                            <Image 
+                              src={product.image_url} 
+                              alt={product.name} 
+                              width="52" 
+                              height="52"
+                              className="object-fit-cover"
+                              rounded
+                            />
+                          ) : (
+                            <div className="placeholder-image">No Image</div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="product-name">{product.name}</div>
+                          <div className="product-id">#{product._id.substring(product._id.length - 6).toUpperCase()}</div>
+                        </div>
+                      </div>
                     </td>
-                    <td>{product.name}</td>
-                    <td>{formatPrice(product.price)}</td>
-                    <td>{product.category?.name || 'Uncategorized'}</td>
                     <td>
-                      <Badge bg={product.stock_quantity > 0 ? 'success' : 'danger'}>
-                        {product.stock_quantity > 0 ? product.stock_quantity : 'Out of Stock'}
-                      </Badge>
+                      <div className="price-chip">{formatPrice(product.price)}</div>
                     </td>
                     <td>
-                      <div className="d-flex gap-2">
+                      <div className="category-pill">
+                        <FaTag /> {product.category?.name || 'Uncategorized'}
+                      </div>
+                    </td>
+                    <td>
+                      <div className={`stock-pill ${product.stock_quantity > 0 ? 'in-stock' : 'out-of-stock'}`}>
+                        <FaBoxes /> {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}
+                      </div>
+                    </td>
+                    <td className="text-end">
+                      <div className="action-buttons">
                         <Button 
                           variant="outline-primary" 
                           size="sm" 
                           onClick={() => onEditProduct(product)}
                           title="Edit Product"
+                          className="action-button"
                         >
                           <FaEdit />
                         </Button>
@@ -135,6 +150,7 @@ const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
                           size="sm"
                           onClick={() => handleDeleteProduct(product._id, product.name)}
                           title="Delete Product"
+                          className="action-button"
                         >
                           <FaTrash />
                         </Button>
@@ -145,9 +161,6 @@ const ProductList = ({ products, onEditProduct, onProductUpdated }) => {
               )}
             </tbody>
           </Table>
-        </div>
-        <div className="mt-2 text-muted small">
-          Showing {filteredProducts.length} of {products.length} products
         </div>
       </div>
     </>

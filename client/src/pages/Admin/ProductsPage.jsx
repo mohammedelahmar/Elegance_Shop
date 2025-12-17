@@ -7,7 +7,7 @@ import ProductEdit from '../../components/Admin/Products/ProductEdit';
 import ProductCreate from '../../components/Admin/Products/ProductCreate';
 import LoadingAnimation from '../../components/common/LoadingAnimation';
 import Message from '../../components/UI/Message';
-import './ProductsPage.css'; 
+import './ProductsPage.css';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -17,11 +17,6 @@ const ProductsPage = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    pages: 1,
-    totalProducts: 0
-  });
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -29,14 +24,9 @@ const ProductsPage = () => {
         setLoading(true);
         const data = await getAllProducts({
           page: 1,
-          limit: 50 // Higher limit for admin view
+          limit: 50
         });
         setProducts(data.products);
-        setPagination({
-          page: data.page,
-          pages: data.pages,
-          totalProducts: data.totalProducts
-        });
         setError(null);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
@@ -48,9 +38,7 @@ const ProductsPage = () => {
     fetchProducts();
   }, [refreshTrigger]);
 
-  const handleRefresh = () => {
-    setRefreshTrigger(prev => prev + 1);
-  };
+  const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
 
   const handleEditProduct = (product) => {
     setEditProduct(product);
@@ -62,13 +50,8 @@ const ProductsPage = () => {
     setEditProduct(null);
   };
 
-  const handleShowCreateModal = () => {
-    setShowCreateModal(true);
-  };
-
-  const handleCloseCreateModal = () => {
-    setShowCreateModal(false);
-  };
+  const handleShowCreateModal = () => setShowCreateModal(true);
+  const handleCloseCreateModal = () => setShowCreateModal(false);
 
   const handleProductUpdated = () => {
     handleRefresh();
@@ -81,26 +64,29 @@ const ProductsPage = () => {
   };
 
   return (
-    <Container fluid className="admin-page-container py-3">
-      <Row className="mb-4 align-items-center">
+    <Container fluid className="products-admin-shell py-3">
+      <Row className="mb-4 align-items-center products-hero">
         <Col>
-          <h1 className="h3 mb-0" style={{color:"white"}}>Product Management</h1>
+          <p className="eyebrow">Admin • Products</p>
+          <h1>Product Management</h1>
+          <p className="subtitle">Oversee catalog, stock, and pricing in one place.</p>
         </Col>
         <Col xs="auto">
-        <div className="products-admin-actions">
-          <Button style={{marginRight:"10px"}}
-            variant="primary" 
-            className="me-2" 
-            onClick={handleShowCreateModal}
-          >
-            <FaPlus /> Add Product
-          </Button>
-          <Button 
-            variant="outline-secondary" 
-            onClick={handleRefresh}
-          >
-            <FaSync /> Refresh
-          </Button></div>
+          <div className="products-admin-actions d-flex gap-2 flex-wrap justify-content-end">
+            <Button
+              variant="primary"
+              className="me-2"
+              onClick={handleShowCreateModal}
+            >
+              <FaPlus /> Add Product
+            </Button>
+            <Button
+              variant="outline-secondary"
+              onClick={handleRefresh}
+            >
+              <FaSync /> Refresh
+            </Button>
+          </div>
         </Col>
       </Row>
 
@@ -109,11 +95,11 @@ const ProductsPage = () => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Card style={{ background: '#1e2634'}}>
-          <Card.Body >
-            <ProductList 
-              products={products} 
-              onEditProduct={handleEditProduct} 
+        <Card className="products-card">
+          <Card.Body>
+            <ProductList
+              products={products}
+              onEditProduct={handleEditProduct}
               onProductUpdated={handleRefresh}
             />
           </Card.Body>
