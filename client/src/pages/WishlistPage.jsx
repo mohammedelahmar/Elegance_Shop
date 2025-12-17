@@ -104,11 +104,11 @@ const WishlistPage = () => {
                 </Alert>
               )}
 
-              <Card>
-                <Card.Header className="d-flex justify-content-between align-items-center">
+              <Card className="wishlist-card">
+                <Card.Header className="wishlist-toolbar d-flex justify-content-between align-items-center">
                   <h5 className="mb-0 d-flex align-items-center">
                     Saved Items
-                    <span className="ms-2 bg-primary bg-opacity-25 px-2 py-1 rounded-circle">
+                    <span className="wishlist-counter ms-2">
                       {wishlistItems?.length || 0}
                     </span>
                   </h5>
@@ -119,7 +119,7 @@ const WishlistPage = () => {
                       size="sm"
                       onClick={handleMoveAllToCart}
                       disabled={movingToCart || wishlistItems.length === 0}
-                      className="d-flex align-items-center"
+                      className="wishlist-action-btn move-all-btn d-flex align-items-center"
                     >
                       <span className="d-inline">Move All to Cart</span>
                     </Button>
@@ -129,7 +129,7 @@ const WishlistPage = () => {
                       size="sm"
                       onClick={handleClearAll}
                       disabled={clearingAll || wishlistItems.length === 0}
-                      className="d-flex align-items-center"
+                      className="wishlist-action-btn clear-btn d-flex align-items-center"
                     >
                       <span className="d-inline">Clear All</span>
                     </Button>
