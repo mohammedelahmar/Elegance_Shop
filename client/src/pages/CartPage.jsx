@@ -90,11 +90,11 @@ const CartPage = () => {
 
         <Row>
           <Col lg={8} className="mb-4 mb-lg-0">
-            <Card>
-              <Card.Header className="d-flex justify-content-between align-items-center">
+            <Card className="cart-shell">
+              <Card.Header className="cart-toolbar d-flex justify-content-between align-items-center">
                 <h5 className="mb-0">
                   Cart Items 
-                  <span className="ms-2 badge rounded-pill bg-primary bg-opacity-25">
+                  <span className="cart-badge ms-2">
                     {itemsCount}
                   </span>
                 </h5>
@@ -130,8 +130,8 @@ const CartPage = () => {
           </Col>
 
           <Col lg={4}>
-            <Card className="order-summary">
-              <Card.Header>
+            <Card className="order-summary glass-summary">
+              <Card.Header className="cart-toolbar">
                 <h5 className="mb-0">Order Summary</h5>
               </Card.Header>
               <Card.Body>
