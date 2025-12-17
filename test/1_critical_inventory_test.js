@@ -75,10 +75,15 @@ async function run() {
 		console.error('❌ Échec du test critique d’inventaire:', error);
 		process.exitCode = 1;
 	} finally {
-		if (driver) {
-			await driver.quit();
-		}
 		await mongoClient.close();
+		if (driver) {
+			if (config.keepBrowserOpen) {
+				console.log('🎬 Mode démonstration : le navigateur reste ouvert. Fermez-le manuellement (Ctrl+C pour arrêter).');
+				await holdBrowserOpen();
+			} else {
+				await driver.quit();
+			}
+		}
 	}
 }
 
@@ -97,9 +102,11 @@ function buildConfig() {
 	const mongoDbName = process.env.MONGO_DB_NAME || extractDbNameFromUri(mongoUri);
 	const waitTimeout = Number.parseInt(process.env.E2E_WAIT_TIMEOUT ?? '20000', 10);
 	const networkTimeout = Number.parseInt(process.env.E2E_API_TIMEOUT ?? '15000', 10);
+	const demoDelay = Number.parseInt(process.env.E2E_DEMO_DELAY ?? '800', 10);
 	const stockPollAttempts = Number.parseInt(process.env.E2E_STOCK_ATTEMPTS ?? '10', 10);
 	const stockPollIntervalMs = Number.parseInt(process.env.E2E_STOCK_INTERVAL ?? '3000', 10);
 	const headless = (process.env.E2E_HEADLESS ?? 'true').toLowerCase() !== 'false';
+	const keepBrowserOpen = (process.env.E2E_KEEP_BROWSER_OPEN ?? 'true').toLowerCase() !== 'false';
 
 	const shippingDefaults = {
 		address: process.env.E2E_SHIPPING_ADDRESS || '123 Rue du Test',
@@ -144,6 +151,8 @@ function buildConfig() {
 		headless,
 		stockPollAttempts,
 		stockPollIntervalMs,
+		demoDelay,
+		keepBrowserOpen,
 		shippingDefaults
 	};
 }
@@ -153,15 +162,26 @@ function buildConfig() {
  */
 async function loginAndGetToken(driver) {
 	await driver.get(`${config.baseUrl}/login`);
+	await demoPause();
 
 	const emailInput = await waitForElement(driver, By.css('input[type="email"]'));
-	await emailInput.sendKeys(config.credentials.email);
+	await typeSlow(emailInput, 'mohamedgamil.com');
+	await demoPause();
 
 	const passwordInput = await waitForElement(driver, By.css('input[type="password"]'));
-	await passwordInput.sendKeys(config.credentials.password);
+	const wrongPassword = `${config.credentials.password || 'password'}_wrong`;
+	await typeSlow(passwordInput, wrongPassword);
+	await demoPause();
 
 	const submitButton = await waitForElement(driver, By.css('button[type="submit"]'));
+	await scrollIntoView(driver, submitButton);
 	await submitButton.click();
+	await demoPause();
+
+	await observeAndFixInvalidEmail(driver, emailInput, submitButton);
+	await observeAndFixInvalidPassword(driver, passwordInput, submitButton);
+
+	await demoPause();
 
 	await driver.wait(async () => {
 		const token = await driver.executeScript('return window.localStorage.getItem("userToken");');
@@ -169,6 +189,52 @@ async function loginAndGetToken(driver) {
 	}, config.waitTimeout, 'Le token utilisateur n’a pas été trouvé dans le localStorage après la connexion.');
 
 	return driver.executeScript('return window.localStorage.getItem("userToken");');
+}
+
+/**
+ * Met en scène une erreur de saisie d'email puis la corrige automatiquement pour une démonstration interactive.
+ */
+async function observeAndFixInvalidEmail(driver, emailInput, submitButton) {
+	console.log('🚧 Démonstration : tentative de login avec un email invalide...');
+	const feedbackWait = Math.max(4000, config.demoDelay * 2);
+	try {
+		await driver.wait(async () => {
+			const validationMessage = await driver.executeScript('return arguments[0].validationMessage;', emailInput);
+			if (validationMessage) return true;
+			const alerts = await driver.findElements(By.css('.alert-danger, .invalid-feedback, .error, .text-danger'));
+			return alerts.length > 0;
+		}, feedbackWait);
+		await demoPause();
+	} catch (error) {
+		console.warn('Aucun message d’erreur détecté après l’email invalide (poursuite du scénario).');
+	}
+
+	console.log('✏️ Correction automatique de l’email, puis nouvelle tentative...');
+	await fillInput(emailInput, config.credentials.email);
+	await demoPause();
+	await submitButton.click();
+}
+
+/**
+ * Met en scène un mot de passe erroné, attend l'erreur, puis saisit le bon mot de passe et réessaie.
+ */
+async function observeAndFixInvalidPassword(driver, passwordInput, submitButton) {
+	console.log('🔐 Démonstration : mot de passe erroné, observation du message d’erreur...');
+	const feedbackWait = Math.max(4000, config.demoDelay * 2);
+	try {
+		await driver.wait(async () => {
+			const alerts = await driver.findElements(By.css('.alert-danger, .invalid-feedback, .error, .text-danger'));
+			return alerts.length > 0;
+		}, feedbackWait);
+		await demoPause();
+	} catch (error) {
+		console.warn('Aucun message d’erreur détecté après le mauvais mot de passe (poursuite du scénario).');
+	}
+
+	console.log('✏️ Correction automatique du mot de passe, nouvelle tentative de connexion...');
+	await fillInput(passwordInput, config.credentials.password);
+	await demoPause();
+	await submitButton.click();
 }
 
 /**
@@ -195,6 +261,7 @@ async function clearRemoteCart(token) {
  */
 async function addProductToCart(driver) {
 	await driver.get(`${config.baseUrl}/products/${config.productId}`);
+	await demoPause();
 
 	await maybeSelectVariantOptions(driver);
 	await adjustQuantity(driver, config.productQuantity);
@@ -202,6 +269,7 @@ async function addProductToCart(driver) {
 	const addToCartButton = await waitForElement(driver, By.css('.add-to-cart-main-btn'));
 	await scrollIntoView(driver, addToCartButton);
 	await addToCartButton.click();
+	await demoPause();
 
 	await driver.wait(until.elementLocated(By.css('.alert-success, .alert.alert-success')), config.waitTimeout);
 }
@@ -220,14 +288,14 @@ async function maybeSelectVariantOptions(driver) {
 			throw new Error('Aucune taille disponible pour ce produit.');
 		}
 		await selectable[0].click();
-		await waitShort();
+		await demoPause();
 	}
 
 	const colorOptions = await driver.findElements(By.css('.color-section .color-option:not(.out-of-stock)'));
 	if (colorOptions.length) {
 		await scrollIntoView(driver, colorOptions[0]);
 		await colorOptions[0].click();
-		await waitShort();
+		await demoPause();
 	}
 }
 
@@ -242,7 +310,7 @@ async function adjustQuantity(driver, quantity) {
 
 	for (let i = 1; i < quantity; i += 1) {
 		await incrementButton.click();
-		await waitShort();
+		await demoPause();
 	}
 }
 
@@ -251,11 +319,14 @@ async function adjustQuantity(driver, quantity) {
  */
 async function completeCheckout(driver) {
 	await driver.get(`${config.baseUrl}/cart`);
+	await demoPause();
 	const checkoutButton = await waitForElement(driver, By.css('.checkout-btn'));
 	await scrollIntoView(driver, checkoutButton);
 	await checkoutButton.click();
+	await demoPause();
 
 	await driver.wait(until.urlContains('/checkout'), config.waitTimeout);
+	await demoPause();
 
 	await completeShippingStep(driver);
 	await completePaymentStep(driver);
@@ -270,15 +341,20 @@ async function completeShippingStep(driver) {
 	const addressField = await findOptionalInput(driver, 'Enter your street address');
 	if (addressField) {
 		await fillInput(addressField, config.shippingDefaults.address);
+		await demoPause();
 		await fillByPlaceholder(driver, 'Enter your city', config.shippingDefaults.city);
+		await demoPause();
 		await fillByPlaceholder(driver, 'Enter postal code', config.shippingDefaults.postalCode);
+		await demoPause();
 		await fillByPlaceholder(driver, 'Enter your country', config.shippingDefaults.country);
+		await demoPause();
 		await fillByPlaceholder(driver, 'Enter phone number', config.shippingDefaults.phone, false);
 	}
 
 	const continueButton = await waitForElement(driver, By.xpath('//button[contains(., "Continue to Payment")]'));
 	await scrollIntoView(driver, continueButton);
 	await continueButton.click();
+	await demoPause();
 	await driver.wait(until.elementLocated(By.css('.checkout-card h5')), config.waitTimeout);
 }
 
@@ -288,10 +364,12 @@ async function completeShippingStep(driver) {
 async function completePaymentStep(driver) {
 	const creditRadio = await waitForElement(driver, By.css('input[value="credit_card"]'));
 	await driver.executeScript('arguments[0].click();', creditRadio);
+	await demoPause();
 
 	const continueButton = await waitForElement(driver, By.xpath('//button[contains(., "Continue to Review")]'));
 	await scrollIntoView(driver, continueButton);
 	await continueButton.click();
+	await demoPause();
 }
 
 /**
@@ -301,10 +379,12 @@ async function completeReviewAndPayment(driver) {
 	const placeOrderButton = await waitForElement(driver, By.xpath('//button[contains(., "Place Order")]'));
 	await scrollIntoView(driver, placeOrderButton);
 	await placeOrderButton.click();
+	await demoPause();
 
 	await fillCreditCardModal(driver);
 
 	await driver.wait(until.urlContains('/payment-success/'), config.waitTimeout * 2);
+	await demoPause();
 	const successUrl = await driver.getCurrentUrl();
 	const orderIdMatch = successUrl.match(/payment-success\/([^/?]+)/);
 	return orderIdMatch ? orderIdMatch[1] : null;
@@ -315,19 +395,24 @@ async function completeReviewAndPayment(driver) {
  */
 async function fillCreditCardModal(driver) {
 	const cardNumber = await waitForElement(driver, By.css('input[name="cardNumber"]'));
-	await fillInput(cardNumber, '4111 1111 1111 1111');
+	await typeSlow(cardNumber, '4111 1111 1111 1111');
+	await demoPause();
 
 	const holder = await waitForElement(driver, By.css('input[name="cardholderName"]'));
-	await fillInput(holder, 'Test User');
+	await typeSlow(holder, 'Test User');
+	await demoPause();
 
 	const expiry = await waitForElement(driver, By.css('input[name="expiryDate"]'));
-	await fillInput(expiry, '12/30');
+	await typeSlow(expiry, '12/30');
+	await demoPause();
 
 	const cvv = await waitForElement(driver, By.css('input[name="cvv"]'));
-	await fillInput(cvv, '123');
+	await typeSlow(cvv, '123');
+	await demoPause();
 
 	const payButton = await waitForElement(driver, By.xpath('//button[contains(., "Pay Now")]'));
 	await payButton.click();
+	await demoPause();
 }
 
 /**
@@ -422,6 +507,14 @@ async function fillInput(element, value) {
 	await element.sendKeys(value);
 }
 
+async function typeSlow(element, value) {
+	for (const char of value) {
+		await element.sendKeys(char);
+		await delay(80);
+	}
+	await demoPause();
+}
+
 /**
  * Extrait le nom de base de données à partir d'une URI MongoDB classique ou SRV.
  */
@@ -429,6 +522,10 @@ function extractDbNameFromUri(uri) {
 	if (!uri) return null;
 	const match = uri.match(/mongodb(?:\+srv)?:\/\/[^/]+\/([^/?]+)/i);
 	return match ? match[1] : null;
+}
+
+async function holdBrowserOpen() {
+	return new Promise(() => {});
 }
 
 /**
@@ -442,7 +539,12 @@ function delay(ms) {
  * Petite pause (300 ms) utilisée pour laisser l'UI se stabiliser entre deux actions.
  */
 function waitShort() {
-	return delay(300);
+	return delay(Math.max(300, config.demoDelay));
+}
+
+async function demoPause(multiplier = 1) {
+	if (!config.demoDelay || config.demoDelay <= 0) return;
+	await delay(config.demoDelay * multiplier);
 }
 
 run();
