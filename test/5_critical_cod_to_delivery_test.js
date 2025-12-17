@@ -12,8 +12,8 @@ async function run() {
 	try {
 		driver = await createDriver();
 
-		console.log('👤 Connexion client (avec erreurs mises en scène)...');
-		const userToken = await loginWithDemoErrors(driver, config.credentials.email, config.credentials.password);
+		console.log('👤 Connexion client...');
+		const userToken = await login(driver, config.credentials.email, config.credentials.password);
 
 		console.log('🏠 Vérification/creation adresse de livraison...');
 		const shippingAddressId = await ensureShippingAddress(userToken);
@@ -29,7 +29,7 @@ async function run() {
 		await demoPause(2);
 
 		console.log('🛡️ Connexion administrateur...');
-		const adminToken = await loginWithDemoErrors(driver, config.adminCredentials.email, config.adminCredentials.password);
+		const adminToken = await login(driver, config.adminCredentials.email, config.adminCredentials.password);
 
 		console.log('💳 Marquage commande "payée" côté admin...');
 		await markOrderPaid(adminToken, orderId);
@@ -118,25 +118,20 @@ async function createDriver() {
 	return new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
 }
 
-async function loginWithDemoErrors(driver, email, password) {
+async function login(driver, email, password) {
 	await driver.get(`${config.baseUrl}/login`);
 	await demoPause();
 
 	const emailInput = await waitForElement(driver, By.css('input[type="email"], input[name="email"]'));
-	await typeSlow(emailInput, 'wrong-email.com');
+	await fillInput(emailInput, email);
 	await demoPause();
 
 	const passwordInput = await waitForElement(driver, By.css('input[type="password"], input[name="password"]'));
-	const wrongPassword = `${password || 'password'}_wrong`;
-	await typeSlow(passwordInput, wrongPassword);
+	await fillInput(passwordInput, password);
 	await demoPause();
 
 	const submitButton = await waitForElement(driver, By.css('button[type="submit"]'));
 	await submitButton.click();
-	await demoPause();
-
-	await observeAndFixInvalidEmail(driver, emailInput, submitButton, email);
-	await observeAndFixInvalidPassword(driver, passwordInput, submitButton, password);
 	await demoPause();
 
 	await driver.wait(async () => {
@@ -149,45 +144,7 @@ async function loginWithDemoErrors(driver, email, password) {
 	return token;
 }
 
-async function observeAndFixInvalidEmail(driver, emailInput, submitButton, correctEmail) {
-	console.log('🚧 Démonstration : email invalide, observation du message d’erreur...');
-	const feedbackWait = Math.max(4000, config.demoDelay * 2);
-	try {
-		await driver.wait(async () => {
-			const validationMessage = await driver.executeScript('return arguments[0].validationMessage;', emailInput);
-			if (validationMessage) return true;
-			const alerts = await driver.findElements(By.css('.alert-danger, .invalid-feedback, .error, .text-danger'));
-			return alerts.length > 0;
-		}, feedbackWait);
-		await demoPause();
-	} catch (error) {
-		console.warn('Aucun message d’erreur détecté après l’email invalide (poursuite du scénario).');
-	}
-
-	console.log('✏️ Correction automatique de l’email, puis nouvelle tentative...');
-	await fillInput(emailInput, correctEmail);
-	await demoPause();
-	await submitButton.click();
-}
-
-async function observeAndFixInvalidPassword(driver, passwordInput, submitButton, correctPassword) {
-	console.log('🔐 Démonstration : mot de passe erroné, observation du message d’erreur...');
-	const feedbackWait = Math.max(4000, config.demoDelay * 2);
-	try {
-		await driver.wait(async () => {
-			const alerts = await driver.findElements(By.css('.alert-danger, .invalid-feedback, .error, .text-danger'));
-			return alerts.length > 0;
-		}, feedbackWait);
-		await demoPause();
-	} catch (error) {
-		console.warn('Aucun message d’erreur détecté après le mauvais mot de passe (poursuite du scénario).');
-	}
-
-	console.log('✏️ Correction automatique du mot de passe, nouvelle tentative de connexion...');
-	await fillInput(passwordInput, correctPassword);
-	await demoPause();
-	await submitButton.click();
-}
+// Removed staged wrong-email/password demo to speed up login and reduce flakiness.
 
 async function ensureShippingAddress(token) {
 	const client = buildApiClient(token);
