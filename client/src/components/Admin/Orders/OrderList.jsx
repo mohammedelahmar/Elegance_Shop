@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Badge, Button, ButtonGroup } from 'react-bootstrap';
-import { FaEye, FaCheck, FaTruck } from 'react-icons/fa';
+import { FaEye, FaCheck, FaTruck, FaEnvelope, FaCalendarAlt, FaDollarSign } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import './OrderList.css'; // Import the CSS file
 
@@ -22,13 +22,18 @@ const formatPrice = (price) => {
 };
 
 const OrderList = ({ orders, onViewOrder, onMarkPaid, onMarkDelivered, isLoading }) => {
+  const getInitials = (first, last) => {
+    const f = first?.[0] || '';
+    const l = last?.[0] || '';
+    return `${f}${l}` || 'G';
+  };
+
   return (
-    <div className="order-list-container table-responsive"> {/* Added order-list-container */}
-      <Table hover className="align-middle order-table"> {/* Added order-table class */}
+    <div className="order-list-container table-responsive">
+      <Table hover className="align-middle order-table">
         <thead>
           <tr>
-            <th>Order ID</th>
-            <th>Date</th>
+            <th>Order</th>
             <th>Customer</th>
             <th>Total</th>
             <th>Payment</th>
@@ -37,78 +42,94 @@ const OrderList = ({ orders, onViewOrder, onMarkPaid, onMarkDelivered, isLoading
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
-            <tr key={order._id}>
-              <td>
-                <strong>{order._id.substring(order._id.length - 8)}</strong>
-              </td>
-              <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-              <td>
-                <div className="customer-name">{order.user_id?.Firstname || ''} {order.user_id?.Lastname || 'Guest'}</div>
-                <small className="text-muted">{order.user_id?.email}</small>
-              </td>
-              <td>${formatPrice(order.totalPrice || order.total_amount)}</td>
-              <td>
-                {order.isPaid ? (
-                  <Badge bg="success" className="status-badge">
-                    Paid on {new Date(order.paidAt).toLocaleDateString()}
-                  </Badge>
-                ) : (
-                  <Badge bg="warning" text="dark" className="status-badge">
-                    Pending
-                  </Badge>
-                )}
-              </td>
-              <td>
-                {order.isDelivered ? (
-                  <Badge bg="success" className="status-badge">
-                    Delivered on {new Date(order.deliveredAt).toLocaleDateString()}
-                  </Badge>
-                ) : (
-                  <Badge bg="warning" text="dark" className="status-badge">
-                    Not Delivered
-                  </Badge>
-                )}
-              </td>
-              <td>
-                <ButtonGroup className="action-buttons">
-                  <Button
-                    variant="outline-primary" // Will be styled by CSS
-                    size="sm"
-                    onClick={() => onViewOrder(order)}
-                    title="View Order Details"
-                    className="action-button view-button"
-                  >
-                    <FaEye />
-                  </Button>
-                  {!order.isPaid && (
-                    <Button
-                      variant="outline-success" // Will be styled by CSS
-                      size="sm"
-                      onClick={() => onMarkPaid(order._id)}
-                      disabled={isLoading}
-                      title="Mark as Paid"
-                      className="action-button paid-button"
-                    >
-                      <FaCheck />
-                    </Button>
+          {orders.map((order) => {
+            const first = order.user_id?.Firstname || '';
+            const last = order.user_id?.Lastname || 'Guest';
+            const email = order.user_id?.email || 'No email';
+            return (
+              <tr key={order._id}>
+                <td>
+                  <div className="order-id-block">
+                    <span className="order-pill">#{order._id.substring(order._id.length - 8)}</span>
+                    <span className="order-date"><FaCalendarAlt /> {new Date(order.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </td>
+                <td>
+                  <div className="customer-block">
+                    <div className="avatar-circle">{getInitials(first, last)}</div>
+                    <div>
+                      <div className="customer-name">{first} {last}</div>
+                      <div className="customer-email"><FaEnvelope /> {email}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className="total-chip">
+                    <FaDollarSign /> ${formatPrice(order.totalPrice || order.total_amount)}
+                  </div>
+                </td>
+                <td>
+                  {order.isPaid ? (
+                    <Badge bg="success" className="status-badge modern">
+                      Paid • {new Date(order.paidAt).toLocaleDateString()}
+                    </Badge>
+                  ) : (
+                    <Badge bg="warning" text="dark" className="status-badge modern">
+                      Pending
+                    </Badge>
                   )}
-                  {order.isPaid && !order.isDelivered && (
-                    <Button
-                      variant="outline-info" // Will be styled by CSS
-                      size="sm"
-                      onClick={() => onMarkDelivered(order._id)}
-                      disabled={isLoading}
-                      title="Mark as Delivered"
-                      className="action-button delivered-button"
-                    >
-                      <FaTruck />
-                    </Button>
+                </td>
+                <td>
+                  {order.isDelivered ? (
+                    <Badge bg="success" className="status-badge modern">
+                      Delivered • {new Date(order.deliveredAt).toLocaleDateString()}
+                    </Badge>
+                  ) : (
+                    <Badge bg="warning" text="dark" className="status-badge modern">
+                      Not Delivered
+                    </Badge>
                   )}
-                </ButtonGroup>
-              </td>
-            </tr>
-          ))}
+                </td>
+                <td>
+                  <ButtonGroup className="action-buttons">
+                    <Button
+                      variant="outline-primary"
+                      size="sm"
+                      onClick={() => onViewOrder(order)}
+                      title="View Order Details"
+                      className="action-button view-button"
+                    >
+                      <FaEye />
+                    </Button>
+                    {!order.isPaid && (
+                      <Button
+                        variant="outline-success"
+                        size="sm"
+                        onClick={() => onMarkPaid(order._id)}
+                        disabled={isLoading}
+                        title="Mark as Paid"
+                        className="action-button paid-button"
+                      >
+                        <FaCheck />
+                      </Button>
+                    )}
+                    {order.isPaid && !order.isDelivered && (
+                      <Button
+                        variant="outline-info"
+                        size="sm"
+                        onClick={() => onMarkDelivered(order._id)}
+                        disabled={isLoading}
+                        title="Mark as Delivered"
+                        className="action-button delivered-button"
+                      >
+                        <FaTruck />
+                      </Button>
+                    )}
+                  </ButtonGroup>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
     </div>

@@ -232,8 +232,12 @@ const OrdersPage = () => {
   return (
     <div className="orders-admin-container"> {/* Apply new container class */}
       {/* Header Row */}
-      <div className="orders-admin-header mb-4 d-flex justify-content-between align-items-center">
-        <h1 className="orders-admin-title">Order Management</h1>
+      <div className="orders-admin-header mb-4 d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+          <p className="eyebrow">Admin • Orders</p>
+          <h1 className="orders-admin-title">Order Management</h1>
+          <p className="orders-admin-subtitle">Track payments, delivery, and act faster with filters.</p>
+        </div>
         <div className="orders-admin-actions">
           <Button 
             variant="outline-success" 

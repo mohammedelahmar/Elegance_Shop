@@ -1,13 +1,14 @@
 /* Modern dark admin styles for OrdersPage - Adapted from CategoriesPage.css */
 
 .orders-admin-container {
-  background: #161c2d; /* Deep blue background */
+  background: linear-gradient(135deg, #0f172a 0%, #1f2937 50%, #111827 100%);
   border-radius: 22px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-  padding: 2rem 1.5rem;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  padding: 2.25rem 1.75rem;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  color: #e0e0e0; /* Light text color for contrast */
+  color: #e0e0e0;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 .orders-admin-header {
@@ -17,11 +18,24 @@
   margin-bottom: 2rem;
 }
 
+.eyebrow {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 0.2rem;
+}
+
 .orders-admin-title {
   color: #fff;
   font-weight: 700;
   font-size: 2rem;
   letter-spacing: -0.5px;
+}
+
+.orders-admin-subtitle {
+  color: #cbd5e1;
+  margin: 0.15rem 0 0;
 }
 
 .orders-admin-actions .btn {
@@ -56,11 +70,12 @@
 }
 
 .orders-list-card {
-  background: #1e2634; /* Dark card background */
+  background: rgba(255,255,255,0.03);
   border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
-  border: 1px solid rgba(255,255,255,0.07);
+  box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.08);
   padding: 1.5rem;
+  backdrop-filter: blur(10px);
 }
 
 /* Styles for search bar and tabs, similar to CategoryList.css or VariantList.css */
@@ -69,7 +84,7 @@
 }
 
 .order-search-input {
-  background: rgba(44, 54, 87, 0.95) !important;
+  background: rgba(44, 54, 87, 0.65) !important;
   color: #fff !important;
   border: 2px solid #f45da0 !important;
   border-radius: 2rem !important;
@@ -109,7 +124,7 @@
 .order-tabs .nav-link.active {
   color: #f45da0;
   border-bottom-color: #f45da0;
-  background-color: rgba(244, 93, 160, 0.1);
+  background-color: rgba(244, 93, 160, 0.14);
 }
 
 .order-tabs .nav-link:hover {
@@ -130,6 +145,9 @@
   }
   .orders-admin-title {
     font-size: 1.5rem;
+  }
+  .orders-admin-subtitle {
+    font-size: 0.95rem;
   }
   .order-search-input {
     font-size: 0.9rem !important;
