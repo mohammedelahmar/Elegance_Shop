@@ -1,157 +1,142 @@
-/* Add this to your existing App.css */
+.payment-success-page {
+  background: linear-gradient(135deg, #0f172a 0%, #131b2f 50%, #0f172a 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-/* Payment Success Animation */
-.success-checkmark {
-     width: 80px;
-     height: 80px;
-     margin: 0 auto;
-     position: relative;
-   }
-   
-   .success-checkmark .check-icon {
-     width: 80px;
-     height: 80px;
-     position: relative;
-     border-radius: 50%;
-     box-sizing: content-box;
-     border: 4px solid #4CAF50;
-   }
-   
-   .success-checkmark .check-icon::before {
-     top: 3px;
-     left: -2px;
-     width: 30px;
-     transform-origin: 100% 50%;
-     border-radius: 100px 0 0 100px;
-   }
-   
-   .success-checkmark .check-icon::after {
-     top: 0;
-     left: 30px;
-     width: 60px;
-     transform-origin: 0 50%;
-     border-radius: 0 100px 100px 0;
-     animation: rotate-circle 4.25s ease-in;
-   }
-   
-   .success-checkmark .check-icon::before, .success-checkmark .check-icon::after {
-     content: '';
-     height: 100px;
-     position: absolute;
-     background: #FFFFFF;
-     transform: rotate(-45deg);
-   }
-   
-   .success-checkmark .check-icon .icon-line {
-     height: 5px;
-     background-color: #4CAF50;
-     display: block;
-     border-radius: 2px;
-     position: absolute;
-     z-index: 10;
-   }
-   
-   .success-checkmark .check-icon .icon-line.line-tip {
-     top: 46px;
-     left: 14px;
-     width: 25px;
-     transform: rotate(45deg);
-     animation: icon-line-tip 0.75s;
-   }
-   
-   .success-checkmark .check-icon .icon-line.line-long {
-     top: 38px;
-     right: 8px;
-     width: 47px;
-     transform: rotate(-45deg);
-     animation: icon-line-long 0.75s;
-   }
-   
-   .success-checkmark .check-icon .icon-circle {
-     top: -4px;
-     left: -4px;
-     z-index: 10;
-     width: 80px;
-     height: 80px;
-     border-radius: 50%;
-     position: absolute;
-     box-sizing: content-box;
-     border: 4px solid rgba(76, 175, 80, .5);
-   }
-   
-   .success-checkmark .check-icon .icon-fix {
-     top: 8px;
-     width: 5px;
-     left: 26px;
-     z-index: 1;
-     height: 85px;
-     position: absolute;
-     transform: rotate(-45deg);
-     background-color: #FFFFFF;
-   }
-   
-   @keyframes rotate-circle {
-     0% {
-       transform: rotate(-45deg);
-     }
-     5% {
-       transform: rotate(-45deg);
-     }
-     12% {
-       transform: rotate(-405deg);
-     }
-     100% {
-       transform: rotate(-405deg);
-     }
-   }
-   
-   @keyframes icon-line-tip {
-     0% {
-       width: 0;
-       left: 1px;
-       top: 19px;
-     }
-     54% {
-       width: 0;
-       left: 1px;
-       top: 19px;
-     }
-     70% {
-       width: 50px;
-       left: -8px;
-       top: 37px;
-     }
-     84% {
-       width: 17px;
-       left: 21px;
-       top: 48px;
-     }
-     100% {
-       width: 25px;
-       left: 14px;
-       top: 45px;
-     }
-   }
-   
-   @keyframes icon-line-long {
-     0% {
-       width: 0;
-       right: 46px;
-       top: 54px;
-     }
-     65% {
-       width: 0;
-       right: 46px;
-       top: 54px;
-     }
-     84% {
-       width: 55px;
-       right: 0px;
-       top: 35px;
-     }
-     100% {
-       width: 47px;
-       right: 8px;
-       top: 38px;
-     }
-   }
+.payment-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(155deg, rgba(30, 38, 66, 0.92), rgba(23, 30, 52, 0.96));
+  color: #f8fafc;
+}
+
+.payment-card::before,
+.payment-card::after {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.28;
+}
+
+.payment-card::before {
+  background: #f45da0;
+  top: -120px;
+  left: -120px;
+}
+
+.payment-card::after {
+  background: #7c9bff;
+  bottom: -140px;
+  right: -120px;
+}
+
+.payment-card .card-body {
+  position: relative;
+  z-index: 1;
+}
+
+.success-icon-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.success-blob {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.08));
+  box-shadow: 0 20px 45px rgba(244, 93, 160, 0.4);
+  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
+  display: grid;
+  place-items: center;
+}
+
+.success-icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #0f172a;
+  font-size: 2.4rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a0f0b5 0%, #2dd4bf 100%);
+  transform: translate(4px, 4px);
+  box-shadow: 0 14px 32px rgba(45, 212, 191, 0.35);
+}
+
+.success-title {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: #fefefe;
+}
+
+.success-lead {
+  color: #cfd6e6;
+  font-size: 1.02rem;
+}
+
+.payment-details {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  color: #e5e7f0;
+}
+
+.payment-details strong {
+  color: #ffbed3;
+}
+
+.primary-glow-btn {
+  background: linear-gradient(120deg, #ff85a1 0%, #f45da0 45%, #9f7aea 100%) !important;
+  border: none !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.3px;
+  border-radius: 12px !important;
+  padding: 0.9rem 1rem !important;
+  box-shadow: 0 16px 36px rgba(244, 93, 160, 0.38);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  color: #0f172a !important;
+}
+
+.primary-glow-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 44px rgba(244, 93, 160, 0.48);
+  filter: brightness(1.03);
+}
+
+.ghost-btn {
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #e5e7f0 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-radius: 12px !important;
+  padding: 0.85rem 1rem !important;
+  transition: all 0.2s ease;
+}
+
+.ghost-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 576px) {
+  .payment-card {
+    margin: 0 0.5rem;
+  }
+  .success-title {
+    font-size: 1.6rem;
+  }
+  .success-icon {
+    font-size: 2.1rem;
+  }
+}
