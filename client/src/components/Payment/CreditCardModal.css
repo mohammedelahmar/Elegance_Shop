@@ -1,0 +1,144 @@
+:root {
+  --ccm-bg: #0f1425;
+  --ccm-card: rgba(19, 24, 45, 0.95);
+  --ccm-border: rgba(255, 255, 255, 0.08);
+  --ccm-text: #f8fafc;
+  --ccm-muted: #a6b3c6;
+  --ccm-accent-1: #9f7aea;
+  --ccm-accent-2: #ff85a1;
+  --ccm-accent-3: #5ac8fa;
+  --ccm-radius: 16px;
+  --ccm-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  --ccm-gradient: linear-gradient(120deg, #ff85a1 0%, #f45da0 45%, #9f7aea 100%);
+}
+
+.credit-card-modal .modal-content {
+  background: var(--ccm-card);
+  border-radius: var(--ccm-radius);
+  border: 1px solid var(--ccm-border);
+  box-shadow: var(--ccm-shadow);
+  color: var(--ccm-text);
+  overflow: hidden;
+}
+
+.ccm-header {
+  background: linear-gradient(140deg, rgba(159, 122, 234, 0.18), rgba(244, 93, 160, 0.14));
+  border-bottom: 1px solid var(--ccm-border);
+  padding: 1.25rem 1.5rem;
+}
+
+.ccm-title-text {
+  font-weight: 800;
+  letter-spacing: 0.1px;
+  color: var(--ccm-text);
+}
+
+.ccm-subtitle {
+  color: var(--ccm-muted);
+  font-size: 0.9rem;
+}
+
+.ccm-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ccm-gradient);
+  color: #0f172a;
+  box-shadow: 0 12px 24px rgba(244, 93, 160, 0.35);
+}
+
+.ccm-body {
+  padding: 1.8rem;
+  background: linear-gradient(160deg, rgba(17, 22, 40, 0.92), rgba(16, 20, 34, 0.9));
+}
+
+.ccm-amount-label {
+  color: var(--ccm-muted);
+  font-weight: 600;
+}
+
+.ccm-amount-value {
+  font-weight: 800;
+  font-size: 1.4rem;
+  background: var(--ccm-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.3px;
+}
+
+.ccm-form label {
+  color: var(--ccm-text);
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.ccm-form .form-control {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--ccm-text);
+  border-radius: 10px;
+  padding: 0.75rem 0.85rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ccm-form .form-control:focus {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(244, 93, 160, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(244, 93, 160, 0.15);
+}
+
+.ccm-form .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ccm-form .is-invalid {
+  border-color: rgba(233, 69, 96, 0.6) !important;
+  box-shadow: 0 0 0 0.2rem rgba(233, 69, 96, 0.1) !important;
+}
+
+.ccm-pay-btn {
+  background: var(--ccm-gradient) !important;
+  border: none !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.3px;
+  padding: 0.9rem 1rem !important;
+  border-radius: 12px !important;
+  box-shadow: 0 14px 30px rgba(244, 93, 160, 0.38);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.ccm-pay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(244, 93, 160, 0.48);
+  filter: brightness(1.03);
+}
+
+.ccm-pay-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.ccm-secure-text {
+  color: var(--ccm-muted);
+}
+
+.ccm-footer {
+  border-top: 1px solid var(--ccm-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ccm-cancel-btn {
+  border-radius: 10px;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: var(--ccm-muted) !important;
+}
+
+.ccm-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ccm-text) !important;
+}

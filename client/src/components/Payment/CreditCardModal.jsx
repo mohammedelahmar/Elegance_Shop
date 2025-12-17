@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
 import { FaLock, FaCreditCard } from 'react-icons/fa';
+import './CreditCardModal.css';
 
 const CreditCardModal = ({ show, onHide, amount, onSubmit, loading }) => {
   const [cardData, setCardData] = useState({
@@ -47,12 +48,28 @@ const CreditCardModal = ({ show, onHide, amount, onSubmit, loading }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered backdrop="static" keyboard={false}>
-      <Modal.Header>
-        <Modal.Title>Complete payment with Credit Card</Modal.Title>
+    <Modal 
+      show={show} 
+      onHide={onHide} 
+      centered 
+      backdrop="static" 
+      keyboard={false}
+      dialogClassName="credit-card-modal"
+    >
+      <Modal.Header className="ccm-header">
+        <div className="ccm-title d-flex align-items-center gap-2">
+          <span className="ccm-icon"><FaCreditCard /></span>
+          <div>
+            <div className="ccm-title-text">Complete Payment</div>
+            <div className="ccm-subtitle">Secure credit card checkout</div>
+          </div>
+        </div>
       </Modal.Header>
-      <Modal.Body>
-        <p className="mb-4">Total amount: <strong>${amount.toFixed(2)}</strong></p>
+      <Modal.Body className="ccm-body">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div className="ccm-amount-label">Total Amount</div>
+          <div className="ccm-amount-value">${amount.toFixed(2)}</div>
+        </div>
         
         {loading ? (
           <div className="text-center my-4">
@@ -60,7 +77,7 @@ const CreditCardModal = ({ show, onHide, amount, onSubmit, loading }) => {
             <p className="mt-2">Processing your payment...</p>
           </div>
         ) : (
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} className="ccm-form">
             <Form.Group className="mb-3">
               <Form.Label>Card Number</Form.Label>
               <Form.Control
@@ -130,14 +147,14 @@ const CreditCardModal = ({ show, onHide, amount, onSubmit, loading }) => {
             </Row>
             
             <div className="d-grid mt-4">
-              <Button variant="primary" type="submit" disabled={loading}>
+              <Button variant="primary" type="submit" disabled={loading} className="ccm-pay-btn">
                 <FaLock className="me-2" />
                 Pay Now
               </Button>
             </div>
             
             <div className="text-center mt-3">
-              <small className="text-muted">
+              <small className="ccm-secure-text">
                 <FaLock size={12} className="me-1" />
                 Your payment information is secure
               </small>
@@ -145,7 +162,7 @@ const CreditCardModal = ({ show, onHide, amount, onSubmit, loading }) => {
           </Form>
         )}
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className="ccm-footer">
         <Button 
           variant="outline-secondary" 
           onClick={() => {
@@ -154,6 +171,7 @@ const CreditCardModal = ({ show, onHide, amount, onSubmit, loading }) => {
             }
           }}
           disabled={loading}
+          className="ccm-cancel-btn"
         >
           Cancel
         </Button>
