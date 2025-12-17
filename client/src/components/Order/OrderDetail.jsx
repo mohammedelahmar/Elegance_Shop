@@ -23,10 +23,86 @@ const formatPrice = (price) => {
 
 const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
   if (!order) return null;
+
+  const normalizedPaymentMethod =
+    order.paymentMethod ||
+    order.payment_method ||
+    order.paymentType ||
+    order.payment?.method ||
+    order.paymentDetails?.method ||
+    order.paymentInfo?.method ||
+    order.payment_info?.method ||
+    'Not specified';
+
+  const normalizedItems = (
+    order.orderItems ||
+    order.items ||
+    order.products ||
+    order.cartItems ||
+    []
+  ).map((item, index) => {
+    const quantity = item.quantity || item.qty || 1;
+    const price = item.price ?? item.unitPrice ?? item.product?.price ?? item.product_id?.price ?? 0;
+    const productId =
+      item.product ||
+      item.product_id?._id ||
+      item.product_id ||
+      item._id ||
+      index;
+    const name = item.name || item.product?.name || item.product_id?.name || 'Product';
+    const image =
+      item.image ||
+      item.image_url ||
+      item.product?.image_url ||
+      item.product_id?.image_url ||
+      'https://via.placeholder.com/120x120?text=Item';
+
+    return {
+      key: productId,
+      name,
+      image,
+      quantity,
+      price,
+      total: quantity * (price || 0),
+      link: `/product/${productId}`
+    };
+  });
+
+  const statCards = [
+    {
+      label: 'Total Items',
+      value: normalizedItems.length,
+      icon: FaBoxOpen
+    },
+    {
+      label: 'Order Total',
+      value: `$${formatPrice(order.totalPrice || order.total_amount || order.total || 0)}`,
+      icon: FaCalculator
+    },
+    {
+      label: 'Payment Method',
+      value: normalizedPaymentMethod,
+      icon: FaCreditCard
+    }
+  ];
   
   return (
     <div className="order-detail-wrapper">
       <div className="order-detail-main">
+        <div className="order-stats-grid">
+          {statCards.map((stat, idx) => (
+            <div key={idx} className="order-stat-card">
+              <div className="stat-icon">
+                <stat.icon />
+              </div>
+              <div className="stat-text">
+                <span className="stat-label">{stat.label}</span>
+                <span className="stat-value">{stat.value}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* Shipping and Payment Information */}
         <div className="shipping-payment-grid">
           <div className="info-section">
@@ -80,7 +156,7 @@ const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
             </h3>
             <div className="info-item">
               <span className="info-label">Payment Method:</span>
-              <span className="info-value">{order.paymentMethod || 'Not specified'}</span>
+              <span className="info-value payment-pill">{normalizedPaymentMethod}</span>
             </div>
             <div className={`status-indicator ${order.isPaid ? 'status-paid' : 'status-not-paid'}`}>
               {order.isPaid ? (
@@ -98,14 +174,14 @@ const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
             <FaBoxOpen />
             Order Items
           </h3>
-          {!order.orderItems || order.orderItems.length === 0 ? (
+          {!normalizedItems || normalizedItems.length === 0 ? (
             <div className="order-items-empty">
               <p>Order is empty</p>
             </div>
           ) : (
             <div className="order-items-list">
-              {order.orderItems.map((item, index) => (
-                <div key={index} className="order-item-card">
+              {normalizedItems.map((item) => (
+                <div key={item.key} className="order-item-card">
                   <div className="item-content">
                     <div className="item-image-container">
                       <img
@@ -116,20 +192,20 @@ const OrderDetail = ({ order, isAdmin, onMarkDelivered, deliverLoading }) => {
                     </div>
                     <div className="item-info">
                       <h4>
-                        <Link to={`/product/${item.product}`}>
-                          {item.name || 'Product'}
+                        <Link to={item.link}>
+                          {item.name}
                         </Link>
                       </h4>
                     </div>
                     <div className="item-pricing">
                       <div className="item-quantity">
-                        Quantity: {item.quantity || 1}
+                        Quantity: {item.quantity}
                       </div>
                       <div className="item-price">
                         ${formatPrice(item.price)} each
                       </div>
                       <div className="item-total">
-                        Total: ${formatPrice((item.quantity || 1) * (item.price || 0))}
+                        Total: ${formatPrice(item.total)}
                       </div>
                     </div>
                   </div>

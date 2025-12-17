@@ -32,6 +32,64 @@
   padding: 2rem;
 }
 
+.order-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.order-stat-card {
+  background: linear-gradient(135deg, rgba(244, 93, 160, 0.14), rgba(101, 120, 242, 0.08));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+}
+
+.order-stat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), transparent 45%);
+  pointer-events: none;
+}
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  font-size: 1.2rem;
+}
+
+.stat-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+}
+
+.stat-value {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
 .shipping-payment-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -75,6 +133,19 @@
 .info-value {
   color: #f8fafc;
   font-weight: 600;
+}
+
+.payment-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(244, 93, 160, 0.14);
+  border: 1px solid rgba(244, 93, 160, 0.35);
+  color: #ffe4f2;
+  border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(244, 93, 160, 0.25);
+  font-size: 0.95rem;
 }
 
 .info-value a {
