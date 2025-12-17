@@ -28,6 +28,7 @@ async function run() {
 
 		console.log('🧭 Accès au panneau des produits...');
 		await driver.get(`${config.baseUrl}/admin/products`);
+		await demoPause();
 		await waitForAdminProductsPage(driver);
 
 		console.log('➕ Création d’un nouveau produit via le formulaire admin...');
@@ -54,7 +55,12 @@ async function run() {
 		process.exitCode = 1;
 	} finally {
 		if (driver) {
-			await driver.quit();
+			if (config.keepBrowserOpen) {
+				console.log('🎬 Mode démonstration : le navigateur reste ouvert. Fermez-le manuellement (Ctrl+C pour arrêter).');
+				await holdBrowserOpen();
+			} else {
+				await driver.quit();
+			}
 		}
 	}
 }
@@ -67,6 +73,8 @@ function buildConfig() {
 	const waitTimeout = Number.parseInt(process.env.E2E_WAIT_TIMEOUT ?? '20000', 10);
 	const networkTimeout = Number.parseInt(process.env.E2E_API_TIMEOUT ?? '15000', 10);
 	const headless = (process.env.E2E_HEADLESS ?? 'true').toLowerCase() !== 'false';
+	const demoDelay = Number.parseInt(process.env.E2E_DEMO_DELAY ?? '800', 10);
+	const keepBrowserOpen = (process.env.E2E_KEEP_BROWSER_OPEN ?? 'true').toLowerCase() !== 'false';
 	const productPrice = Number.parseFloat(process.env.E2E_ADMIN_PRODUCT_PRICE ?? '79.99');
 	const productStock = Number.parseInt(process.env.E2E_ADMIN_PRODUCT_STOCK ?? '15', 10);
 	const productImage = process.env.E2E_ADMIN_PRODUCT_IMAGE || 'https://via.placeholder.com/600x600?text=E2E+ADMIN';
@@ -97,6 +105,8 @@ function buildConfig() {
 		waitTimeout,
 		networkTimeout,
 		headless,
+		demoDelay,
+		keepBrowserOpen,
 		productTemplate: {
 			price: productPrice,
 			stock_quantity: productStock,
@@ -122,15 +132,24 @@ function buildProductCandidate() {
 
 async function loginAsAdmin(driver) {
 	await driver.get(`${config.baseUrl}/login`);
+	await demoPause();
 
 	const emailInput = await waitForElement(driver, By.css('input[type="email"], input[name="email"]'));
-	await fillInput(emailInput, config.credentials.email);
+	await typeSlow(emailInput, 'wrong-email.com');
+	await demoPause();
 
 	const passwordInput = await waitForElement(driver, By.css('input[type="password"], input[name="password"]'));
-	await fillInput(passwordInput, config.credentials.password);
+	const wrongPassword = `${config.credentials.password || 'password'}_wrong`;
+	await typeSlow(passwordInput, wrongPassword);
+	await demoPause();
 
 	const submitButton = await waitForElement(driver, By.css('button[type="submit"]'));
 	await submitButton.click();
+	await demoPause();
+
+	await observeAndFixInvalidEmail(driver, emailInput, submitButton);
+	await observeAndFixInvalidPassword(driver, passwordInput, submitButton);
+	await demoPause();
 
 	await driver.wait(async () => {
 		const token = await driver.executeScript('return window.localStorage.getItem("userToken");');
@@ -150,22 +169,30 @@ async function createProductViaUi(driver, product) {
 	const addButton = await waitForElement(driver, By.xpath("//button[contains(., 'Add Product') or contains(., 'Add new product') or contains(., 'Ajouter')]"));
 	await scrollIntoView(driver, addButton);
 	await addButton.click();
+	await demoPause();
 
 	await waitForElement(driver, By.css('.product-modal.show, .modal.show'));
 
-	await fillInput(await waitForElement(driver, By.css('input[name="name"]')), product.name);
-	await fillInput(await waitForElement(driver, By.css('textarea[name="description"]')), product.description);
+	await typeSlow(await waitForElement(driver, By.css('input[name="name"]')), product.name);
+	await demoPause();
+	await typeSlow(await waitForElement(driver, By.css('textarea[name="description"]')), product.description);
+	await demoPause();
 	await fillInput(await waitForElement(driver, By.css('input[name="price"]')), product.price.toString());
+	await demoPause();
 	await fillInput(await waitForElement(driver, By.css('input[name="stock_quantity"]')), product.stock_quantity.toString());
+	await demoPause();
 
 	const imageInput = await waitForElement(driver, By.css('input[name="image_url"]'));
 	await fillInput(imageInput, product.image_url);
+	await demoPause();
 
 	await selectCategory(driver);
+	await demoPause();
 
 	const submitButton = await waitForElement(driver, By.css('.product-modal button[type="submit"], .modal.show button[type="submit"]'));
 	await scrollIntoView(driver, submitButton);
 	await submitButton.click();
+	await demoPause();
 
 	await driver.wait(async () => {
 		const modals = await driver.findElements(By.css('.product-modal.show, .modal.show'));
@@ -229,6 +256,7 @@ async function assertProductVisibleInPublicListing(driver, productName) {
 	const url = new URL(`${config.baseUrl}/products`);
 	url.searchParams.set('keyword', productName);
 	await driver.get(url.toString());
+	await demoPause();
 
 	await waitForElement(driver, By.css('.product-list-container'));
 
@@ -278,6 +306,46 @@ async function deleteProductViaApi(token, productName) {
 	}
 }
 
+async function observeAndFixInvalidEmail(driver, emailInput, submitButton) {
+	console.log('🚧 Démonstration : email invalide, recherche du message d’erreur...');
+	const feedbackWait = Math.max(4000, config.demoDelay * 2);
+	try {
+		await driver.wait(async () => {
+			const validationMessage = await driver.executeScript('return arguments[0].validationMessage;', emailInput);
+			if (validationMessage) return true;
+			const alerts = await driver.findElements(By.css('.alert-danger, .invalid-feedback, .error, .text-danger'));
+			return alerts.length > 0;
+		}, feedbackWait);
+		await demoPause();
+	} catch (error) {
+		console.warn('Aucun message d’erreur détecté après l’email invalide (poursuite du scénario).');
+	}
+
+	console.log('✏️ Correction automatique de l’email, puis nouvelle tentative...');
+	await fillInput(emailInput, config.credentials.email);
+	await demoPause();
+	await submitButton.click();
+}
+
+async function observeAndFixInvalidPassword(driver, passwordInput, submitButton) {
+	console.log('🔐 Démonstration : mot de passe erroné, observation du message d’erreur...');
+	const feedbackWait = Math.max(4000, config.demoDelay * 2);
+	try {
+		await driver.wait(async () => {
+			const alerts = await driver.findElements(By.css('.alert-danger, .invalid-feedback, .error, .text-danger'));
+			return alerts.length > 0;
+		}, feedbackWait);
+		await demoPause();
+	} catch (error) {
+		console.warn('Aucun message d’erreur détecté après le mauvais mot de passe (poursuite du scénario).');
+	}
+
+	console.log('✏️ Correction automatique du mot de passe, nouvelle tentative de connexion...');
+	await fillInput(passwordInput, config.credentials.password);
+	await demoPause();
+	await submitButton.click();
+}
+
 async function waitForElement(driver, locator) {
 	const element = await driver.wait(until.elementLocated(locator), config.waitTimeout);
 	await driver.wait(until.elementIsVisible(element), config.waitTimeout);
@@ -298,12 +366,29 @@ async function fillInput(element, value) {
 	await element.sendKeys(value);
 }
 
+async function typeSlow(element, value) {
+	for (const char of value.toString()) {
+		await element.sendKeys(char);
+		await delay(80);
+	}
+	await demoPause();
+}
+
 function waitShort(duration = 500) {
-	return delay(duration);
+	return delay(Math.max(duration, config.demoDelay));
 }
 
 function delay(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function demoPause(multiplier = 1) {
+	if (!config.demoDelay || config.demoDelay <= 0) return;
+	await delay(config.demoDelay * multiplier);
+}
+
+async function holdBrowserOpen() {
+	return new Promise(() => {});
 }
 
 run();
