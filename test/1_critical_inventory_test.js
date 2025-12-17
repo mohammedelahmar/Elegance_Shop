@@ -261,7 +261,7 @@ async function clearRemoteCart(token) {
  */
 async function addProductToCart(driver) {
 	await driver.get(`${config.baseUrl}/products/${config.productId}`);
-	await demoPause();
+	await demoPause(2);
 
 	await maybeSelectVariantOptions(driver);
 	await adjustQuantity(driver, config.productQuantity);
@@ -269,7 +269,7 @@ async function addProductToCart(driver) {
 	const addToCartButton = await waitForElement(driver, By.css('.add-to-cart-main-btn'));
 	await scrollIntoView(driver, addToCartButton);
 	await addToCartButton.click();
-	await demoPause();
+	await demoPause(2);
 
 	await driver.wait(until.elementLocated(By.css('.alert-success, .alert.alert-success')), config.waitTimeout);
 }
@@ -319,14 +319,14 @@ async function adjustQuantity(driver, quantity) {
  */
 async function completeCheckout(driver) {
 	await driver.get(`${config.baseUrl}/cart`);
-	await demoPause();
+	await demoPause(2);
 	const checkoutButton = await waitForElement(driver, By.css('.checkout-btn'));
 	await scrollIntoView(driver, checkoutButton);
 	await checkoutButton.click();
-	await demoPause();
+	await demoPause(2);
 
 	await driver.wait(until.urlContains('/checkout'), config.waitTimeout);
-	await demoPause();
+	await demoPause(2);
 
 	await completeShippingStep(driver);
 	await completePaymentStep(driver);
@@ -341,20 +341,20 @@ async function completeShippingStep(driver) {
 	const addressField = await findOptionalInput(driver, 'Enter your street address');
 	if (addressField) {
 		await fillInput(addressField, config.shippingDefaults.address);
-		await demoPause();
+		await demoPause(2);
 		await fillByPlaceholder(driver, 'Enter your city', config.shippingDefaults.city);
-		await demoPause();
+		await demoPause(2);
 		await fillByPlaceholder(driver, 'Enter postal code', config.shippingDefaults.postalCode);
-		await demoPause();
+		await demoPause(2);
 		await fillByPlaceholder(driver, 'Enter your country', config.shippingDefaults.country);
-		await demoPause();
+		await demoPause(2);
 		await fillByPlaceholder(driver, 'Enter phone number', config.shippingDefaults.phone, false);
 	}
 
 	const continueButton = await waitForElement(driver, By.xpath('//button[contains(., "Continue to Payment")]'));
 	await scrollIntoView(driver, continueButton);
 	await continueButton.click();
-	await demoPause();
+	await demoPause(2);
 	await driver.wait(until.elementLocated(By.css('.checkout-card h5')), config.waitTimeout);
 }
 
