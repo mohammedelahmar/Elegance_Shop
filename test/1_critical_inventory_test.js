@@ -17,10 +17,12 @@ const config = buildConfig();
  * Point d'entrée du scénario : instancie le navigateur, exécute le flux métier et compare le stock initial/final.
  */
 async function run() {
+	// Préparation du navigateur : options stables pour les environnements CI (pas de GPU, sandbox désactivée)
 	const chromeOptions = new chrome.Options()
 		.addArguments('--disable-gpu', '--window-size=1920,1080', '--no-sandbox', '--disable-dev-shm-usage');
 
 	if (config.headless) {
+		// Mode headless activé par défaut pour exécutions automatisées sans interface graphique
 		chromeOptions.addArguments('--headless=new');
 	}
 
@@ -92,6 +94,7 @@ async function run() {
  * Retourne un objet de configuration partagé par l'ensemble du test.
  */
 function buildConfig() {
+	// Centralisation des variables d'environnement avec valeurs par défaut raisonnables pour le local/CI
 	const baseUrl = process.env.E2E_BASE_URL || 'http://localhost:3000';
 	const apiBaseUrl = process.env.E2E_API_BASE_URL || 'http://localhost:5000/api';
 	const email = process.env.E2E_USER_EMAIL;
@@ -108,6 +111,7 @@ function buildConfig() {
 	const headless = (process.env.E2E_HEADLESS ?? 'true').toLowerCase() !== 'false';
 	const keepBrowserOpen = (process.env.E2E_KEEP_BROWSER_OPEN ?? 'true').toLowerCase() !== 'false';
 
+	// Valeurs d'expédition utilisées si le checkout affiche un formulaire (fallback UI)
 	const shippingDefaults = {
 		address: process.env.E2E_SHIPPING_ADDRESS || '123 Rue du Test',
 		city: process.env.E2E_SHIPPING_CITY || 'Paris',
@@ -132,6 +136,8 @@ function buildConfig() {
 	} catch (error) {
 		throw new Error('E2E_PRODUCT_ID doit être un ObjectId MongoDB valide.');
 	}
+
+	// En cas d'oubli de variables critiques, on échoue tôt pour éviter un test instable
 
 	if (missing.length) {
 		throw new Error(`Variables d’environnement manquantes: ${missing.join(', ')}`);
@@ -164,10 +170,12 @@ async function loginAndGetToken(driver) {
 	await driver.get(`${config.baseUrl}/login`);
 	await demoPause();
 
+	// Étape pédagogique : on saisit volontairement un email invalide pour observer la validation front
 	const emailInput = await waitForElement(driver, By.css('input[type="email"]'));
 	await typeSlow(emailInput, 'mohamedgamil.com');
 	await demoPause();
 
+	// Même principe pour le mot de passe : on déclenche une erreur contrôlée pour voir le feedback UI
 	const passwordInput = await waitForElement(driver, By.css('input[type="password"]'));
 	const wrongPassword = `${config.credentials.password || 'password'}_wrong`;
 	await typeSlow(passwordInput, wrongPassword);
@@ -252,6 +260,7 @@ async function clearRemoteCart(token) {
 	try {
 		await client.delete('/cart');
 	} catch (error) {
+		// Le nettoyage n'est pas bloquant : si l'API refuse on poursuit avec l'état courant du panier
 		console.warn('Impossible de nettoyer le panier via l’API (ignoré):', error.response?.data || error.message);
 	}
 }
@@ -260,6 +269,7 @@ async function clearRemoteCart(token) {
  * Ouvre la page produit, applique les variantes nécessaires et dépose l'article dans le panier.
  */
 async function addProductToCart(driver) {
+	// Ouverture directe de la fiche produit pour éviter de naviguer via la home
 	await driver.get(`${config.baseUrl}/products/${config.productId}`);
 	await demoPause(2);
 
@@ -318,6 +328,7 @@ async function adjustQuantity(driver, quantity) {
  * Navigue jusqu'au tunnel de checkout et enchaîne les étapes expédition/paiement/revue.
  */
 async function completeCheckout(driver) {
+	// Enchaînement des trois étapes du tunnel : Panier -> Shipping -> Payment -> Review/Pay
 	await driver.get(`${config.baseUrl}/cart`);
 	await demoPause(2);
 	const checkoutButton = await waitForElement(driver, By.css('.checkout-btn'));
@@ -338,6 +349,7 @@ async function completeCheckout(driver) {
  */
 async function completeShippingStep(driver) {
 	await waitForElement(driver, By.css('.checkout-card'));
+	// Certains parcours affichent déjà une adresse par défaut : on ne remplit que si les champs existent
 	const addressField = await findOptionalInput(driver, 'Enter your street address');
 	if (addressField) {
 		await fillInput(addressField, config.shippingDefaults.address);
@@ -362,6 +374,7 @@ async function completeShippingStep(driver) {
  * Sélectionne un mode de paiement et passe à l'écran de revue de commande.
  */
 async function completePaymentStep(driver) {
+	// Sélection simple : on force la radio carte de crédit pour déclencher la modale de paiement simulé
 	const creditRadio = await waitForElement(driver, By.css('input[value="credit_card"]'));
 	await driver.executeScript('arguments[0].click();', creditRadio);
 	await demoPause();
@@ -381,6 +394,7 @@ async function completeReviewAndPayment(driver) {
 	await placeOrderButton.click();
 	await demoPause();
 
+	// À ce stade une modale de carte s'affiche : on la remplit avec des données factices
 	await fillCreditCardModal(driver);
 
 	await driver.wait(until.urlContains('/payment-success/'), config.waitTimeout * 2);
@@ -447,6 +461,7 @@ async function waitForStockDecrease(collection, productId, initialStock, expecte
  * Wrapper utilitaire pour `driver.wait` avec le timeout global.
  */
 async function waitForElement(driver, locator) {
+	// Attente minimale : présence dans le DOM suffit ici, la visibilité est gérée au cas par cas
 	return driver.wait(until.elementLocated(locator), config.waitTimeout);
 }
 
@@ -508,6 +523,7 @@ async function fillInput(element, value) {
 }
 
 async function typeSlow(element, value) {
+	// Saisie progressive pour rendre la démonstration lisible et laisser le temps aux validations front
 	for (const char of value) {
 		await element.sendKeys(char);
 		await delay(80);

@@ -19,6 +19,12 @@ const config = buildConfig();
 async function run() {
 	let driver;
 	try {
+		// Séquence complète du scénario, pensée comme une mini "recette" :
+		// - on instancie le navigateur (driver)
+		// - on connecte l'utilisateur client et prépare son environnement (adresse, panier vide)
+		// - on exécute tout le parcours d'achat en Cash on Delivery via l'UI
+		// - on se déconnecte puis on se reconnecte en admin pour marquer la commande payée et livrée
+		// - on contrôle via l'API que les drapeaux isPaid/isDelivered sont bien positionnés
 		driver = await createDriver();
 
 		console.log('👤 Connexion client...');
@@ -54,6 +60,7 @@ async function run() {
 	} finally {
 		if (driver) {
 			if (config.keepBrowserOpen) {
+				// Mode démonstration : on laisse le navigateur ouvert pour inspection manuelle
 				console.log('🎬 Mode démonstration : le navigateur reste ouvert. Fermez-le manuellement (Ctrl+C pour arrêter).');
 				await holdBrowserOpen();
 			} else {
@@ -66,6 +73,8 @@ async function run() {
 // Construit et valide la configuration issue des variables d'environnement.
 // Objectif : éviter les valeurs manquantes/incohérentes avant d'exécuter le scénario.
 function buildConfig() {
+	// Centralise la lecture des variables d'environnement pour garder le reste du code propre
+	// Chaque valeur est validée pour éviter des plantages tardifs en cours de scénario
 	const baseUrl = process.env.E2E_BASE_URL || 'http://localhost:3000';
 	const apiBaseUrl = process.env.E2E_API_BASE_URL || 'http://localhost:5000/api';
 	const email = process.env.E2E_USER_EMAIL;
@@ -111,6 +120,7 @@ function buildConfig() {
 
 // Instancie le driver Chrome (headless configurable) avec options stables en CI
 async function createDriver() {
+	// Options Chrome adaptées aux environnements CI (pas d'accélération GPU, pas de sandbox)
 	const chromeOptions = new chrome.Options().addArguments(
 		'--disable-gpu',
 		'--window-size=1920,1080',
@@ -125,6 +135,7 @@ async function createDriver() {
 
 // Connexion générique (client ou admin) avec stockage attendu du token en localStorage
 async function login(driver, email, password) {
+	// Navigation directe vers la page de login plutôt que dépendre d'un état précédent
 	await driver.get(`${config.baseUrl}/login`);
 	await demoPause();
 
@@ -145,6 +156,8 @@ async function login(driver, email, password) {
 		return Boolean(token);
 	}, config.waitTimeout, 'Le token utilisateur n’a pas été enregistré après la connexion.');
 
+	// À ce stade on considère la connexion réussie si le token est présent dans le localStorage
+
 	const token = await driver.executeScript('return window.localStorage.getItem("userToken");');
 	assert.ok(token, 'Aucun token utilisateur présent dans le localStorage après la connexion.');
 	return token;
@@ -155,11 +168,14 @@ async function login(driver, email, password) {
 
 // S'assure qu'une adresse de livraison existe (réutilise la première, sinon en crée une)
 async function ensureShippingAddress(token) {
+	// Si l'utilisateur a déjà une adresse, on réutilise la première pour éviter la saisie UI
 	const client = buildApiClient(token);
 	const { data: existing } = await client.get('/addresses/user');
 	if (Array.isArray(existing) && existing.length > 0) {
 		return existing[0]._id;
 	}
+
+	// Sinon on crée une adresse minimaliste pour déverrouiller l'étape Shipping
 
 	const payload = {
 		address: '123 Rue Demo',
@@ -178,12 +194,14 @@ async function clearRemoteCart(token) {
 	try {
 		await client.delete('/cart');
 	} catch (error) {
+		// Le nettoyage n'est pas bloquant : si l'API échoue on poursuit avec le panier actuel
 		console.warn('Impossible de nettoyer le panier via l’API (ignoré):', error.response?.data || error.message);
 	}
 }
 
 // Parcours UI complet pour une commande COD : page produit -> panier -> checkout -> succès
 async function checkoutCodViaUi(driver, userToken, productId, quantity, addressId) {
+	// Déroulé UI principal : page produit -> panier -> checkout (Shipping/Payment/Review) -> succès
 	// Produit
 	console.log('🔎 Ouverture page produit et sélection...');
 	await driver.get(`${config.baseUrl}/products/${productId}`);
@@ -260,6 +278,7 @@ async function checkoutCodViaUi(driver, userToken, productId, quantity, addressI
 		throw new Error('ID commande introuvable après success page.');
 	} catch (err) {
 		// Fallback robuste : si l'UI échoue (ex: 500 COD), on crée la commande via l'API
+		// Cela permet au test E2E de rester utile en exerçant malgré tout les étapes post-commande
 		console.warn('⚠️ Échec via UI (probable 500 COD). Fallback API pour créer la commande puis navigation success.', err.message);
 		const fallbackOrderId = await createCodOrderViaApi(userToken, productId, quantity, addressId);
 		await driver.get(`${config.baseUrl}/payment-success/${fallbackOrderId}?method=cod`);
@@ -270,6 +289,7 @@ async function checkoutCodViaUi(driver, userToken, productId, quantity, addressI
 
 // Parcours UI admin : ouvre le menu Admin, va sur Orders, filtre par ID puis marque payé et livré
 async function markOrderPaidAndDeliveredViaUi(driver, orderId) {
+	// Partie back-office : on cible l'écran Orders, on filtre par ID puis on clique sur les boutons
 	await goToAdminOrdersPage(driver);
 
 	// Recherche de la commande par ID
@@ -298,6 +318,7 @@ async function markOrderPaidAndDeliveredViaUi(driver, orderId) {
 
 // Récupère l'état de la commande pour les assertions finales
 async function fetchOrder(token, orderId) {
+	// Lecture directe de la commande via l'API admin pour valider les statuts finaux
 	const client = buildApiClient(token);
 	const { data } = await client.get(`/commandes/${orderId}`);
 	return data;
@@ -378,6 +399,7 @@ async function createCodOrderViaApi(userToken, productId, quantity, addressId) {
 
 // Calcule les montants panier (articles, shipping conditionnel, TVA) avec arrondi 2 décimales
 function computePricing(unitPrice, quantity) {
+	// Simule la logique panier côté front pour construire un payload cohérent en fallback API
 	const itemsPrice = round2(unitPrice * quantity);
 	const shippingPrice = itemsPrice > 50 ? 0 : 10;
 	const taxPrice = round2(itemsPrice * 0.15);
@@ -398,6 +420,7 @@ async function fetchProductPrice(productId) {
 
 // Fabrique un client Axios préconfiguré (timeout + Authorization si token fourni)
 function buildApiClient(token) {
+	// Client Axios commun : timeout court pour détecter les API down, header Authorization optionnel
 	return axios.create({
 		baseURL: config.apiBaseUrl,
 		timeout: config.networkTimeout,
@@ -412,6 +435,7 @@ async function clearSession(driver) {
 
 // Attend la présence/visibilité/activabilité d'un élément (robuste aux lenteurs réseau)
 async function waitForElement(driver, locator) {
+	// Triple attente : présence dans le DOM, visibilité et activabilité (enabled)
 	const element = await driver.wait(until.elementLocated(locator), config.waitTimeout);
 	await driver.wait(until.elementIsVisible(element), config.waitTimeout);
 	await driver.wait(until.elementIsEnabled(element), config.waitTimeout);
@@ -564,6 +588,7 @@ function round2(value) {
 
 // Sélectionne la première taille/couleur disponible si des variantes existent
 async function maybeSelectVariantOptions(driver) {
+	// Certains produits ont des variantes taille/couleur : on clique la première option disponible
 	const sizeSelects = await driver.findElements(By.css('.size-section select'));
 	if (sizeSelects.length) {
 		const select = sizeSelects[0];
@@ -589,6 +614,7 @@ async function maybeSelectVariantOptions(driver) {
 
 // Incrémente la quantité en cliquant sur le bouton + autant que nécessaire
 async function adjustQuantity(driver, quantity) {
+	// Imitation utilisateur : on clique sur le bouton + autant de fois que nécessaire
 	if (quantity <= 1) return;
 	const buttons = await driver.findElements(By.css('.quantity-section .quantity-btn'));
 	if (buttons.length < 2) return;

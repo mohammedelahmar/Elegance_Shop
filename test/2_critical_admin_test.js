@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // Script E2E critique pour vérifier la capacité d'un admin à créer un produit
-// via l'interface graphique et à le voir apparaître côté public. Tous les 
-// commentaires sont en français pour faciliter la relecture rapide du scénario.
+// via l'interface graphique et à le voir apparaître côté public.
 
 import 'dotenv/config';
 import axios from 'axios';
