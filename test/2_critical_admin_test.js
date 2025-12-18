@@ -54,7 +54,9 @@ async function run() {
 
 		// Nettoyage optionnel pour ne pas polluer la base de données avec des produits de test
 		if (config.enableCleanup) {
-			console.log('🧹 Nettoyage: suppression du produit de test via l’API...');
+			console.log('🧹 Nettoyage: suppression du produit de test via l’UI admin...');
+			await deleteProductViaUi(driver, productUnderTest.name);
+			console.log('🧹 (Fallback) Tentative API si l’UI n’a pas supprimé');
 			await deleteProductViaApi(adminToken, productUnderTest.name);
 		}
 
@@ -317,6 +319,70 @@ async function assertProductVisibleInPublicListing(driver, productName) {
 	}, config.waitTimeout * 2, `Le produit ${productName} n’est pas visible dans la liste publique.`);
 }
 
+// Supprime le produit via l'UI admin : menu Admin > Products, recherche, puis clic Delete
+async function deleteProductViaUi(driver, productName) {
+	await goToAdminProductsPage(driver);
+
+	// Champ de recherche (différents libellés possibles)
+	const searchInput = await waitForElement(
+		driver,
+		By.css('input.product-search-input, input[placeholder*="Search products" i], input[placeholder*="Search" i], input[type="search"], input[name="search"]')
+	);
+	// Cliquer sur la barre de recherche (filter) puis saisir le nom du produit
+	await scrollIntoView(driver, searchInput);
+	await searchInput.click();
+	await fillInput(searchInput, productName);
+	await demoPause();
+
+	// Laisse le filtre s'appliquer côté UI (rafraîchissement local)
+	await waitShort(1000);
+
+	// Attente active de l'apparition d'une ligne filtrée avec le produit recherché
+	try {
+		await driver.wait(async () => {
+			const rows = await driver.findElements(By.css('table tbody tr'));
+			for (const row of rows) {
+				const text = (await row.getText()).toLowerCase();
+				if (text.includes(productName.toLowerCase())) return true;
+			}
+			return false;
+		}, Math.max(config.waitTimeout, 10000));
+	} catch (e) {
+		console.warn('⚠️ Aucune ligne filtrée trouvée avant la tentative de suppression, poursuite quand même.');
+	}
+
+	// Attente explicite demandée (10s) avant action
+	await delay(10000);
+
+	const rows = await driver.findElements(By.css('table tbody tr'));
+	for (const row of rows) {
+		const text = (await row.getText()).toLowerCase();
+		if (!text.includes(productName.toLowerCase())) continue;
+
+		const deleteButtons = await row.findElements(
+			By.xpath(".//button[@title='Delete Product' or contains(., 'Delete') or contains(., 'Supprimer')]")
+		);
+		if (!deleteButtons.length) continue;
+
+		await scrollIntoView(driver, deleteButtons[0]);
+		await deleteButtons[0].click();
+		await acceptConfirmIfPresent(driver);
+
+		// Attendre que plus aucune ligne ne contienne le produit (après refresh onProductUpdated)
+		await driver.wait(async () => {
+			const currentRows = await driver.findElements(By.css('table tbody tr'));
+			for (const r of currentRows) {
+				const t = (await r.getText()).toLowerCase();
+				if (t.includes(productName.toLowerCase())) return false;
+			}
+			return true;
+		}, config.waitTimeout, 'Le produit est encore présent après tentative de suppression UI.');
+		return;
+	}
+
+	console.warn('⚠️ Produit non trouvé pour suppression via UI, passage éventuel au fallback API.');
+}
+
 // Ouvre le menu Admin (header) puis clique sur "Products" pour atteindre /admin/products
 async function goToAdminProductsPage(driver) {
 	await driver.get(config.baseUrl);
@@ -336,6 +402,9 @@ async function goToAdminProductsPage(driver) {
 	await productsLink.click();
 	await demoPause();
 	await waitForAdminProductsPage(driver);
+
+	// Pause supplémentaire pour laisser le tableau produits se charger complètement (demande utilisateur)
+	await delay(10000);
 }
 
 // Supprime le produit de test via l'API (nettoyage) en utilisant le token admin obtenu lors du login.
@@ -366,6 +435,17 @@ async function deleteProductViaApi(token, productName) {
 		console.log('✅ Produit de test supprimé côté API.');
 	} catch (error) {
 		console.warn('⚠️ Impossible de nettoyer le produit via l’API:', error.response?.data || error.message);
+	}
+}
+
+// Accepte une éventuelle boîte de dialogue de confirmation
+async function acceptConfirmIfPresent(driver) {
+	try {
+		await driver.wait(until.alertIsPresent(), 4000);
+		const alert = await driver.switchTo().alert();
+		await alert.accept();
+	} catch (e) {
+		// aucune alerte, on ignore
 	}
 }
 
