@@ -40,10 +40,8 @@ async function run() {
 		// Retourne le token JWT stocké en localStorage après login
 		const adminToken = await loginAsAdmin(driver);
 
-		console.log('🧭 Accès au panneau des produits...');
-		await driver.get(`${config.baseUrl}/admin/products`);
-		await demoPause();
-		await waitForAdminProductsPage(driver);
+		console.log('🧭 Accès au panneau des produits via menu Admin...');
+		await goToAdminProductsPage(driver);
 
 		console.log('➕ Création d’un nouveau produit via le formulaire admin...');
 		await createProductViaUi(driver, productUnderTest);
@@ -317,6 +315,27 @@ async function assertProductVisibleInPublicListing(driver, productName) {
 		}
 		return false;
 	}, config.waitTimeout * 2, `Le produit ${productName} n’est pas visible dans la liste publique.`);
+}
+
+// Ouvre le menu Admin (header) puis clique sur "Products" pour atteindre /admin/products
+async function goToAdminProductsPage(driver) {
+	await driver.get(config.baseUrl);
+	await demoPause();
+
+	// Dropdown Admin dans le header : id admin-dropdown ou texte "Admin"
+	const adminToggle = await waitForElement(driver, By.css('#admin-dropdown, [id="admin-dropdown"], .admin-dropdown'));
+	await scrollIntoView(driver, adminToggle);
+	await adminToggle.click();
+	await demoPause();
+
+	const productsLink = await waitForElement(
+		driver,
+		By.xpath("//a[contains(@href, '/admin/products') and (contains(., 'Products') or contains(., 'Produits'))]")
+	);
+	await scrollIntoView(driver, productsLink);
+	await productsLink.click();
+	await demoPause();
+	await waitForAdminProductsPage(driver);
 }
 
 // Supprime le produit de test via l'API (nettoyage) en utilisant le token admin obtenu lors du login.
