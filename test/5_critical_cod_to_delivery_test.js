@@ -1,12 +1,21 @@
 #!/usr/bin/env node
+// Test critique bout-en-bout : parcours client en paiement "Cash on Delivery"
+// puis validation côté administrateur (marquage payée + livrée). Commentaires
+// détaillés en français pour faciliter la relecture et le débogage rapide.
 import 'dotenv/config';
 import assert from 'node:assert/strict';
 import axios from 'axios';
 import { Builder, By, Key, until } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 
+// Configuration centralisée, construite une seule fois à partir des variables d'env
 const config = buildConfig();
 
+// Orchestrateur principal du scénario COD -> livraison
+// 1) connexion client, adresse, panier, checkout COD
+// 2) déconnexion puis connexion admin
+// 3) marquage commande payée puis livrée
+// 4) vérification finale via API + affichage visuel
 async function run() {
 	let driver;
 	try {
@@ -24,24 +33,16 @@ async function run() {
 		console.log('🛒 Parcours UI: ajout produit + checkout en Cash on Delivery...');
 		const orderId = await checkoutCodViaUi(driver, userToken, config.productId, config.productQuantity, shippingAddressId);
 
-		console.log('🚪 Déconnexion du client...');
-		await clearSession(driver);
-		await demoPause(2);
+		console.log('🚪 Déconnexion du client via menu profil...');
+		await logoutViaUi(driver);
 
 		console.log('🛡️ Connexion administrateur...');
 		const adminToken = await login(driver, config.adminCredentials.email, config.adminCredentials.password);
 
-		console.log('💳 Marquage commande "payée" côté admin...');
-		await markOrderPaid(adminToken, orderId);
-		await demoPause();
+		console.log('🧭 Navigation admin vers Orders puis marquage payé/livré via UI...');
+		await markOrderPaidAndDeliveredViaUi(driver, orderId);
 
-		console.log('📦 Marquage commande "livrée" côté admin...');
-		await markOrderDelivered(adminToken, orderId);
-
-		console.log('� Visualisation de la commande côté interface...');
-		await showOrderVisually(driver, orderId);
-
-		console.log('�🔎 Vérification finale de l’état commande...');
+		console.log('�🔎 Vérification finale via API uniquement...');
 		const finalOrder = await fetchOrder(adminToken, orderId);
 		assert.equal(finalOrder.isPaid, true, 'La commande devrait être marquée payée.');
 		assert.equal(finalOrder.isDelivered, true, 'La commande devrait être marquée livrée.');
@@ -62,6 +63,8 @@ async function run() {
 	}
 }
 
+// Construit et valide la configuration issue des variables d'environnement.
+// Objectif : éviter les valeurs manquantes/incohérentes avant d'exécuter le scénario.
 function buildConfig() {
 	const baseUrl = process.env.E2E_BASE_URL || 'http://localhost:3000';
 	const apiBaseUrl = process.env.E2E_API_BASE_URL || 'http://localhost:5000/api';
@@ -77,6 +80,7 @@ function buildConfig() {
 	const demoDelay = Number.parseInt(process.env.E2E_DEMO_DELAY ?? '800', 10);
 	const keepBrowserOpen = (process.env.E2E_KEEP_BROWSER_OPEN ?? 'true').toLowerCase() !== 'false';
 
+	// Contrôles préalables : tous les identifiants et le produit cible doivent être fournis
 	const missing = [];
 	if (!email) missing.push('E2E_USER_EMAIL');
 	if (!password) missing.push('E2E_USER_PASSWORD');
@@ -105,6 +109,7 @@ function buildConfig() {
 	};
 }
 
+// Instancie le driver Chrome (headless configurable) avec options stables en CI
 async function createDriver() {
 	const chromeOptions = new chrome.Options().addArguments(
 		'--disable-gpu',
@@ -118,6 +123,7 @@ async function createDriver() {
 	return new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
 }
 
+// Connexion générique (client ou admin) avec stockage attendu du token en localStorage
 async function login(driver, email, password) {
 	await driver.get(`${config.baseUrl}/login`);
 	await demoPause();
@@ -144,8 +150,10 @@ async function login(driver, email, password) {
 	return token;
 }
 
-// Removed staged wrong-email/password demo to speed up login and reduce flakiness.
+// Note : la saisie volontairement erronée (email/mot de passe) a été retirée pour
+// accélérer le test et limiter la flakiness; on va directement au succès attendu.
 
+// S'assure qu'une adresse de livraison existe (réutilise la première, sinon en crée une)
 async function ensureShippingAddress(token) {
 	const client = buildApiClient(token);
 	const { data: existing } = await client.get('/addresses/user');
@@ -164,6 +172,7 @@ async function ensureShippingAddress(token) {
 	return data._id;
 }
 
+// Vide le panier côté API pour repartir d'un état propre avant le parcours UI
 async function clearRemoteCart(token) {
 	const client = buildApiClient(token);
 	try {
@@ -173,6 +182,7 @@ async function clearRemoteCart(token) {
 	}
 }
 
+// Parcours UI complet pour une commande COD : page produit -> panier -> checkout -> succès
 async function checkoutCodViaUi(driver, userToken, productId, quantity, addressId) {
 	// Produit
 	console.log('🔎 Ouverture page produit et sélection...');
@@ -249,6 +259,7 @@ async function checkoutCodViaUi(driver, userToken, productId, quantity, addressI
 		}
 		throw new Error('ID commande introuvable après success page.');
 	} catch (err) {
+		// Fallback robuste : si l'UI échoue (ex: 500 COD), on crée la commande via l'API
 		console.warn('⚠️ Échec via UI (probable 500 COD). Fallback API pour créer la commande puis navigation success.', err.message);
 		const fallbackOrderId = await createCodOrderViaApi(userToken, productId, quantity, addressId);
 		await driver.get(`${config.baseUrl}/payment-success/${fallbackOrderId}?method=cod`);
@@ -257,26 +268,42 @@ async function checkoutCodViaUi(driver, userToken, productId, quantity, addressI
 	}
 }
 
-async function markOrderPaid(adminToken, orderId) {
-	const client = buildApiClient(adminToken);
-	await client.put(`/commandes/${orderId}/pay`, {
-		id: 'admin-marked',
-		status: 'completed',
-		update_time: new Date().toISOString()
-	});
+// Parcours UI admin : ouvre le menu Admin, va sur Orders, filtre par ID puis marque payé et livré
+async function markOrderPaidAndDeliveredViaUi(driver, orderId) {
+	await goToAdminOrdersPage(driver);
+
+	// Recherche de la commande par ID
+	const searchInput = await waitForElement(driver, By.css('input.order-search-input[placeholder*="Search"], input[placeholder*="order ID"], input[placeholder*="Search"]'));
+	await fillInput(searchInput, orderId);
+	await demoPause();
+
+	// Marquer payé si le bouton est disponible
+	const payButtons = await driver.findElements(By.xpath("//table//button[@title='Mark as Paid' or contains(., 'Paid')]"));
+	if (payButtons.length) {
+		await scrollIntoView(driver, payButtons[0]);
+		await payButtons[0].click();
+		await acceptConfirmIfPresent(driver);
+		await waitForPaidBadge(driver);
+	}
+
+	// Marquer livré si le bouton apparaît après paiement
+	const deliverButtons = await driver.findElements(By.xpath("//table//button[@title='Mark as Delivered' or contains(., 'Delivered') or contains(., 'Deliver')]"));
+	if (deliverButtons.length) {
+		await scrollIntoView(driver, deliverButtons[0]);
+		await deliverButtons[0].click();
+		await acceptConfirmIfPresent(driver);
+		await waitForDeliveredBadge(driver);
+	}
 }
 
-async function markOrderDelivered(adminToken, orderId) {
-	const client = buildApiClient(adminToken);
-	await client.put(`/commandes/${orderId}/deliver`, {});
-}
-
+// Récupère l'état de la commande pour les assertions finales
 async function fetchOrder(token, orderId) {
 	const client = buildApiClient(token);
 	const { data } = await client.get(`/commandes/${orderId}`);
 	return data;
 }
 
+// Parcourt quelques URLs probables pour afficher la commande et voir les statuts
 async function showOrderVisually(driver, orderId) {
 	const urls = [
 		`${config.baseUrl}/orders/${orderId}`,
@@ -306,6 +333,30 @@ async function showOrderVisually(driver, orderId) {
 	console.warn('Impossible d’afficher visuellement la commande (aucune page commande avec statut détectée).');
 }
 
+// Ouvre le dropdown Admin puis clique sur "Orders" pour atteindre /admin/orders
+async function goToAdminOrdersPage(driver) {
+	// Se place sur la page d'accueil pour garantir la présence du header
+	await driver.get(config.baseUrl);
+	await demoPause();
+
+	// Ouverture du menu admin (NavDropdown avec id admin-dropdown)
+	const adminToggle = await waitForElement(driver, By.css('#admin-dropdown, [id="admin-dropdown"]'));
+	await scrollIntoView(driver, adminToggle);
+	await adminToggle.click();
+	await demoPause();
+
+	// Clic sur l'entrée Orders
+	const ordersLink = await waitForElement(
+		driver,
+		By.xpath("//a[contains(@href, '/admin/orders') and (contains(., 'Orders') or contains(., 'Commandes'))]")
+	);
+	await scrollIntoView(driver, ordersLink);
+	await ordersLink.click();
+	await driver.wait(until.urlContains('/admin/orders'), config.waitTimeout);
+	await waitForElement(driver, By.css('.orders-admin-container, .order-search-bar, .orders-admin-title'));
+}
+
+// Plan B : création d'une commande COD directement via l'API (utile si l'UI échoue)
 async function createCodOrderViaApi(userToken, productId, quantity, addressId) {
 	const price = await fetchProductPrice(productId);
 	const pricing = computePricing(price, quantity);
@@ -325,6 +376,7 @@ async function createCodOrderViaApi(userToken, productId, quantity, addressId) {
 	return data._id || data.id;
 }
 
+// Calcule les montants panier (articles, shipping conditionnel, TVA) avec arrondi 2 décimales
 function computePricing(unitPrice, quantity) {
 	const itemsPrice = round2(unitPrice * quantity);
 	const shippingPrice = itemsPrice > 50 ? 0 : 10;
@@ -333,6 +385,7 @@ function computePricing(unitPrice, quantity) {
 	return { itemsPrice, shippingPrice, taxPrice, totalPrice };
 }
 
+// Récupère le prix unitaire du produit (compat JSON/Decimal128)
 async function fetchProductPrice(productId) {
 	const client = buildApiClient();
 	const { data } = await client.get(`/products/${productId}`);
@@ -343,6 +396,7 @@ async function fetchProductPrice(productId) {
 	return Number.parseFloat(price?.$numberDecimal ?? price);
 }
 
+// Fabrique un client Axios préconfiguré (timeout + Authorization si token fourni)
 function buildApiClient(token) {
 	return axios.create({
 		baseURL: config.apiBaseUrl,
@@ -351,10 +405,12 @@ function buildApiClient(token) {
 	});
 }
 
+// Nettoie le stockage local/session pour simuler une vraie déconnexion utilisateur
 async function clearSession(driver) {
 	await driver.executeScript('window.localStorage.clear(); window.sessionStorage.clear();');
 }
 
+// Attend la présence/visibilité/activabilité d'un élément (robuste aux lenteurs réseau)
 async function waitForElement(driver, locator) {
 	const element = await driver.wait(until.elementLocated(locator), config.waitTimeout);
 	await driver.wait(until.elementIsVisible(element), config.waitTimeout);
@@ -362,6 +418,14 @@ async function waitForElement(driver, locator) {
 	return element;
 }
 
+// Fait défiler jusqu'à l'élément et vérifie qu'il est interactif
+async function scrollIntoView(driver, element) {
+	await driver.executeScript('arguments[0].scrollIntoView({block:"center"});', element);
+	await driver.wait(until.elementIsVisible(element), config.waitTimeout);
+	await driver.wait(until.elementIsEnabled(element), config.waitTimeout);
+}
+
+// Tente plusieurs sélecteurs pour trouver le bouton "Place Order" selon les variations d'UI
 async function findPlaceOrderButton(driver) {
 	// Ensure review card is present
 	await waitForElement(driver, By.css('.order-summary, .checkout-card'));
@@ -386,6 +450,35 @@ async function findPlaceOrderButton(driver) {
 	throw new Error('Bouton "Place Order" introuvable sur la page de revue.');
 }
 
+// Accepte une boîte de dialogue de confirmation si présente (window.confirm déclenché par les boutons admin)
+async function acceptConfirmIfPresent(driver) {
+	try {
+		await driver.wait(until.alertIsPresent(), 4000);
+		const alert = await driver.switchTo().alert();
+		await alert.accept();
+	} catch (e) {
+		// aucune alerte, on continue
+	}
+}
+
+// Attend qu'un badge Paid soit visible dans le tableau admin
+async function waitForPaidBadge(driver) {
+	await driver.wait(async () => {
+		const badges = await driver.findElements(By.xpath("//table//span[contains(., 'Paid')]"));
+		return badges.length > 0;
+	}, config.waitTimeout);
+}
+
+// Attend qu'un badge Delivered soit visible dans le tableau admin
+async function waitForDeliveredBadge(driver) {
+	await driver.wait(async () => {
+		const badges = await driver.findElements(By.xpath("//table//span[contains(., 'Delivered') or contains(., 'Livrée')]")
+		);
+		return badges.length > 0;
+	}, config.waitTimeout);
+}
+
+// Remplace entièrement le contenu d'un champ par la valeur fournie
 async function fillInput(element, value) {
 	const modifier = process.platform === 'darwin' ? Key.COMMAND : Key.CONTROL;
 	await element.click();
@@ -394,6 +487,7 @@ async function fillInput(element, value) {
 	await element.sendKeys(value);
 }
 
+// Renseigne un champ identifié par son placeholder (optionnellement obligatoire)
 async function fillByPlaceholder(driver, placeholder, value, required = true) {
 	const elements = await driver.findElements(By.xpath(`//input[@placeholder="${placeholder}"]`));
 	if (!elements.length) {
@@ -403,6 +497,7 @@ async function fillByPlaceholder(driver, placeholder, value, required = true) {
 	await fillInput(elements[0], value);
 }
 
+// Saisie lente « humaine » pour visualiser les démos
 async function typeSlow(element, value) {
 	for (const char of value.toString()) {
 		await element.sendKeys(char);
@@ -411,23 +506,63 @@ async function typeSlow(element, value) {
 	await demoPause();
 }
 
+// Promise utilitaire de temporisation
 function delay(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Pause configurable pour rendre le scénario démonstratif (ralentissement volontaire)
 async function demoPause(multiplier = 1) {
 	if (!config.demoDelay || config.demoDelay <= 0) return;
 	await delay(config.demoDelay * multiplier);
 }
 
+// Utilitaire pour laisser le navigateur ouvert en mode démo (ex: présentation)
 async function holdBrowserOpen() {
 	return new Promise(() => {});
 }
 
+// Déconnexion utilisateur en cliquant sur l'avatar/profil puis "Logout"
+async function logoutViaUi(driver) {
+	// On suppose la présence d'un élément déclenchant le menu profil (icône ou texte)
+	const profileToggleCandidates = [
+		By.css('#profile-dropdown, .profile-dropdown, .user-menu, .dropdown-toggle'),
+		By.xpath("//button[contains(., 'Profile') or contains(., 'Account') or contains(., 'Profil')]")
+	];
+
+	let toggle = null;
+	for (const locator of profileToggleCandidates) {
+		const found = await driver.findElements(locator);
+		if (found.length) {
+			toggle = found[0];
+			break;
+		}
+	}
+
+	if (!toggle) {
+		throw new Error('Bouton/menu profil introuvable pour se déconnecter.');
+	}
+
+	await scrollIntoView(driver, toggle);
+	await toggle.click();
+	await demoPause();
+
+	// Cherche l'item Logout dans le menu
+	const logoutItem = await waitForElement(
+		driver,
+		By.xpath("//a[contains(., 'Logout') or contains(., 'Sign out') or contains(., 'Déconnexion')] | //button[contains(., 'Logout') or contains(., 'Sign out') or contains(., 'Déconnexion')]")
+	);
+	await scrollIntoView(driver, logoutItem);
+	await logoutItem.click();
+	await demoPause();
+}
+
+// Arrondi à 2 décimales (prix)
 function round2(value) {
 	return Math.round(value * 100) / 100;
 }
 
+// Sélectionne la première taille/couleur disponible si des variantes existent
 async function maybeSelectVariantOptions(driver) {
 	const sizeSelects = await driver.findElements(By.css('.size-section select'));
 	if (sizeSelects.length) {
@@ -452,6 +587,7 @@ async function maybeSelectVariantOptions(driver) {
 	}
 }
 
+// Incrémente la quantité en cliquant sur le bouton + autant que nécessaire
 async function adjustQuantity(driver, quantity) {
 	if (quantity <= 1) return;
 	const buttons = await driver.findElements(By.css('.quantity-section .quantity-btn'));
